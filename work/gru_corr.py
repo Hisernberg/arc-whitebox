@@ -12,7 +12,8 @@ args = sys.argv[1:]
 def arg(name, default, typ=float):
     return typ(args[args.index(name) + 1]) if name in args else default
 H = arg("--hidden", 64, int); EPOCHS = arg("--epochs", 150, int); HOLD = arg("--holdout", 20, int)
-LR = arg("--lr", 1e-3); OUT = arg("--out", "/home/user/arc-whitebox/work/gru_model.npz", str); SEED = arg("--seed", 0, int)
+LR = arg("--lr", 5e-4); OUT = arg("--out", "/home/user/arc-whitebox/work/gru_model.npz", str); SEED = arg("--seed", 0, int)
+WD = arg("--wd", 1e-5)
 NMAX = arg("--nmax", 1000, int)
 torch.manual_seed(SEED); np.random.seed(SEED); torch.set_num_threads(2)
 
@@ -127,19 +128,31 @@ def tens(i):
 model = Model()
 EVAL = arg("--eval", "", str)
 if EVAL:
-    ck = np.load(EVAL, allow_pickle=False)
-    mu_f, sd_f, sig_mu = ck["mu_f"], ck["sd_f"], float(ck["sig_mu"])
-    mu_f_t = torch.tensor(mu_f); sd_f_t = torch.tensor(sd_f)
-    model.load_state_dict({k: torch.tensor(ck[k]) for k in model.state_dict().keys()})
-    model.eval()
+    cks = [np.load(f, allow_pickle=False) for f in EVAL.split(",")]
     ids_eval = [(int(x) if x.isdigit() else x) for x in arg("--ids", ",".join(str(i) for i in ids), str).split(",")]
-    with torch.no_grad():
-        for i in ids_eval:
-            Xs, E, Wt = tens(i); U = model(Xs, Wt)
-            base = float((E[15] ** 2).mean()) * sig_mu ** 2; corr = float(((E[15] - U[15]) ** 2).mean()) * sig_mu ** 2
-            print(f"[{i:03d}] {data[i][3]:20s} V29 {base:.4e} corrected {corr:.4e} ratio {corr / base:.3f} ({'holdout' if i in hold else 'train'})")
+    corrs = {i: None for i in ids_eval}
+    for ck in cks:
+        mu_f, sd_f, sig_mu = ck["mu_f"], ck["sd_f"], float(ck["sig_mu"])
+        mu_f_t = torch.tensor(mu_f); sd_f_t = torch.tensor(sd_f)
+        model.load_state_dict({k: torch.tensor(ck[k]) for k in model.state_dict().keys()})
+        model.eval()
+        with torch.no_grad():
+            for i in ids_eval:
+                Xs, E, Wt = tens(i); U = model(Xs, Wt)
+                c = U[15].numpy() * sig_mu / len(cks)
+                corrs[i] = c if corrs[i] is None else corrs[i] + c
+    rows = []
+    for i in ids_eval:
+        e15 = data[i][1][15].astype(np.float64)
+        base = float(np.mean(e15 ** 2)); corr = float(np.mean((e15 - corrs[i]) ** 2))
+        rows.append((base, corr, i in hold))
+        print(f"[{str(i):>10s}] {data[i][3]:20s} V29 {base:.4e} corrected {corr:.4e} ratio {corr / base:.3f} ({'holdout' if i in hold else 'train'})")
+    for name, flag in (("holdout", True), ("train", False)):
+        r = [(b, c) for b, c, h in rows if h == flag]
+        if r:
+            print(f"ENSEMBLE {name}: n={len(r)} mean ratio {sum(c for _, c in r) / sum(b for b, _ in r):.4f}")
     sys.exit(0)
-opt = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=1e-6)
+opt = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=WD)
 sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=EPOCHS * len(train))
 def evaluate(idx):
     model.eval(); rows = []
@@ -151,6 +164,7 @@ def evaluate(idx):
     model.train(); r = np.array(rows)
     return r[:, 1].mean() / r[:, 0].mean(), np.median(r[:, 1] / r[:, 0]), r[:, 1].max() / r[:, 0].max()
 t0 = time.time()
+best = (float("inf"), -1, None)
 for ep in range(EPOCHS):
     order = rng.permutation(train); tot = 0.0
     for i in order:
@@ -159,9 +173,14 @@ for ep in range(EPOCHS):
         loss = (layer_w[:, None] * (U - E) ** 2).mean()
         opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
         tot += float(loss)
-    if ep % 10 == 0 or ep == EPOCHS - 1:
+    if ep % 5 == 0 or ep == EPOCHS - 1:
         tr = evaluate(train[:10]); ho = evaluate(hold) if hold else (float('nan'),) * 3
-        print(f"ep {ep:3d} loss {tot / len(train):.4f}  final-layer MSE ratio train {tr[0]:.3f}  holdout {ho[0]:.3f} (median {ho[1]:.3f})  t={time.time() - t0:.0f}s", flush=True)
+        if hold and ho[0] < best[0]:
+            best = (ho[0], ep, {k: v.detach().clone() for k, v in model.state_dict().items()})
+        print(f"ep {ep:3d} loss {tot / len(train):.4f}  final-layer MSE ratio train {tr[0]:.3f}  holdout {ho[0]:.3f} (median {ho[1]:.3f})  best {best[0]:.3f}@{best[1]}  t={time.time() - t0:.0f}s", flush=True)
+if best[2] is not None:
+    model.load_state_dict(best[2])
+    print(f"BEST holdout ratio {best[0]:.4f} at epoch {best[1]} (saved)")
 # save weights + normalization for deployment
 sd = {k: v.detach().numpy() for k, v in model.state_dict().items()}
 np.savez(OUT, mu_f=mu_f, sd_f=sd_f, sig_mu=sig_mu, feats=np.array(FEATS), H=H, act=ACT, **sd)
