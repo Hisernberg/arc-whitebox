@@ -50,11 +50,18 @@ def load_mlp(i):
     e = (d["truth"].astype(np.float64) - d["pred"].astype(np.float64)).astype(np.float32)   # (16, n)
     wf = f"{FE}/W_{i:04d}.npy" if isinstance(i, int) else ""
     if wf and __import__("os").path.exists(wf):
-        W = np.load(wf, mmap_mode="r")
+        Wref = ("file", wf)
     else:
-        seed = int(d["seed"]) if "seed" in d.files else SEED_OF[str(d["name"])]
-        W = regen_weights(seed)
-    return X, e, W, str(d["name"]), float(d["mse"])
+        Wref = ("seed", int(d["seed"]) if "seed" in d.files else SEED_OF[str(d["name"])])
+    return X, e, Wref, str(d["name"]), float(d["mse"])
+
+
+def get_W(Wref):
+    if Wref[0] == "file":
+        return np.load(Wref[1], mmap_mode="r")
+    from numpy.random import SeedSequence, default_rng
+    rng = default_rng(SeedSequence(int(Wref[1])).spawn(3)[0])
+    return np.stack([(rng.standard_normal((1024, 1024)) * np.sqrt(2.0 / 1024)).astype(np.float32) for _ in range(16)])
 
 ids = sorted(int(f.split("feat_")[1][:4]) for f in glob.glob(f"{FE}/feat_*.npz"))
 FULL = "--full" in args          # also use the full-split dumps (featf_*.npz), named by file stem
@@ -122,8 +129,8 @@ class Model(nn.Module):
 
 mu_f_t = torch.tensor(mu_f); sd_f_t = torch.tensor(sd_f)
 def tens(i):
-    X, e, W, _, _ = data[i]
-    Xs = torch.tensor((X - mu_f[:, None, :]) / sd_f[:, None, :]); E = torch.tensor(e / sig_mu); Wt = torch.tensor(np.asarray(W, dtype=np.float32))
+    X, e, Wref, _, _ = data[i]
+    Xs = torch.tensor((X - mu_f[:, None, :]) / sd_f[:, None, :]); E = torch.tensor(e / sig_mu); Wt = torch.tensor(np.asarray(get_W(Wref), dtype=np.float32))
     return Xs, E, Wt
 model = Model()
 EVAL = arg("--eval", "", str)
@@ -153,7 +160,7 @@ if EVAL:
             print(f"ENSEMBLE {name}: n={len(r)} mean ratio {sum(c for _, c in r) / sum(b for b, _ in r):.4f}")
     sys.exit(0)
 opt = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=WD)
-sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=EPOCHS * len(train))
+sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=EPOCHS * len(train) * arg("--inner", 1, int))
 def evaluate(idx):
     model.eval(); rows = []
     with torch.no_grad():
@@ -165,13 +172,15 @@ def evaluate(idx):
     return r[:, 1].mean() / r[:, 0].mean(), np.median(r[:, 1] / r[:, 0]), r[:, 1].max() / r[:, 0].max()
 t0 = time.time()
 best = (float("inf"), -1, None)
+INNER = arg("--inner", 1, int)   # gradient steps per MLP visit (amortizes the weight regeneration)
 for ep in range(EPOCHS):
     order = rng.permutation(train); tot = 0.0
     for i in order:
         Xs, E, Wt = tens(i)
-        U = model(Xs, Wt)
-        loss = (layer_w[:, None] * (U - E) ** 2).mean()
-        opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
+        for _ in range(INNER):
+            U = model(Xs, Wt)
+            loss = (layer_w[:, None] * (U - E) ** 2).mean()
+            opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
         tot += float(loss)
     if ep % 5 == 0 or ep == EPOCHS - 1:
         tr = evaluate(train[:10]); ho = evaluate(hold) if hold else (float('nan'),) * 3
