@@ -5,6 +5,7 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `333509-v31-gru-cdf-smoke5/`   | 333509 | ✅ GRADED  | 5.584e-09    | 2026-10-02 09:28 | V31 with a normal-CDF GRU (hidden 48) trained on only 20 mini MLPs (local held-out ratio 1.025): raw 2.193e-08, +2.8% worse than V29, matching the local held-out estimate |
 | `333508-v31-gru-smoke4/`       | 333508 | ✅ GRADED  | **5.311e-09** | 2026-10-02 09:26 | **V31**: V29 + per-layer GRU corrector (tanh, hidden 48, trained on only 20 mini MLPs), model embedded, suite-shape gate + setup dry run. Raw 2.087e-08 (−2.2% vs V29), cost unchanged. First graded learned-corrector submission |
 | `333489-v31-gru-smoke-failed/`  | 333489 | ❌ FAILED | — | 2026-10-02 08:44 | V31 pipeline test 1: V29 + GRU corrector (hidden 48, 20 mini MLPs) from gru_model.json. Smoke test failed: FLOPSCOPE_SERVER_ERROR |
 | `333492-v31-gru-smoke2-failed/` | 333492 | ❌ FAILED | — | 2026-10-02 08:52 | V31 pipeline test 2 (defensive GRU step). Smoke test failed: FLOPSCOPE_SERVER_ERROR |
