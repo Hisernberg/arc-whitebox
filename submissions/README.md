@@ -5,6 +5,7 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| (pending) | 333578 | ⏳ SUBMITTED | — | 2026-10-02 16:34 | **S3**: V32 with leaf 8 + first-call level 5 (both grader-verified) + the 3-member full-split GRU ensemble of S1 (held-out 0.925); the 7-member ensemble evaluated no better (0.9267) |
 | (pending) | 333572 | ⏳ SUBMITTED | — | 2026-10-02 15:56 | multi_agent: S2 with leaf 8 |
 | (pending) | 333571 | ⏳ SUBMITTED | — | 2026-10-02 15:53 | **S2**: V32 (lone level 2, leaf 16) + 5-member GRU ensemble (3 x h64 + 2 x h96), 630 full-split MLPs, 100 mini held out at ratio 0.926 |
 | `333567-acct2-S1-first5/`      | 333567 | ✅ GRADED | 4.780e-09 | 2026-10-02 15:25 | multi_agent: S1 with the first predict of each worker at Strassen level 5 (V28_STRASSEN_FIRST=5): cost −0.5% vs S1, same raw; passed 100/100 |
