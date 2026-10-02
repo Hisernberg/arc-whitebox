@@ -7,7 +7,7 @@ listing stable when statuses change.
 |--------|---------------|--------|-----|---------------|-------------|
 | (pending) | 333572 | ⏳ SUBMITTED | — | 2026-10-02 15:56 | multi_agent: S2 with leaf 8 |
 | (pending) | 333571 | ⏳ SUBMITTED | — | 2026-10-02 15:53 | **S2**: V32 (lone level 2, leaf 16) + 5-member GRU ensemble (3 x h64 + 2 x h96), 630 full-split MLPs, 100 mini held out at ratio 0.926 |
-| (pending) | 333567 | ⏳ SUBMITTED | — | 2026-10-02 15:25 | multi_agent: S1 with first-call Strassen level 5 |
+| `333567-acct2-S1-first5/`      | 333567 | ✅ GRADED | 4.780e-09 | 2026-10-02 15:25 | multi_agent: S1 with the first predict of each worker at Strassen level 5 (V28_STRASSEN_FIRST=5): cost −0.5% vs S1, same raw; passed 100/100 |
 | `333566-sub16_A2S1_leaf8-v32/` | 333566 | ✅ GRADED | 4.734e-09 | 2026-10-02 15:25 | multi_agent: S1 with smallest leaf 8 (cost 0.2388 x B); same raw as S1 (1.983e-08). Best score on that account |
 | `333564-sub12_S1-v32/`         | 333564 | ✅ GRADED  | **4.804e-09** | 2026-10-02 15:22 | **S1**: V32 (lone level 2, leaf 16) + 3-member GRU ensemble (hidden 64) trained on 630 full-split MLPs, 100 mini held out at ratio 0.925. Raw 1.983e-08 (−7.0% vs V29). Best so far |
 | `333557-acct2-v32-leaf8-gru-ens3/` | 333557 | ✅ GRADED | 4.855e-09 | 2026-10-02 14:40 | **multi_agent account**: 333531's recipe with smallest Strassen leaf 8 (cost 0.2388 x B, −1.2%), same raw 2.033e-08; residual stayed under the cap |
