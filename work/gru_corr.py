@@ -189,6 +189,9 @@ for ep in range(EPOCHS):
         tr = evaluate(train[:10]); ho = evaluate(hold) if hold else (float('nan'),) * 3
         if hold and ho[0] < best[0]:
             best = (ho[0], ep, {k: v.detach().clone() for k, v in model.state_dict().items()})
+            # checkpoint on every improvement (a killed run keeps its best model)
+            np.savez(OUT, mu_f=mu_f, sd_f=sd_f, sig_mu=sig_mu, feats=np.array(FEATS), H=H, act=ACT, best_ratio=best[0], best_epoch=best[1],
+                     **{k: v.numpy() for k, v in best[2].items()})
         print(f"ep {ep:3d} loss {tot / len(train):.4f}  final-layer MSE ratio train {tr[0]:.3f}  holdout {ho[0]:.3f} (median {ho[1]:.3f})  best {best[0]:.3f}@{best[1]}  t={time.time() - t0:.0f}s", flush=True)
 if best[2] is not None:
     model.load_state_dict(best[2])
