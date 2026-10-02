@@ -108,13 +108,15 @@ class CdfGRUCell(nn.Module):
         return (1.0 - z) * n_ + z * hp
 
 class Model(nn.Module):
-    def __init__(self):
+    def __init__(self, hid=None):
         super().__init__()
-        self.cell = nn.GRUCell(F + 3, H) if ACT == "tanh" else CdfGRUCell(F + 3, H)
-        self.ro = nn.Sequential(nn.Linear(H, 2 * H), nn.GELU(approximate="tanh") if ACT == "tanh" else nn.GELU(), nn.Linear(2 * H, 2))
+        hid = H if hid is None else hid
+        self.hid = hid
+        self.cell = nn.GRUCell(F + 3, hid) if ACT == "tanh" else CdfGRUCell(F + 3, hid)
+        self.ro = nn.Sequential(nn.Linear(hid, 2 * hid), nn.GELU(approximate="tanh") if ACT == "tanh" else nn.GELU(), nn.Linear(2 * hid, 2))
     def forward(self, X, W):
         # X (16, n, F) standardized; W (16, n, n) float32 tensor
-        h = torch.zeros(n, H); u = torch.zeros(n); q = torch.zeros(n)
+        h = torch.zeros(n, self.hid); u = torch.zeros(n); q = torch.zeros(n)
         us = []
         for m in range(16):
             Phi = X[m, :, FEATS.index("Phi")] * sd_f_t[m, FEATS.index("Phi")] + mu_f_t[m, FEATS.index("Phi")]
@@ -141,6 +143,7 @@ if EVAL:
     for ck in cks:
         mu_f, sd_f, sig_mu = ck["mu_f"], ck["sd_f"], float(ck["sig_mu"])
         mu_f_t = torch.tensor(mu_f); sd_f_t = torch.tensor(sd_f)
+        model = Model(int(ck["H"]))
         model.load_state_dict({k: torch.tensor(ck[k]) for k in model.state_dict().keys()})
         model.eval()
         with torch.no_grad():
