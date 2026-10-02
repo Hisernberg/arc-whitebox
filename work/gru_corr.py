@@ -182,7 +182,7 @@ for ep in range(EPOCHS):
             loss = (layer_w[:, None] * (U - E) ** 2).mean()
             opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
         tot += float(loss)
-    if ep % 5 == 0 or ep == EPOCHS - 1:
+    if ep % (1 if EPOCHS <= 12 else 5) == 0 or ep == EPOCHS - 1:
         tr = evaluate(train[:10]); ho = evaluate(hold) if hold else (float('nan'),) * 3
         if hold and ho[0] < best[0]:
             best = (ho[0], ep, {k: v.detach().clone() for k, v in model.state_dict().items()})
