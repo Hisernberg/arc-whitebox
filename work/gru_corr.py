@@ -177,7 +177,7 @@ t0 = time.time()
 best = (float("inf"), -1, None)
 INNER = arg("--inner", 1, int)   # gradient steps per MLP visit (amortizes the weight regeneration)
 for ep in range(EPOCHS):
-    order = rng.permutation(train); tot = 0.0
+    order = [train[k] for k in rng.permutation(len(train))]; tot = 0.0   # keep int/str ids intact
     for i in order:
         Xs, E, Wt = tens(i)
         for _ in range(INNER):
