@@ -5,6 +5,11 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `333489-v31-gru-smoke-failed/`  | 333489 | ❌ FAILED | — | 2026-10-02 08:44 | V31 pipeline test 1: V29 + GRU corrector (hidden 48, 20 mini MLPs) from gru_model.json. Smoke test failed: FLOPSCOPE_SERVER_ERROR |
+| `333492-v31-gru-smoke2-failed/` | 333492 | ❌ FAILED | — | 2026-10-02 08:52 | V31 pipeline test 2 (defensive GRU step). Smoke test failed: FLOPSCOPE_SERVER_ERROR |
+| `333497-v31-gru-smoke3-failed/` | 333497 | ❌ FAILED | — | 2026-10-02 09:02 | V31 pipeline test 3 (model embedded, contiguous readout). Smoke test failed: FLOPSCOPE_SERVER_ERROR |
+| `333493-bisect-b1-hooks-only/` | 333493 | ✅ GRADED  | 5.420e-09    | 2026-10-02 08:56 | Bisection B1: V29 + per-layer feature-recording hooks only (GRU disabled). Raw identical to V29 |
+| `333494-bisect-b2-load-only/`  | 333494 | ✅ GRADED  | 5.440e-09    | 2026-10-02 08:56 | Bisection B2: V29 + feature hooks + GRU model loaded in setup (step disabled). Grader-identical raw; the +0.4% is first-call Strassen-level scheduling, not the load |
 | `333467-graded/`               | 333467 | ✅ GRADED  | 5.418e-09    | 2026-10-02 06:39:28 | V29 verbatim (504aldo, MIT) re-submitted from the `nabid_nur` account as the Phase 2 baseline; raw 2.133e-08, 0.2534 x B, grader kernel 62.5 s, residual 0.183 s mean |
 | `333364-top-scored/`           | 333364 | ✅ GRADED  | **5.394e-09** | 2026-10-01 16:00:54 | V29 baseline (504aldo, MIT) + kappa4 lambda table scale 0.95→1.00 (mean raw -0.35% on 4 public mini-split MLPs) |
 | `333330-graded/`               | 333330 | ✅ GRADED  | 5.406e-09    | 2026-10-01 11:11:03 | V29 + R_OLD2 192 cost trim |

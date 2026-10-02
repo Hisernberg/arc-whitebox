@@ -5,7 +5,7 @@ SK=/tmp/claude-0/-home-user-arc-whitebox/828b687d-6a50-5b7c-872b-6b10df70baf6/sc
 until [ "$(ls work/feats/feat_*.npz | wc -l)" -ge 100 ]; do sleep 60; done
 echo "$(date -u +%H:%M) 100 mini feats ready; training"
 source work/lean_env.sh
-OMP_NUM_THREADS=2 python work/gru_corr.py --hidden 64 --epochs 150 --holdout 20 --seed 1 --out work/gru_mini100.npz > work/runs/gru_mini100.log 2>&1
+OMP_NUM_THREADS=2 python work/gru_corr.py --hidden 64 --epochs 150 --holdout 20 --seed 1 --act cdf --out work/gru_mini100.npz > work/runs/gru_mini100.log 2>&1
 echo "$(date -u +%H:%M) training done: $(grep 'ep 149' work/runs/gru_mini100.log)"
 mkdir -p work/sub04_v31m
 uv run --project $SK python work/export_gru.py work/gru_mini100.npz work/gru_mini100.json

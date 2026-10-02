@@ -28,6 +28,7 @@ GRU_FEATS = ["mu_pre", "var", "alpha", "phi", "Phi", "D3", "g4row", "K2v", "K3v"
              "d21T_abs", "d21_colsum", "d21_rowsum", "pred"]
 GRU_OFF = _os.environ.get("V31_GRU_OFF", "0") == "1"
 GRU_STEP = _os.environ.get("V31_GRU_STEP", "1") == "1"   # 0 -> load the model but never run the step (bisection)
+GRU_WARM = _os.environ.get("V31_GRU_WARM", "1") == "1"   # setup-time dry run of the step at n = 8
 
 
 GRU_JSON = None   # optionally replaced by make_v31.py --embed with the model as a JSON string literal
@@ -79,6 +80,17 @@ rep('''    def setup(self, ctx: SetupContext) -> None:
 ''', '''    def setup(self, ctx: SetupContext) -> None:
         self._setup_rng = fnp.random.default_rng(ctx.seed)
         self._gru = None if GRU_OFF else _load_gru(ctx)
+        if self._gru is not None and GRU_WARM:
+            # tiny dry run of the corrector step (n = 8, two layers): same ops as the suite path
+            f32 = fnp.float32
+            n8 = 8
+            Wt = fnp.zeros((n8, n8), dtype=f32) + 0.1
+            fd = {k: fnp.zeros(n8, dtype=f32) + 0.5 for k in GRU_FEATS}
+            fd["lam"] = 0.01
+            gst = {"u": None, "q": None, "h": None}
+            for li in range(2):
+                self._gru_step(li, fd, Wt, gst, n8)
+            _ = float(fnp.sum(gst["u"]))
 ''')
 
 # 3. the GRU step method, inserted before _dslices
@@ -145,6 +157,7 @@ rep('''        rows = []
 ''', '''        rows = []
         FEAT.clear()
         gst = {"u": None, "q": None, "h": None}
+        gru_on = self._gru is not None and GRU_STEP and n == 1024 and L == 16   # suite shape only (16-row tables)
 
         w1_prev = None  # wick w(1) of the previous layer, folded into WD
 ''')
@@ -158,7 +171,7 @@ rep('''            if last:
 ''', '''            if last:
                 FEAT[-1].update(pred=_f(pk1v))
             if last:
-                if self._gru is not None and GRU_STEP:
+                if gru_on:
                     self._gru_step(li, FEAT[-1], W, gst, n)
                     pk1v = pk1v + gst["u"] * float(self._gru["sig_mu"])
                 rows.append(pk1v if delta is None else pk1v + delta)
@@ -173,7 +186,7 @@ rep('''            if riders:
 ''', '''            if riders:
                 K4_vec = (K4v * float(st["k4_c4"])
                           + (K22 @ ones_n) * float(st["k4_c22"])) * float(n * st["P2"])
-            if self._gru is not None and GRU_STEP:
+            if gru_on:
                 self._gru_step(li, FEAT[-1], W, gst, n)
             rows.append(mu)
 ''')

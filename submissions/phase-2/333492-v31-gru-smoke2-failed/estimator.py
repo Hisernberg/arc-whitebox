@@ -345,50 +345,27 @@ GRU_FEATS = ["mu_pre", "var", "alpha", "phi", "Phi", "D3", "g4row", "K2v", "K3v"
              "k21col", "e_b", "w1", "w2", "s3c", "g_post", "coff_sq", "coff_sum", "d21_abs", "d21_sq",
              "d21T_abs", "d21_colsum", "d21_rowsum", "pred"]
 GRU_OFF = _os.environ.get("V31_GRU_OFF", "0") == "1"
-GRU_STEP = _os.environ.get("V31_GRU_STEP", "1") == "1"   # 0 -> load the model but never run the step (bisection)
-GRU_WARM = _os.environ.get("V31_GRU_WARM", "1") == "1"   # setup-time dry run of the step at n = 8
-
-
-GRU_JSON = None   # optionally replaced by make_v31.py --embed with the model as a JSON string literal
-
-
-def _gru_from_dict(d):
-            f32 = fnp.float32
-            g = {k: fnp.asarray(d[k], dtype=f32) for k in ("bih", "bhh", "b1", "b2", "mu_f", "sd_f")}
-            g["H"] = int(d["H"]); g["sig_mu"] = float(d["sig_mu"]); g["feats"] = list(d["feats"]); g["act"] = str(d.get("act", "tanh"))
-            assert g["feats"] == GRU_FEATS, "feature list mismatch"
-            # transposed (in, out) layouts built host-side in pure Python, uploaded once
-            for k in ("Wih", "Whh", "W1"):
-                g[k + "T"] = fnp.asarray([list(col) for col in zip(*d[k])], dtype=f32)
-            # readout rows as separate contiguous vectors (u and q come out of two matvecs)
-            g["w2u"] = fnp.asarray(list(d["W2"][0]), dtype=f32)
-            g["w2q"] = fnp.asarray(list(d["W2"][1]), dtype=f32)
-            g["b2u"] = float(d["b2"][0])
-            g["b2q"] = float(d["b2"][1])
-            return g
 
 
 def _load_gru(ctx):
-    """Model parameters: the embedded GRU_JSON literal, else gru_model.json beside this file or in
-    ctx.submission_dir. Any failure -> None (the estimator then runs as V29)."""
-    try:
-        if GRU_JSON is not None:
-            return _gru_from_dict(_json.loads(GRU_JSON))
-        cands = []
-        sd = getattr(ctx, "submission_dir", None)
-        if sd:
-            cands.append(_os.path.join(str(sd), "gru_model.json"))
-        try:
-            cands.append(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "gru_model.json"))
-        except NameError:
-            pass
-        cands.append("gru_model.json")
-        for p in cands:
-            if _os.path.exists(p):
-                with open(p) as fh:
-                    return _gru_from_dict(_json.load(fh))
-    except Exception:
-        return None
+    """gru_model.json next to this file (or in ctx.submission_dir): weights as nested lists."""
+    cands = []
+    sd = getattr(ctx, "submission_dir", None)
+    if sd:
+        cands.append(_os.path.join(str(sd), "gru_model.json"))
+    cands.append(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "gru_model.json"))
+    for p in cands:
+        if _os.path.exists(p):
+            with open(p) as fh:
+                d = _json.load(fh)
+            f32 = fnp.float32
+            g = {k: fnp.asarray(d[k], dtype=f32) for k in ("bih", "bhh", "b1", "b2", "mu_f", "sd_f")}
+            g["H"] = int(d["H"]); g["sig_mu"] = float(d["sig_mu"]); g["feats"] = list(d["feats"])
+            assert g["feats"] == GRU_FEATS, "feature list mismatch"
+            # transposed (in, out) layouts built host-side in pure Python, uploaded once
+            for k in ("Wih", "Whh", "W1", "W2"):
+                g[k + "T"] = fnp.asarray([list(col) for col in zip(*d[k])], dtype=f32)
+            return g
     return None
 
 # pruned V16b table + the 4 (3,1)-slice use-side terms
@@ -738,17 +715,6 @@ class Estimator(BaseEstimator):
     def setup(self, ctx: SetupContext) -> None:
         self._setup_rng = fnp.random.default_rng(ctx.seed)
         self._gru = None if GRU_OFF else _load_gru(ctx)
-        if self._gru is not None and GRU_WARM:
-            # tiny dry run of the corrector step (n = 8, two layers): same ops as the suite path
-            f32 = fnp.float32
-            n8 = 8
-            Wt = fnp.zeros((n8, n8), dtype=f32) + 0.1
-            fd = {k: fnp.zeros(n8, dtype=f32) + 0.5 for k in GRU_FEATS}
-            fd["lam"] = 0.01
-            gst = {"u": None, "q": None, "h": None}
-            for li in range(2):
-                self._gru_step(li, fd, Wt, gst, n8)
-            _ = float(fnp.sum(gst["u"]))
         if WARM:
             # V26: first-call warm-ups (the residual audit showed one-off 5-30 ms gaps
             # before the first qr / norm.pdf / sandwich of every MLP: library init).
@@ -917,7 +883,6 @@ class Estimator(BaseEstimator):
         rows = []
         FEAT.clear()
         gst = {"u": None, "q": None, "h": None}
-        gru_on = self._gru is not None and GRU_STEP and n == 1024 and L == 16   # suite shape only (16-row tables)
 
         w1_prev = None  # wick w(1) of the previous layer, folded into WD
 
@@ -1314,7 +1279,7 @@ class Estimator(BaseEstimator):
             if last:
                 FEAT[-1].update(pred=_f(pk1v))
             if last:
-                if gru_on:
+                if self._gru is not None:
                     self._gru_step(li, FEAT[-1], W, gst, n)
                     pk1v = pk1v + gst["u"] * float(self._gru["sig_mu"])
                 rows.append(pk1v if delta is None else pk1v + delta)
@@ -1571,7 +1536,7 @@ class Estimator(BaseEstimator):
             if riders:
                 K4_vec = (K4v * float(st["k4_c4"])
                           + (K22 @ ones_n) * float(st["k4_c22"])) * float(n * st["P2"])
-            if gru_on:
+            if self._gru is not None:
                 self._gru_step(li, FEAT[-1], W, gst, n)
             rows.append(mu)
 
@@ -1640,24 +1605,15 @@ class Estimator(BaseEstimator):
         h_prev = gst["h"] if gst["h"] is not None else fnp.zeros((n, H), dtype=f32)
         gi = inp @ g["WihT"] + g["bih"][None, :]
         gh = h_prev @ g["WhhT"] + g["bhh"][None, :]
-        if g["act"] == "cdf":
-            # normal-CDF gates and 2*CDF-1 candidate (the only nonlinearity V29 already runs on the grader)
-            cdf = flops.stats.norm.cdf
-            r = cdf(gi[:, :H] + gh[:, :H]).astype(f32)
-            z = cdf(gi[:, H:2 * H] + gh[:, H:2 * H]).astype(f32)
-            nn_ = 2.0 * cdf(gi[:, 2 * H:] + r * gh[:, 2 * H:]).astype(f32) - 1.0
-            h = (1.0 - z) * nn_ + z * h_prev
-            a = h @ g["W1T"] + g["b1"][None, :]
-            a = a * cdf(a).astype(f32)                                             # exact GELU
-        else:
-            r = 0.5 + 0.5 * fnp.tanh(0.5 * (gi[:, :H] + gh[:, :H]))               # sigmoid via tanh
-            z = 0.5 + 0.5 * fnp.tanh(0.5 * (gi[:, H:2 * H] + gh[:, H:2 * H]))
-            nn_ = fnp.tanh(gi[:, 2 * H:] + r * gh[:, 2 * H:])
-            h = (1.0 - z) * nn_ + z * h_prev
-            a = h @ g["W1T"] + g["b1"][None, :]
-            a = 0.5 * a * (1.0 + fnp.tanh(0.7978845608028654 * (a + 0.044715 * a * a * a)))   # tanh-GELU
-        gst["u"] = a @ g["w2u"] + g["b2u"]     # (n,) contiguous
-        gst["q"] = a @ g["w2q"] + g["b2q"]
+        r = 0.5 + 0.5 * fnp.tanh(0.5 * (gi[:, :H] + gh[:, :H]))                   # sigmoid via tanh
+        z = 0.5 + 0.5 * fnp.tanh(0.5 * (gi[:, H:2 * H] + gh[:, H:2 * H]))
+        nn_ = fnp.tanh(gi[:, 2 * H:] + r * gh[:, 2 * H:])
+        h = (1.0 - z) * nn_ + z * h_prev
+        a = h @ g["W1T"] + g["b1"][None, :]
+        a = 0.5 * a * (1.0 + fnp.tanh(0.7978845608028654 * (a + 0.044715 * a * a * a)))   # tanh-GELU
+        y = a @ g["W2T"] + g["b2"][None, :]
+        gst["u"] = y[:, 0]
+        gst["q"] = y[:, 1]
         gst["h"] = h
 
     def _dslices(self, A_st, P_st, Z_st, L_st, w2b_list, s_list, e_list,
