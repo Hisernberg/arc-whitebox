@@ -61,7 +61,8 @@ if FULL:
     ids = ids + sorted(f.split("/")[-1][:-4] for f in glob.glob(f"{FE}/featf_*.npz"))
 ids = ids[:NMAX]
 HOLD_MINI = "--hold-mini" in args   # holdout = the mini-split MLPs (never trained on): clean LB-like estimate
-rng = np.random.default_rng(SEED); perm = rng.permutation(len(ids))
+SPLIT_SEED = arg("--split-seed", SEED, int)   # holdout split seed (keep fixed across ensemble members)
+rng = np.random.default_rng(SPLIT_SEED); perm = rng.permutation(len(ids))
 if HOLD_MINI:
     hold = [i for i in ids if isinstance(i, int)]; train = [i for i in ids if not isinstance(i, int)]
 else:
