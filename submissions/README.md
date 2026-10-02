@@ -9,7 +9,7 @@ listing stable when statuses change.
 | (pending) | 333571 | ⏳ SUBMITTED | — | 2026-10-02 15:53 | **S2**: V32 (lone level 2, leaf 16) + 5-member GRU ensemble (3 x h64 + 2 x h96), 630 full-split MLPs, 100 mini held out at ratio 0.926 |
 | (pending) | 333567 | ⏳ SUBMITTED | — | 2026-10-02 15:25 | multi_agent: S1 with first-call Strassen level 5 |
 | (pending) | 333566 | ⏳ SUBMITTED | — | 2026-10-02 15:25 | multi_agent: S1 with leaf 8 |
-| (pending) | 333564 | ⏳ SUBMITTED | — | 2026-10-02 15:22 | **S1**: V32 (lone level 2, leaf 16) + 3-member GRU ensemble (hidden 64) trained on 630 full-split MLPs, 100 mini held out at ratio 0.925 |
+| `333564-sub12_S1-v32/`         | 333564 | ✅ GRADED  | **4.804e-09** | 2026-10-02 15:22 | **S1**: V32 (lone level 2, leaf 16) + 3-member GRU ensemble (hidden 64) trained on 630 full-split MLPs, 100 mini held out at ratio 0.925. Raw 1.983e-08 (−7.0% vs V29). Best so far |
 | `333557-acct2-v32-leaf8-gru-ens3/` | 333557 | ✅ GRADED | 4.855e-09 | 2026-10-02 14:40 | **multi_agent account**: 333531's recipe with smallest Strassen leaf 8 (cost 0.2388 x B, −1.2%), same raw 2.033e-08; residual stayed under the cap |
 | `333531-v32-lone2-min16-gru-ens3/` | 333531 | ✅ GRADED | **4.913e-09** | 2026-10-02 11:48 | **V32**: V31 ensemble + Strassen pricing of the join's lone dense products (level cap 2, leaf 16). Same raw as 333530 (2.034e-08), cost 0.2416 x B (−5.5%). Best so far |
 | `333530-v31-gru-ens3-mini/`    | 333530 | ✅ GRADED  | **5.199e-09** | 2026-10-02 11:44 | **V31 ensemble**: V29 + 3-member per-layer GRU corrector ensemble (CDF gates, hidden 48, early-stopped; trained on 80 mini MLPs, 20 held out at ratio 0.955). Raw 2.034e-08 (−4.6% vs V29), cost unchanged. Best so far |
