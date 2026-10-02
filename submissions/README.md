@@ -5,6 +5,10 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| (pending) | 333567 | ⏳ SUBMITTED | — | 2026-10-02 15:25 | multi_agent: S1 with first-call Strassen level 5 |
+| (pending) | 333566 | ⏳ SUBMITTED | — | 2026-10-02 15:25 | multi_agent: S1 with leaf 8 |
+| (pending) | 333564 | ⏳ SUBMITTED | — | 2026-10-02 15:22 | **S1**: V32 (lone level 2, leaf 16) + 3-member GRU ensemble (hidden 64) trained on 630 full-split MLPs, 100 mini held out at ratio 0.925 |
+| `333557-acct2-v32-leaf8-gru-ens3/` | 333557 | ✅ GRADED | 4.855e-09 | 2026-10-02 14:40 | **multi_agent account**: 333531's recipe with smallest Strassen leaf 8 (cost 0.2388 x B, −1.2%), same raw 2.033e-08; residual stayed under the cap |
 | `333531-v32-lone2-min16-gru-ens3/` | 333531 | ✅ GRADED | **4.913e-09** | 2026-10-02 11:48 | **V32**: V31 ensemble + Strassen pricing of the join's lone dense products (level cap 2, leaf 16). Same raw as 333530 (2.034e-08), cost 0.2416 x B (−5.5%). Best so far |
 | `333530-v31-gru-ens3-mini/`    | 333530 | ✅ GRADED  | **5.199e-09** | 2026-10-02 11:44 | **V31 ensemble**: V29 + 3-member per-layer GRU corrector ensemble (CDF gates, hidden 48, early-stopped; trained on 80 mini MLPs, 20 held out at ratio 0.955). Raw 2.034e-08 (−4.6% vs V29), cost unchanged. Best so far |
 | `333509-v31-gru-cdf-smoke5/`   | 333509 | ✅ GRADED  | 5.584e-09    | 2026-10-02 09:28 | V31 with a normal-CDF GRU (hidden 48) trained on only 20 mini MLPs (local held-out ratio 1.025): raw 2.193e-08, +2.8% worse than V29, matching the local held-out estimate |
