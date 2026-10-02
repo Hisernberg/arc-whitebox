@@ -5,6 +5,8 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| (pending) | 333572 | ⏳ SUBMITTED | — | 2026-10-02 15:56 | multi_agent: S2 with leaf 8 |
+| (pending) | 333571 | ⏳ SUBMITTED | — | 2026-10-02 15:53 | **S2**: V32 (lone level 2, leaf 16) + 5-member GRU ensemble (3 x h64 + 2 x h96), 630 full-split MLPs, 100 mini held out at ratio 0.926 |
 | (pending) | 333567 | ⏳ SUBMITTED | — | 2026-10-02 15:25 | multi_agent: S1 with first-call Strassen level 5 |
 | (pending) | 333566 | ⏳ SUBMITTED | — | 2026-10-02 15:25 | multi_agent: S1 with leaf 8 |
 | (pending) | 333564 | ⏳ SUBMITTED | — | 2026-10-02 15:22 | **S1**: V32 (lone level 2, leaf 16) + 3-member GRU ensemble (hidden 64) trained on 630 full-split MLPs, 100 mini held out at ratio 0.925 |
