@@ -345,19 +345,13 @@ GRU_FEATS = ["mu_pre", "var", "alpha", "phi", "Phi", "D3", "g4row", "K2v", "K3v"
              "k21col", "e_b", "w1", "w2", "s3c", "g_post", "coff_sq", "coff_sum", "d21_abs", "d21_sq",
              "d21T_abs", "d21_colsum", "d21_rowsum", "pred"]
 GRU_OFF = _os.environ.get("V31_GRU_OFF", "0") == "1"
+GRU_STEP = _os.environ.get("V31_GRU_STEP", "1") == "1"   # 0 -> load the model but never run the step (bisection)
 
 
-def _load_gru(ctx):
-    """gru_model.json next to this file (or in ctx.submission_dir): weights as nested lists."""
-    cands = []
-    sd = getattr(ctx, "submission_dir", None)
-    if sd:
-        cands.append(_os.path.join(str(sd), "gru_model.json"))
-    cands.append(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "gru_model.json"))
-    for p in cands:
-        if _os.path.exists(p):
-            with open(p) as fh:
-                d = _json.load(fh)
+GRU_JSON = None   # optionally replaced by make_v31.py --embed with the model as a JSON string literal
+
+
+def _gru_from_dict(d):
             f32 = fnp.float32
             g = {k: fnp.asarray(d[k], dtype=f32) for k in ("bih", "bhh", "b1", "b2", "mu_f", "sd_f")}
             g["H"] = int(d["H"]); g["sig_mu"] = float(d["sig_mu"]); g["feats"] = list(d["feats"])
@@ -366,6 +360,29 @@ def _load_gru(ctx):
             for k in ("Wih", "Whh", "W1", "W2"):
                 g[k + "T"] = fnp.asarray([list(col) for col in zip(*d[k])], dtype=f32)
             return g
+
+
+def _load_gru(ctx):
+    """Model parameters: the embedded GRU_JSON literal, else gru_model.json beside this file or in
+    ctx.submission_dir. Any failure -> None (the estimator then runs as V29)."""
+    try:
+        if GRU_JSON is not None:
+            return _gru_from_dict(_json.loads(GRU_JSON))
+        cands = []
+        sd = getattr(ctx, "submission_dir", None)
+        if sd:
+            cands.append(_os.path.join(str(sd), "gru_model.json"))
+        try:
+            cands.append(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "gru_model.json"))
+        except NameError:
+            pass
+        cands.append("gru_model.json")
+        for p in cands:
+            if _os.path.exists(p):
+                with open(p) as fh:
+                    return _gru_from_dict(_json.load(fh))
+    except Exception:
+        return None
     return None
 
 # pruned V16b table + the 4 (3,1)-slice use-side terms
@@ -1279,7 +1296,7 @@ class Estimator(BaseEstimator):
             if last:
                 FEAT[-1].update(pred=_f(pk1v))
             if last:
-                if self._gru is not None:
+                if self._gru is not None and GRU_STEP:
                     self._gru_step(li, FEAT[-1], W, gst, n)
                     pk1v = pk1v + gst["u"] * float(self._gru["sig_mu"])
                 rows.append(pk1v if delta is None else pk1v + delta)
@@ -1536,7 +1553,7 @@ class Estimator(BaseEstimator):
             if riders:
                 K4_vec = (K4v * float(st["k4_c4"])
                           + (K22 @ ones_n) * float(st["k4_c22"])) * float(n * st["P2"])
-            if self._gru is not None:
+            if self._gru is not None and GRU_STEP:
                 self._gru_step(li, FEAT[-1], W, gst, n)
             rows.append(mu)
 
