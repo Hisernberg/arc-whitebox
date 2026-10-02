@@ -3,7 +3,7 @@
 import json, sys, numpy as np
 src, dst = sys.argv[1], sys.argv[2]
 d = np.load(src, allow_pickle=False)
-out = {"H": int(d["H"]), "sig_mu": float(d["sig_mu"]), "feats": [str(x) for x in d["feats"]],
+out = {"H": int(d["H"]), "sig_mu": float(d["sig_mu"]), "feats": [str(x) for x in d["feats"]], "act": (str(d["act"]) if "act" in d.files else "tanh"),
        "mu_f": d["mu_f"].astype(np.float32).tolist(), "sd_f": d["sd_f"].astype(np.float32).tolist(),
        "Wih": d["cell.weight_ih"].tolist(), "Whh": d["cell.weight_hh"].tolist(),
        "bih": d["cell.bias_ih"].tolist(), "bhh": d["cell.bias_hh"].tolist(),

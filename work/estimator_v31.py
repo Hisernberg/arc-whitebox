@@ -354,11 +354,16 @@ GRU_JSON = None   # optionally replaced by make_v31.py --embed with the model as
 def _gru_from_dict(d):
             f32 = fnp.float32
             g = {k: fnp.asarray(d[k], dtype=f32) for k in ("bih", "bhh", "b1", "b2", "mu_f", "sd_f")}
-            g["H"] = int(d["H"]); g["sig_mu"] = float(d["sig_mu"]); g["feats"] = list(d["feats"])
+            g["H"] = int(d["H"]); g["sig_mu"] = float(d["sig_mu"]); g["feats"] = list(d["feats"]); g["act"] = str(d.get("act", "tanh"))
             assert g["feats"] == GRU_FEATS, "feature list mismatch"
             # transposed (in, out) layouts built host-side in pure Python, uploaded once
-            for k in ("Wih", "Whh", "W1", "W2"):
+            for k in ("Wih", "Whh", "W1"):
                 g[k + "T"] = fnp.asarray([list(col) for col in zip(*d[k])], dtype=f32)
+            # readout rows as separate contiguous vectors (u and q come out of two matvecs)
+            g["w2u"] = fnp.asarray(list(d["W2"][0]), dtype=f32)
+            g["w2q"] = fnp.asarray(list(d["W2"][1]), dtype=f32)
+            g["b2u"] = float(d["b2"][0])
+            g["b2q"] = float(d["b2"][1])
             return g
 
 
@@ -1622,15 +1627,24 @@ class Estimator(BaseEstimator):
         h_prev = gst["h"] if gst["h"] is not None else fnp.zeros((n, H), dtype=f32)
         gi = inp @ g["WihT"] + g["bih"][None, :]
         gh = h_prev @ g["WhhT"] + g["bhh"][None, :]
-        r = 0.5 + 0.5 * fnp.tanh(0.5 * (gi[:, :H] + gh[:, :H]))                   # sigmoid via tanh
-        z = 0.5 + 0.5 * fnp.tanh(0.5 * (gi[:, H:2 * H] + gh[:, H:2 * H]))
-        nn_ = fnp.tanh(gi[:, 2 * H:] + r * gh[:, 2 * H:])
-        h = (1.0 - z) * nn_ + z * h_prev
-        a = h @ g["W1T"] + g["b1"][None, :]
-        a = 0.5 * a * (1.0 + fnp.tanh(0.7978845608028654 * (a + 0.044715 * a * a * a)))   # tanh-GELU
-        y = a @ g["W2T"] + g["b2"][None, :]
-        gst["u"] = y[:, 0]
-        gst["q"] = y[:, 1]
+        if g["act"] == "cdf":
+            # normal-CDF gates and 2*CDF-1 candidate (the only nonlinearity V29 already runs on the grader)
+            cdf = flops.stats.norm.cdf
+            r = cdf(gi[:, :H] + gh[:, :H]).astype(f32)
+            z = cdf(gi[:, H:2 * H] + gh[:, H:2 * H]).astype(f32)
+            nn_ = 2.0 * cdf(gi[:, 2 * H:] + r * gh[:, 2 * H:]).astype(f32) - 1.0
+            h = (1.0 - z) * nn_ + z * h_prev
+            a = h @ g["W1T"] + g["b1"][None, :]
+            a = a * cdf(a).astype(f32)                                             # exact GELU
+        else:
+            r = 0.5 + 0.5 * fnp.tanh(0.5 * (gi[:, :H] + gh[:, :H]))               # sigmoid via tanh
+            z = 0.5 + 0.5 * fnp.tanh(0.5 * (gi[:, H:2 * H] + gh[:, H:2 * H]))
+            nn_ = fnp.tanh(gi[:, 2 * H:] + r * gh[:, 2 * H:])
+            h = (1.0 - z) * nn_ + z * h_prev
+            a = h @ g["W1T"] + g["b1"][None, :]
+            a = 0.5 * a * (1.0 + fnp.tanh(0.7978845608028654 * (a + 0.044715 * a * a * a)))   # tanh-GELU
+        gst["u"] = a @ g["w2u"] + g["b2u"]     # (n,) contiguous
+        gst["q"] = a @ g["w2q"] + g["b2q"]
         gst["h"] = h
 
     def _dslices(self, A_st, P_st, Z_st, L_st, w2b_list, s_list, e_list,

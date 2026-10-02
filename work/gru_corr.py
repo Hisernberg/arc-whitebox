@@ -78,11 +78,31 @@ print(f"F={F} sig_mu={sig_mu:.3e}", flush=True)
 del Xall
 layer_w = torch.tensor([0.25] * 4 + [1.0] * 4 + [2.0] * 7 + [4.0], dtype=torch.float32)
 
+ACT = arg("--act", "tanh", str)   # tanh: standard GRU (sigmoid/tanh, tanh-GELU); cdf: normal-CDF gates, 2*CDF-1 candidate, exact GELU
+
+def _cdf(x):
+    return 0.5 * (1.0 + torch.erf(x / 1.4142135623730951))
+
+class CdfGRUCell(nn.Module):
+    """GRU cell whose squashing functions are the normal CDF (gates) and 2*CDF-1 (candidate)."""
+    def __init__(self, fin, h):
+        super().__init__()
+        self.weight_ih = nn.Parameter(torch.randn(3 * h, fin) / fin ** 0.5)
+        self.weight_hh = nn.Parameter(torch.randn(3 * h, h) / h ** 0.5)
+        self.bias_ih = nn.Parameter(torch.zeros(3 * h)); self.bias_hh = nn.Parameter(torch.zeros(3 * h))
+        self.h = h
+    def forward(self, x, hp):
+        gi = x @ self.weight_ih.T + self.bias_ih; gh = hp @ self.weight_hh.T + self.bias_hh
+        H_ = self.h
+        r = _cdf(gi[:, :H_] + gh[:, :H_]); z = _cdf(gi[:, H_:2 * H_] + gh[:, H_:2 * H_])
+        n_ = 2.0 * _cdf(gi[:, 2 * H_:] + r * gh[:, 2 * H_:]) - 1.0
+        return (1.0 - z) * n_ + z * hp
+
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.cell = nn.GRUCell(F + 3, H)
-        self.ro = nn.Sequential(nn.Linear(H, 2 * H), nn.GELU(approximate="tanh"), nn.Linear(2 * H, 2))
+        self.cell = nn.GRUCell(F + 3, H) if ACT == "tanh" else CdfGRUCell(F + 3, H)
+        self.ro = nn.Sequential(nn.Linear(H, 2 * H), nn.GELU(approximate="tanh") if ACT == "tanh" else nn.GELU(), nn.Linear(2 * H, 2))
     def forward(self, X, W):
         # X (16, n, F) standardized; W (16, n, n) float32 tensor
         h = torch.zeros(n, H); u = torch.zeros(n); q = torch.zeros(n)
@@ -143,5 +163,5 @@ for ep in range(EPOCHS):
         print(f"ep {ep:3d} loss {tot / len(train):.4f}  final-layer MSE ratio train {tr[0]:.3f}  holdout {ho[0]:.3f} (median {ho[1]:.3f})  t={time.time() - t0:.0f}s", flush=True)
 # save weights + normalization for deployment
 sd = {k: v.detach().numpy() for k, v in model.state_dict().items()}
-np.savez(OUT, mu_f=mu_f, sd_f=sd_f, sig_mu=sig_mu, feats=np.array(FEATS), H=H, **sd)
+np.savez(OUT, mu_f=mu_f, sd_f=sd_f, sig_mu=sig_mu, feats=np.array(FEATS), H=H, act=ACT, **sd)
 print("saved", OUT, "params", sum(p.numel() for p in model.parameters()))
