@@ -1,0 +1,123 @@
+#!/usr/bin/env python3
+"""GRU corrector on V29's per-neuron layer trajectories (mliston-style).
+Per MLP: features per layer from work/feats/feat_i.npz, weights from W_i.npy (float16), targets
+e_m = truth_m - pred_m at every layer. Recurrent messages: p_mu = Phi_m * (u_{m-1} @ W_m),
+p_q = q_{m-1} @ (W_m*W_m).  Output 0 = normalized mean correction u_m, output 1 = aux q_m.
+Usage: gru_corr.py [--hidden 64] [--epochs 150] [--holdout 20] [--lr 1e-3] [--out model.npz] [--seed 0]"""
+import glob, sys, time, json
+import numpy as np, torch, torch.nn as nn
+
+FE = "/home/user/arc-whitebox/work/feats"
+args = sys.argv[1:]
+def arg(name, default, typ=float):
+    return typ(args[args.index(name) + 1]) if name in args else default
+H = arg("--hidden", 64, int); EPOCHS = arg("--epochs", 150, int); HOLD = arg("--holdout", 20, int)
+LR = arg("--lr", 1e-3); OUT = arg("--out", "/home/user/arc-whitebox/work/gru_model.npz", str); SEED = arg("--seed", 0, int)
+NMAX = arg("--nmax", 1000, int)
+torch.manual_seed(SEED); np.random.seed(SEED); torch.set_num_threads(2)
+
+FEATS = ["mu_pre", "var", "alpha", "phi", "Phi", "D3", "g4row", "K2v", "K3v", "K4v", "k22row", "k21row", "k21col",
+         "e_b", "w1", "w2", "s3c", "g_post", "coff_sq", "coff_sum", "d21_abs", "d21_sq", "d21T_abs", "d21_colsum",
+         "d21_rowsum", "pred"]
+n = 1024
+
+def load_mlp(i):
+    d = np.load(f"{FE}/feat_{i:04d}.npz")
+    X = np.zeros((16, n, len(FEATS) + 4), np.float32)
+    for m in range(16):
+        for q, k in enumerate(FEATS):
+            kk = f"L{m:02d}_{k}"
+            if kk in d.files:
+                X[m, :, q] = d[kk]
+        sig = np.sqrt(np.maximum(d[f"L{m:02d}_var"], 1e-12))
+        X[m, :, len(FEATS)] = sig * d[f"L{m:02d}_phi"]                         # chi
+        X[m, :, len(FEATS) + 1] = (d[f"L{m:02d}_D3"] / sig ** 3) if f"L{m:02d}_D3" in d.files else 0  # skew
+        X[m, :, len(FEATS) + 2] = (d[f"L{m:02d}_g4row"] / sig ** 4) if f"L{m:02d}_g4row" in d.files else 0  # kurt
+        X[m, :, len(FEATS) + 3] = float(d[f"L{m:02d}_lam"]) if f"L{m:02d}_lam" in d.files else 0.0
+    e = (d["truth"].astype(np.float64) - d["pred"].astype(np.float64)).astype(np.float32)   # (16, n)
+    W = np.load(f"{FE}/W_{i:04d}.npy", mmap_mode="r")
+    return X, e, W, str(d["name"]), float(d["mse"])
+
+ids = sorted(int(f.split("feat_")[1][:4]) for f in glob.glob(f"{FE}/feat_*.npz"))
+ids = [i for i in ids if __import__("os").path.exists(f"{FE}/W_{i:04d}.npy")][:NMAX]
+rng = np.random.default_rng(SEED); perm = rng.permutation(len(ids))
+hold = sorted(ids[k] for k in perm[:HOLD]); train = sorted(ids[k] for k in perm[HOLD:])
+print(f"{len(ids)} MLPs: train {len(train)} holdout {len(hold)}", flush=True)
+data = {i: load_mlp(i) for i in ids}
+F = data[ids[0]][0].shape[2]
+# per-layer feature standardization from the training set
+Xall = np.stack([data[i][0] for i in train])          # (N, 16, n, F)
+mu_f = Xall.mean(axis=(0, 2)); sd_f = Xall.std(axis=(0, 2)) + 1e-12   # (16, F)
+sd_f[np.abs(sd_f) < 1e-20] = 1.0
+sig_mu = float(np.sqrt(np.mean(np.stack([data[i][1][8:] for i in train]) ** 2)))   # target scale
+print(f"F={F} sig_mu={sig_mu:.3e}", flush=True)
+del Xall
+layer_w = torch.tensor([0.25] * 4 + [1.0] * 4 + [2.0] * 7 + [4.0], dtype=torch.float32)
+
+class Model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.cell = nn.GRUCell(F + 3, H)
+        self.ro = nn.Sequential(nn.Linear(H, 2 * H), nn.GELU(approximate="tanh"), nn.Linear(2 * H, 2))
+    def forward(self, X, W):
+        # X (16, n, F) standardized; W (16, n, n) float32 tensor
+        h = torch.zeros(n, H); u = torch.zeros(n); q = torch.zeros(n)
+        us = []
+        for m in range(16):
+            Phi = X[m, :, FEATS.index("Phi")] * sd_f_t[m, FEATS.index("Phi")] + mu_f_t[m, FEATS.index("Phi")]
+            pmu = Phi * (u @ W[m]) if m > 0 else torch.zeros(n)
+            pq = (q @ (W[m] * W[m])) if m > 0 else torch.zeros(n)
+            inp = torch.cat([X[m], pmu[:, None], pq[:, None], torch.full((n, 1), m / 15.0)], 1)
+            h = self.cell(inp, h)
+            out = self.ro(h)
+            u, q = out[:, 0], out[:, 1]
+            us.append(u)
+        return torch.stack(us)   # (16, n)
+
+mu_f_t = torch.tensor(mu_f); sd_f_t = torch.tensor(sd_f)
+def tens(i):
+    X, e, W, _, _ = data[i]
+    Xs = torch.tensor((X - mu_f[:, None, :]) / sd_f[:, None, :]); E = torch.tensor(e / sig_mu); Wt = torch.tensor(np.asarray(W, dtype=np.float32))
+    return Xs, E, Wt
+model = Model()
+EVAL = arg("--eval", "", str)
+if EVAL:
+    ck = np.load(EVAL, allow_pickle=False)
+    mu_f, sd_f, sig_mu = ck["mu_f"], ck["sd_f"], float(ck["sig_mu"])
+    mu_f_t = torch.tensor(mu_f); sd_f_t = torch.tensor(sd_f)
+    model.load_state_dict({k: torch.tensor(ck[k]) for k in model.state_dict().keys()})
+    model.eval()
+    ids_eval = [int(x) for x in arg("--ids", ",".join(str(i) for i in ids), str).split(",")]
+    with torch.no_grad():
+        for i in ids_eval:
+            Xs, E, Wt = tens(i); U = model(Xs, Wt)
+            base = float((E[15] ** 2).mean()) * sig_mu ** 2; corr = float(((E[15] - U[15]) ** 2).mean()) * sig_mu ** 2
+            print(f"[{i:03d}] {data[i][3]:20s} V29 {base:.4e} corrected {corr:.4e} ratio {corr / base:.3f} ({'holdout' if i in hold else 'train'})")
+    sys.exit(0)
+opt = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=1e-6)
+sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=EPOCHS * len(train))
+def evaluate(idx):
+    model.eval(); rows = []
+    with torch.no_grad():
+        for i in idx:
+            Xs, E, Wt = tens(i); U = model(Xs, Wt)
+            base = float((E[15] ** 2).mean()); corr = float(((E[15] - U[15]) ** 2).mean())
+            rows.append((base, corr))
+    model.train(); r = np.array(rows)
+    return r[:, 1].mean() / r[:, 0].mean(), np.median(r[:, 1] / r[:, 0]), r[:, 1].max() / r[:, 0].max()
+t0 = time.time()
+for ep in range(EPOCHS):
+    order = rng.permutation(train); tot = 0.0
+    for i in order:
+        Xs, E, Wt = tens(i)
+        U = model(Xs, Wt)
+        loss = (layer_w[:, None] * (U - E) ** 2).mean()
+        opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
+        tot += float(loss)
+    if ep % 10 == 0 or ep == EPOCHS - 1:
+        tr = evaluate(train[:10]); ho = evaluate(hold) if hold else (float('nan'),) * 3
+        print(f"ep {ep:3d} loss {tot / len(train):.4f}  final-layer MSE ratio train {tr[0]:.3f}  holdout {ho[0]:.3f} (median {ho[1]:.3f})  t={time.time() - t0:.0f}s", flush=True)
+# save weights + normalization for deployment
+sd = {k: v.detach().numpy() for k, v in model.state_dict().items()}
+np.savez(OUT, mu_f=mu_f, sd_f=sd_f, sig_mu=sig_mu, feats=np.array(FEATS), H=H, **sd)
+print("saved", OUT, "params", sum(p.numel() for p in model.parameters()))
