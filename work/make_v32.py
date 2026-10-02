@@ -12,7 +12,7 @@ def rep(old, new, count=1):
 
 rep('''STRASSEN_FIRST = int(_os.environ.get("V28_STRASSEN_FIRST", "4"))''',
 '''STRASSEN_FIRST = int(_os.environ.get("V28_STRASSEN_FIRST", "4"))
-LONE_LEV = int(_os.environ.get("V32_LONE_LEV", str(STRASSEN_LEVELS)))   # V32: level cap of the lone join products (0 = V29 op stream)''')
+LONE_LEV = int(_os.environ.get("V32_LONE_LEV", "5"))   # V32: level cap of the lone join products (0 = V29 op stream)''')
 
 # helper on the Estimator: one (m, kd) @ (kd, w) product, or a batched right operand (by, 1, kd, w), into out
 rep('''    def _gru_step(self, li, fd, W, gst, n):''',

@@ -32,7 +32,28 @@ def herm(a):
     return [np.ones_like(a), a, a * a - 1, a ** 3 - 3 * a, a ** 4 - 6 * a * a + 3]
 
 
-def features(d, l):
+def k4_memory(d, W):
+    """kappa4-memory candidates per layer m: diag kappa4 of the pre-activation at m transported
+    from the post kappa4 diagonal (K4v) of layers m-1, m-2, m-3 through W^{o4} (independent-neuron
+    law) and through W o W (the chain's matrix-core law), with w1^4 relu gain between steps."""
+    out = {m: {} for m in range(16)}
+    W4 = [None] + [np.ascontiguousarray((W[m] ** 4).T) for m in range(1, 16)]
+    W2 = [None] + [np.ascontiguousarray((W[m] ** 2).T) for m in range(1, 16)]
+    for m in range(16):
+        for a in (1, 2, 3):
+            if m - a < 0 or f"L{m - a:02d}_K4v" not in d.files:
+                out[m][f"k4w4_{a}"] = np.zeros(n); out[m][f"k4w2_{a}"] = np.zeros(n); continue
+            v4 = d[f"L{m - a:02d}_K4v"].astype(np.float64); v2 = v4.copy()
+            for step in range(m - a + 1, m + 1):
+                v4 = W4[step] @ v4; v2 = W2[step] @ v2
+                if step < m:
+                    w1 = d[f"L{step:02d}_Phi"].astype(np.float64)
+                    v4 = v4 * w1 ** 4; v2 = v2 * w1 ** 2
+            out[m][f"k4w4_{a}"] = v4; out[m][f"k4w2_{a}"] = v2
+    return out
+
+
+def features(d, l, k4m=None):
     """Per-neuron feature dict at layer l from a feature dump (missing keys -> zeros)."""
     def g(k):
         kk = f"L{l:02d}_{k}"
@@ -63,6 +84,11 @@ def features(d, l):
     F["pred"] = g("pred")
     F["mu"], F["Phi"], F["phi"] = mu, Phi, phi
     F["sig"] = sig
+    if k4m is not None:
+        for key, v in k4m[l].items():
+            F[key] = v
+            F[f"chi_{key}_He2"] = chi * (v / sig ** 4) * He[2]
+            F[f"chi_{key}_He0"] = chi * (v / sig ** 4)
     return F
 
 
@@ -111,7 +137,8 @@ def main():
                 s = T(m, s)
             contrib[l] = s[:, 0]
         # features and their transports
-        Fd = [features(d, l) for l in range(16)]
+        k4m = k4_memory(d, W)
+        Fd = [features(d, l, k4m) for l in range(16)]
         names = list(Fd[0].keys())
         Fn = len(names)
         G = np.zeros((16, n, Fn), dtype=np.float32)
@@ -120,7 +147,9 @@ def main():
             for m in range(l + 1, 16):
                 S = T(m, S)
             G[l] = S.astype(np.float32)
+        k4m_arr = np.stack([np.stack([k4m[m][key] for key in sorted(k4m[0].keys())], 1) for m in range(16)]).astype(np.float32)
         np.savez_compressed(out, G=G, e15=e[15].astype(np.float32), e=e.astype(np.float32), born=born.astype(np.float32),
+                            k4m=k4m_arr, k4m_names=np.array(sorted(k4m[0].keys())),
                             contrib=contrib.astype(np.float32), names=np.array(names), name=str(d["name"]),
                             val=np.array(val), mse=float(d["mse"]))
         cm = np.array([np.mean(contrib[l] ** 2) for l in range(16)])

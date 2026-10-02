@@ -481,7 +481,7 @@ CPRE_LEV = int(_os.environ.get("V29_CPRE_LEV", _os.environ.get("V26_STRASSEN", "
 STRASSEN_SB = int(_os.environ.get("V28_STRASSEN_SB", str(STRASSEN_LEVELS)))   # V28: shared-basis formings + contractions   # newborn transport levels (0: ~30 ms residual for 0.5% cost is a bad trade)
 STRASSEN_MIN = int(_os.environ.get("V26_STRASSEN_MIN", "32"))  # smallest leaf block side (V28: 32; f32 error grows ~1.4x per level, MSE unchanged to 4 digits at L5)
 STRASSEN_FIRST = int(_os.environ.get("V28_STRASSEN_FIRST", "4"))
-LONE_LEV = int(_os.environ.get("V32_LONE_LEV", str(STRASSEN_LEVELS)))   # V32: level cap of the lone join products (0 = V29 op stream)
+LONE_LEV = int(_os.environ.get("V32_LONE_LEV", "5"))   # V32: level cap of the lone join products (0 = V29 op stream)
 STRASSEN_FUSE_P = int(_os.environ.get("V28_STRASSEN_FUSE_P", "343"))  # V28: fused per-product leaf when the leaf batch has >= this many blocks (deep levels: 7x smaller pools, +4 ops per leaf)  # V28: level cap of the first predict() of a process (see _predict_core)
 WARM = _os.environ.get("V26_WARM", "1") == "1"
 
