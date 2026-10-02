@@ -138,7 +138,7 @@ model = Model()
 EVAL = arg("--eval", "", str)
 if EVAL:
     cks = [np.load(f, allow_pickle=False) for f in EVAL.split(",")]
-    ids_eval = [(int(x) if x.isdigit() else x) for x in arg("--ids", ",".join(str(i) for i in ids), str).split(",")]
+    ids_eval = [(int(x) if x.isdigit() else x) for x in arg("--ids", ",".join(str(i) for i in (hold if hold else ids)), str).split(",")]   # default: held-out MLPs only
     corrs = {i: None for i in ids_eval}
     for ck in cks:
         mu_f, sd_f, sig_mu = ck["mu_f"], ck["sd_f"], float(ck["sig_mu"])
