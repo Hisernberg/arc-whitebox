@@ -24,6 +24,7 @@ A personal archive of my submissions to the **ARC White-Box Estimation Challenge
   - `#333323` (2026-10-01 10:30 UTC): MSE = 5.418e-09
   - `#333330` (2026-10-01 11:11 UTC): MSE = 5.406e-09
   - `#333364` (2026-10-01 16:00 UTC): **MSE = 5.394e-09** ← best
+  - `#333467` (2026-10-02 06:39 UTC, `nabid_nur` account): MSE = 5.418e-09 (V29 verbatim baseline; leaderboard rank 82 of 248 on 2026-10-02)
 
 A ~1.85× improvement across four graded submissions in two days, all built on the
 public `504aldo, MIT` V29 baseline with kappa4 lambda-table scaling.

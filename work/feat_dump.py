@@ -28,6 +28,23 @@ class _Ctx:
     submission_dir = None
 
 
+def iter_rows_truth():
+    """Rows of the 'full' split from work/truth_all.npz with weights regenerated from the seed
+    (bit-identical to the parquet: default_rng(SeedSequence(seed).spawn(3)[0]))."""
+    from numpy.random import SeedSequence, default_rng
+    T = np.load("/home/user/arc-whitebox/work/truth_all.npz")
+    for i in range(len(T["names"])):
+        if T["split"][i] != "full":
+            continue
+        yield i, {"mlp_name": str(T["names"][i]), "mlp_seed": int(T["seeds"][i]), "all_layer_means": T["truth"][i], "_regen": True}
+
+
+def regen_weights(seed):
+    from numpy.random import SeedSequence, default_rng
+    rng = default_rng(SeedSequence(int(seed)).spawn(3)[0])
+    return np.stack([(rng.standard_normal((1024, 1024)) * np.sqrt(2.0 / 1024)).astype(np.float32) for _ in range(16)])
+
+
 def iter_rows():
     shards = sorted(glob.glob(os.path.expanduser(
         "~/.cache/huggingface/hub/datasets--aicrowd--arc-whestbench-public-2026/snapshots/*/data/mini-*.parquet")))
@@ -41,15 +58,17 @@ def iter_rows():
 
 est = EV.Estimator()
 est.setup(_Ctx())
-for i, row in iter_rows():
+MODE = os.environ.get("FEAT_SRC", "mini")   # mini: parquet rows; full: truth_all.npz + regenerated weights
+PREFIX = "feat" if MODE == "mini" else "featf"
+for i, row in (iter_rows() if MODE == "mini" else iter_rows_truth()):
     if i < start:
         continue
     if i >= stop:
         break
-    out = os.path.join(OUT, f"feat_{i:04d}.npz")
+    out = os.path.join(OUT, f"{PREFIX}_{i:04d}.npz")
     if os.path.exists(out):
         continue
-    w = np.asarray(row["weights"], dtype=np.float32).reshape(16, 1024, 1024)
+    w = regen_weights(row["mlp_seed"]) if row.get("_regen") else np.asarray(row["weights"], dtype=np.float32).reshape(16, 1024, 1024)
     gt = np.asarray(row["all_layer_means"], dtype=np.float32).reshape(16, 1024)
     ws = [fnp.asarray(x) for x in w]
     mlp = MLP(width=1024, depth=16, weights=ws, seed=int(row["mlp_seed"]) % (2 ** 31))
@@ -67,5 +86,5 @@ for i, row in iter_rows():
             if k == "layer":
                 continue
             feats[f"L{li:02d}_{k}"] = np.asarray(v, dtype=np.float32)
-    np.savez_compressed(out, pred=p, truth=gt, name=str(row["mlp_name"]), mse=mse, flops=C, **feats)
+    np.savez_compressed(out, pred=p, truth=gt, name=str(row["mlp_name"]), seed=int(row["mlp_seed"]), mse=mse, flops=C, **feats)
     print(f"[{i:03d}] {row['mlp_name']:22s} mse={mse:.4e} C/B={C / 2 ** 41:.4f} t={time.time() - t0:.0f}s", flush=True)
