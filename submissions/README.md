@@ -5,7 +5,7 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
-| (pending) | 333589 | ⏳ SUBMITTED | — | 2026-10-02 17:03 | multi_agent: V32 leaf 8 + first-call L5 + 3-member tanh-gated GRU ensemble (held-out ratio 0.935, worse than the CDF members' 0.925) |
+| `333589-acct2-tanh3/`          | 333589 | ✅ GRADED | 4.734e-09 | 2026-10-02 17:03 | multi_agent: V32 leaf 8 + first-call L5 + 3-member tanh-gated GRU ensemble (held-out 0.935). Raw 2.000e-08 (tanh members worse than CDF's 1.983e-08), the cost knobs compensate |
 | (pending) | 333596 | ⏳ SUBMITTED | — | 2026-10-02 18:02 | multi_agent: V32 leaf 8 + first-call L5 + 3-member CDF GRU ensemble trained on all 730 public MLPs (no holdout, 3 fixed epochs) |
 | `333578-sub14_S3-v32/`         | 333578 | ✅ GRADED  | **4.705e-09** | 2026-10-02 16:34 | **S3**: V32 with leaf 8 + first-call level 5 (both grader-verified) + the 3-member full-split GRU ensemble of S1 (held-out 0.925). Raw 1.983e-08, cost 0.2373 x B. Best so far |
 | `333572-sub18_A2S2_leaf8-v32/` | 333572 | ✅ GRADED | 4.779e-09 | 2026-10-02 15:56 | multi_agent: S2 (5 members) with leaf 8. Worse than the 3-member 333566 (4.734e-09): extra members only add cost |
