@@ -8,7 +8,7 @@ listing stable when statuses change.
 | (pending) | 333572 | ⏳ SUBMITTED | — | 2026-10-02 15:56 | multi_agent: S2 with leaf 8 |
 | (pending) | 333571 | ⏳ SUBMITTED | — | 2026-10-02 15:53 | **S2**: V32 (lone level 2, leaf 16) + 5-member GRU ensemble (3 x h64 + 2 x h96), 630 full-split MLPs, 100 mini held out at ratio 0.926 |
 | (pending) | 333567 | ⏳ SUBMITTED | — | 2026-10-02 15:25 | multi_agent: S1 with first-call Strassen level 5 |
-| (pending) | 333566 | ⏳ SUBMITTED | — | 2026-10-02 15:25 | multi_agent: S1 with leaf 8 |
+| `333566-sub16_A2S1_leaf8-v32/` | 333566 | ✅ GRADED | 4.734e-09 | 2026-10-02 15:25 | multi_agent: S1 with smallest leaf 8 (cost 0.2388 x B); same raw as S1 (1.983e-08). Best score on that account |
 | `333564-sub12_S1-v32/`         | 333564 | ✅ GRADED  | **4.804e-09** | 2026-10-02 15:22 | **S1**: V32 (lone level 2, leaf 16) + 3-member GRU ensemble (hidden 64) trained on 630 full-split MLPs, 100 mini held out at ratio 0.925. Raw 1.983e-08 (−7.0% vs V29). Best so far |
 | `333557-acct2-v32-leaf8-gru-ens3/` | 333557 | ✅ GRADED | 4.855e-09 | 2026-10-02 14:40 | **multi_agent account**: 333531's recipe with smallest Strassen leaf 8 (cost 0.2388 x B, −1.2%), same raw 2.033e-08; residual stayed under the cap |
 | `333531-v32-lone2-min16-gru-ens3/` | 333531 | ✅ GRADED | **4.913e-09** | 2026-10-02 11:48 | **V32**: V31 ensemble + Strassen pricing of the join's lone dense products (level cap 2, leaf 16). Same raw as 333530 (2.034e-08), cost 0.2416 x B (−5.5%). Best so far |
@@ -28,6 +28,7 @@ listing stable when statuses change.
 | `333363-failed-prohibited-file/` | 333363 | ❌ FAILED | — | 2026-10-01 15:56:44 | V29 baseline (504aldo, MIT) + kappa4 lambda table scale 0.95→1.00 (re-validated). Failure: "Prohibited file in submission" |
 | `333166-failed-eval-error/`    | 333166 | ❌ FAILED | — | 2026-09-30 16:29:17 | (no description provided). Failure: "Evaluation error" |
 
+Account note: the `nabid_nur` account appears on the public leaderboard under its team name **Hydrion-Labs** (rank 50 at 4.8e-09 on 2026-10-02 16:10 UTC); the `multi_agent` account (used from 14:40 UTC for the riskier cost variants, key supplied by the owner) is listed separately.
 Account note: submissions up to #333364 were graded under the `koushik_rudra` participant;
 #333467 onwards are graded under `nabid_nur` (the API key used from 2026-10-02). The grader is
 deterministic, so an identical estimator gives an identical adjusted score on either account.
