@@ -5,7 +5,19 @@ Usage: archive_submission.py <submission_id> <label> [--note "text"] [--estimato
 """
 import json, os, sys, urllib.request, shutil, datetime
 
-API_KEY = os.environ.get("AICROWD_API_KEY", "acb8a247bedc2e090a454bed42d62d61")
+def _load_key():
+    """AIcrowd API key: AICROWD_API_KEY env var, else the git-ignored file work/.aicrowd_key."""
+    k = os.environ.get("AICROWD_API_KEY", "").strip()
+    if not k:
+        kf = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".aicrowd_key")
+        if os.path.exists(kf):
+            k = open(kf).read().strip()
+    if not k:
+        sys.exit("AICROWD_API_KEY not set and work/.aicrowd_key missing")
+    return k
+
+
+API_KEY = _load_key()
 SLUG = "arc-white-box-estimation-challenge-2026"
 ROOT = "/home/user/arc-whitebox/submissions/phase-2"
 B = 2 ** 41
