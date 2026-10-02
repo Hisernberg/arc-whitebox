@@ -359,14 +359,12 @@ def _load_gru(ctx):
             with open(p) as fh:
                 d = _json.load(fh)
             f32 = fnp.float32
-            g = {k: fnp.asarray(d[k], dtype=f32) for k in ("Wih", "Whh", "bih", "bhh", "W1", "b1", "W2", "b2", "mu_f", "sd_f")}
+            g = {k: fnp.asarray(d[k], dtype=f32) for k in ("bih", "bhh", "b1", "b2", "mu_f", "sd_f")}
             g["H"] = int(d["H"]); g["sig_mu"] = float(d["sig_mu"]); g["feats"] = list(d["feats"])
             assert g["feats"] == GRU_FEATS, "feature list mismatch"
-            # transposed copies for x @ W^T
-            g["WihT"] = fnp.asarray(d["Wih"], dtype=f32).T.copy()
-            g["WhhT"] = fnp.asarray(d["Whh"], dtype=f32).T.copy()
-            g["W1T"] = fnp.asarray(d["W1"], dtype=f32).T.copy()
-            g["W2T"] = fnp.asarray(d["W2"], dtype=f32).T.copy()
+            # transposed (in, out) layouts built host-side in pure Python, uploaded once
+            for k in ("Wih", "Whh", "W1", "W2"):
+                g[k + "T"] = fnp.asarray([list(col) for col in zip(*d[k])], dtype=f32)
             return g
     return None
 
@@ -1579,34 +1577,36 @@ class Estimator(BaseEstimator):
         gst holds u (normalized mean correction), q (aux) and h (hidden) of the previous layer."""
         g = self._gru
         f32 = fnp.float32
-        zeros = fnp.zeros(n, dtype=f32)
+        def zeros():
+            return fnp.zeros(n, dtype=f32)   # a fresh array per use: never the same operand twice in one op
         var = fd["var"]
         sig = fnp.sqrt(fnp.maximum(var, 1e-12))
         cols = []
         for k in GRU_FEATS:
             v = fd.get(k)
-            cols.append(zeros if v is None else v)
+            cols.append(zeros() if v is None else v)
         cols.append(sig * fd["phi"])                                              # chi
-        cols.append(fd["D3"] / (sig * sig * sig) if fd.get("D3") is not None else zeros)   # skew
-        cols.append(fd["g4row"] / (var * var) if fd.get("g4row") is not None else zeros)  # kurt (g4row / sig^4)
+        cols.append(fd["D3"] / (sig * sig * sig) if fd.get("D3") is not None else zeros())   # skew
+        cols.append(fd["g4row"] / (var * var) if fd.get("g4row") is not None else zeros())  # kurt (g4row / sig^4)
         lam = fd.get("lam")
-        cols.append(zeros + float(lam) if lam is not None else zeros)
-        X = fnp.stack(cols, axis=1)                                               # (n, F)
-        X = (X - g["mu_f"][li][None, :]) / g["sd_f"][li][None, :]
+        cols.append(zeros() + float(lam) if lam is not None else zeros())
         if gst["u"] is None:
-            pmu = zeros
-            pq = zeros
+            cols.append(zeros())
+            cols.append(zeros())
         else:
-            pmu = fd["Phi"] * (W @ gst["u"])
-            pq = (W * W) @ gst["q"]
-        lay = zeros + float(li / 15.0)
-        inp = fnp.concatenate([X, pmu[:, None], pq[:, None], lay[:, None]], axis=1)   # (n, F+3)
+            cols.append(fd["Phi"] * (W @ gst["u"]))      # transported previous correction
+            cols.append((W * W) @ gst["q"])              # transported auxiliary state
+        cols.append(zeros() + float(li / 15.0))
+        inp = fnp.stack(cols, axis=1)                                             # (n, F+3)
+        nf = g["mu_f"].shape[1]
+        X = (inp[:, :nf] - g["mu_f"][li][None, :]) / g["sd_f"][li][None, :]
+        inp = fnp.concatenate([X, inp[:, nf:]], axis=1)
         H = g["H"]
         h_prev = gst["h"] if gst["h"] is not None else fnp.zeros((n, H), dtype=f32)
         gi = inp @ g["WihT"] + g["bih"][None, :]
         gh = h_prev @ g["WhhT"] + g["bhh"][None, :]
-        r = 1.0 / (1.0 + fnp.exp(-(gi[:, :H] + gh[:, :H])))
-        z = 1.0 / (1.0 + fnp.exp(-(gi[:, H:2 * H] + gh[:, H:2 * H])))
+        r = 0.5 + 0.5 * fnp.tanh(0.5 * (gi[:, :H] + gh[:, :H]))                   # sigmoid via tanh
+        z = 0.5 + 0.5 * fnp.tanh(0.5 * (gi[:, H:2 * H] + gh[:, H:2 * H]))
         nn_ = fnp.tanh(gi[:, 2 * H:] + r * gh[:, 2 * H:])
         h = (1.0 - z) * nn_ + z * h_prev
         a = h @ g["W1T"] + g["b1"][None, :]
