@@ -8,8 +8,14 @@ ratio=$(grep "ensemble holdout" work/runs/night_chain.log | tail -n 1 | sed -n '
 for v in A B; do
   d=work/sub11_$v; [ -f $d/estimator.py ] || continue
   desc=$(cat $d/DESCRIPTION 2>/dev/null || echo "V32 final $v: V29 (504aldo MIT) + Strassen-priced lone join products (level 2, leaf 16) + 3-member GRU corrector ensemble trained on the full public split (mini held out, ratio $ratio); model embedded")
-  cd $SK && out=$(uv run whest submit --estimator /home/user/arc-whitebox/$d/estimator.py --yes --format plain --description "$desc" 2>&1 | grep "submission id"); cd /home/user/arc-whitebox
-  echo "$(date -u +%H:%M) $v: $out"; sid=$(echo "$out" | grep -o "[0-9]\{6\}")
+  sid=""
+  for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+    cd $SK && full=$(uv run whest submit --estimator /home/user/arc-whitebox/$d/estimator.py --yes --format plain --description "$desc" 2>&1); cd /home/user/arc-whitebox
+    out=$(echo "$full" | grep "submission id"); sid=$(echo "$out" | grep -o "[0-9]\{6\}")
+    echo "$(date -u +%H:%M) $v attempt $attempt: ${out:-$(echo "$full" | grep -i -m1 'error\|limit\|quota\|fail')}"
+    [ -n "$sid" ] && break
+    sleep 600
+  done
   [ -n "$sid" ] && nohup work/watch_sub.sh $sid final-$v-v32-gru-full "$d/estimator.py" "$desc" > work/runs/watch_$sid.log 2>&1 &
   sleep 90
 done
