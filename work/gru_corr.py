@@ -21,8 +21,20 @@ FEATS = ["mu_pre", "var", "alpha", "phi", "Phi", "D3", "g4row", "K2v", "K3v", "K
          "d21_rowsum", "pred"]
 n = 1024
 
+def regen_weights(seed):
+    from numpy.random import SeedSequence, default_rng
+    rng = default_rng(SeedSequence(int(seed)).spawn(3)[0])
+    return np.stack([(rng.standard_normal((1024, 1024)) * np.sqrt(2.0 / 1024)).astype(np.float16) for _ in range(16)])
+
+_T = np.load("/home/user/arc-whitebox/work/truth_all.npz") if __import__("os").path.exists("/home/user/arc-whitebox/work/truth_all.npz") else None
+SEED_OF = {str(n): int(s) for n, s in zip(_T["names"], _T["seeds"])} if _T is not None else {}
+MINI_NAMES = set(str(n) for n, sp in zip(_T["names"], _T["split"]) if sp == "mini") if _T is not None else set()
+
+def feat_path(i):
+    return f"{FE}/feat_{i:04d}.npz" if isinstance(i, int) else f"{FE}/{i}.npz"
+
 def load_mlp(i):
-    d = np.load(f"{FE}/feat_{i:04d}.npz")
+    d = np.load(feat_path(i))
     X = np.zeros((16, n, len(FEATS) + 4), np.float32)
     for m in range(16):
         for q, k in enumerate(FEATS):
@@ -35,13 +47,25 @@ def load_mlp(i):
         X[m, :, len(FEATS) + 2] = (d[f"L{m:02d}_g4row"] / sig ** 4) if f"L{m:02d}_g4row" in d.files else 0  # kurt
         X[m, :, len(FEATS) + 3] = float(d[f"L{m:02d}_lam"]) if f"L{m:02d}_lam" in d.files else 0.0
     e = (d["truth"].astype(np.float64) - d["pred"].astype(np.float64)).astype(np.float32)   # (16, n)
-    W = np.load(f"{FE}/W_{i:04d}.npy", mmap_mode="r")
+    wf = f"{FE}/W_{i:04d}.npy" if isinstance(i, int) else ""
+    if wf and __import__("os").path.exists(wf):
+        W = np.load(wf, mmap_mode="r")
+    else:
+        seed = int(d["seed"]) if "seed" in d.files else SEED_OF[str(d["name"])]
+        W = regen_weights(seed)
     return X, e, W, str(d["name"]), float(d["mse"])
 
 ids = sorted(int(f.split("feat_")[1][:4]) for f in glob.glob(f"{FE}/feat_*.npz"))
-ids = [i for i in ids if __import__("os").path.exists(f"{FE}/W_{i:04d}.npy")][:NMAX]
+FULL = "--full" in args          # also use the full-split dumps (featf_*.npz), named by file stem
+if FULL:
+    ids = ids + sorted(f.split("/")[-1][:-4] for f in glob.glob(f"{FE}/featf_*.npz"))
+ids = ids[:NMAX]
+HOLD_MINI = "--hold-mini" in args   # holdout = the mini-split MLPs (never trained on): clean LB-like estimate
 rng = np.random.default_rng(SEED); perm = rng.permutation(len(ids))
-hold = sorted(ids[k] for k in perm[:HOLD]); train = sorted(ids[k] for k in perm[HOLD:])
+if HOLD_MINI:
+    hold = [i for i in ids if isinstance(i, int)]; train = [i for i in ids if not isinstance(i, int)]
+else:
+    hold = sorted((ids[k] for k in perm[:HOLD]), key=str); train = sorted((ids[k] for k in perm[HOLD:]), key=str)
 print(f"{len(ids)} MLPs: train {len(train)} holdout {len(hold)}", flush=True)
 data = {i: load_mlp(i) for i in ids}
 F = data[ids[0]][0].shape[2]
@@ -87,7 +111,7 @@ if EVAL:
     mu_f_t = torch.tensor(mu_f); sd_f_t = torch.tensor(sd_f)
     model.load_state_dict({k: torch.tensor(ck[k]) for k in model.state_dict().keys()})
     model.eval()
-    ids_eval = [int(x) for x in arg("--ids", ",".join(str(i) for i in ids), str).split(",")]
+    ids_eval = [(int(x) if x.isdigit() else x) for x in arg("--ids", ",".join(str(i) for i in ids), str).split(",")]
     with torch.no_grad():
         for i in ids_eval:
             Xs, E, Wt = tens(i); U = model(Xs, Wt)
