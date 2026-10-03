@@ -85,7 +85,8 @@ sd_f[np.abs(sd_f) < 1e-20] = 1.0
 sig_mu = float(np.sqrt(np.mean(np.stack([data[i][1][8:] for i in train]) ** 2)))   # target scale
 print(f"F={F} sig_mu={sig_mu:.3e}", flush=True)
 del Xall
-layer_w = torch.tensor([0.25] * 4 + [1.0] * 4 + [2.0] * 7 + [4.0], dtype=torch.float32)
+FINAL_W = arg("--final-w", 4.0)   # loss weight of the scored (final) layer
+layer_w = torch.tensor([0.25] * 4 + [1.0] * 4 + [2.0] * 7 + [FINAL_W], dtype=torch.float32)
 
 ACT = arg("--act", "tanh", str)   # tanh: standard GRU (sigmoid/tanh, tanh-GELU); cdf: normal-CDF gates, 2*CDF-1 candidate, exact GELU
 
