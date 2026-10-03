@@ -5,7 +5,7 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
-| (pending) | 333790 | ⏳ SUBMITTED | — | 2026-10-03 15:52 | nabid_nur: V32 leaf 8 + first-call L5 + 3-member 8-epoch CDF GRU ensemble (the 333605 recipe) |
+| `333790-day3-N1-long3/`        | 333790 | ✅ GRADED  | **4.689e-09** | 2026-10-03 15:52 | nabid_nur: V32 leaf 8 + first-call L5 + 3-member 8-epoch CDF GRU ensemble (the 333605 recipe; grader is deterministic, same score). Best so far on this account |
 | (pending) | 333791 | ⏳ SUBMITTED | — | 2026-10-03 15:52 | nabid_nur: V32 leaf 8 + first-call L5 + 2-member 8-epoch CDF GRU ensemble |
 | (pending) | 333792 | ⏳ SUBMITTED | — | 2026-10-03 15:53 | multi_agent: V32 leaf 8 + first-call L5 + 2-member 8-epoch CDF GRU ensemble |
 | (pending) | 333793 | ⏳ SUBMITTED | — | 2026-10-03 15:53 | multi_agent: V32 leaf 8 + first-call L5 + single 8-epoch CDF GRU member |
