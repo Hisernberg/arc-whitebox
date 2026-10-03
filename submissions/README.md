@@ -6,7 +6,7 @@ listing stable when statuses change.
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
 | `333790-day3-N1-long3/`        | 333790 | ✅ GRADED  | **4.689e-09** | 2026-10-03 15:52 | nabid_nur: V32 leaf 8 + first-call L5 + 3-member 8-epoch CDF GRU ensemble (the 333605 recipe; grader is deterministic, same score). Best so far on this account |
-| (pending) | 333791 | ⏳ SUBMITTED | — | 2026-10-03 15:52 | nabid_nur: V32 leaf 8 + first-call L5 + 2-member 8-epoch CDF GRU ensemble |
+| `333791-day3-N2-long2/`        | 333791 | ✅ GRADED  | **4.676e-09** | 2026-10-03 15:52 | nabid_nur: V32 leaf 8 + first-call L5 + 2-member 8-epoch CDF GRU ensemble. Same raw as 3 members (1.976e-08), one member less cost. Best so far |
 | (pending) | 333792 | ⏳ SUBMITTED | — | 2026-10-03 15:53 | multi_agent: V32 leaf 8 + first-call L5 + 2-member 8-epoch CDF GRU ensemble |
 | (pending) | 333793 | ⏳ SUBMITTED | — | 2026-10-03 15:53 | multi_agent: V32 leaf 8 + first-call L5 + single 8-epoch CDF GRU member |
 | `333605-acct2-long3/` | 333605 | ✅ GRADED | 4.689e-09 | 2026-10-02 19:22 | multi_agent: V32 leaf 8 + first-call L5 + 3-member CDF GRU ensemble trained for 8 epochs (held-out 0.921). Raw 1.976e-08 |
