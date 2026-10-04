@@ -5,8 +5,8 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
-| (pending) | 334011 | ⏳ SUBMITTED | — | 2026-10-04 | nabid_nur: 2-member 12-epoch GRU ensemble (held-out 0.9187); all V32 lone L2, leaf 8, first-call L5 |
-| (pending) | 334012 | ⏳ SUBMITTED | — | 2026-10-04 | nabid_nur: 2-member 12-epoch GRU ensemble + lambda scale 1.00; all V32 lone L2, leaf 8, first-call L5 |
+| `334011-d4-N1-e12x2/`          | 334011 | ✅ GRADED  | **4.667e-09** | 2026-10-04 16:53 | nabid_nur: 2-member 12-epoch GRU ensemble (held-out 0.9187), V32 lone L2, leaf 8, first-call L5. Raw 1.972e-08. Best so far |
+| `334012-d4-N2-e12x2-lam1/`     | 334012 | ✅ GRADED  | 4.687e-09    | 2026-10-04 16:53 | nabid_nur: as 334011 + lambda scale 1.00. Raw 1.981e-08 (+0.4%): the corrector is tuned to the default chain, so chain knobs hurt |
 | (pending) | 334013 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: single 12-epoch GRU member (held-out 0.9223); all V32 lone L2, leaf 8, first-call L5 |
 | (pending) | 334014 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: 2-member 12-epoch GRU ensemble + lambda scale 1.00 + nested rank 192; all V32 lone L2, leaf 8, first-call L5 |
 | (pending) | 334020 | ⏳ SUBMITTED | — | 2026-10-04 | nabid_nur: 3-member 12-epoch GRU ensemble (held-out 0.9180 vs 0.9213 for 333790's); all V32 lone L2, leaf 8, first-call L5 |
