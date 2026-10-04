@@ -6,5 +6,5 @@ cd /home/user/arc-whitebox
 SK=/tmp/claude-0/-home-user-arc-whitebox/828b687d-6a50-5b7c-872b-6b10df70baf6/scratchpad/whest-starterkit
 cd $SK && out=$(uv run whest submit --estimator /home/user/arc-whitebox/$est --yes --format plain --description "$desc" 2>&1 | grep "submission id"); cd /home/user/arc-whitebox
 sid=$(echo "$out" | grep -o "[0-9]\{6\}")
-echo "$(date -u +%H:%M) acct$acct $label: ${out:-FAILED}" | tee -a work/runs/submissions_day3.log
+echo "$(date -u +%H:%M) acct$acct $label: ${out:-FAILED}" | tee -a ${SUBLOG:-work/runs/submissions_day3.log}
 [ -n "$sid" ] && setsid nohup work/watch_sub.sh $sid $label "$est" "$desc" > work/runs/watch_$sid.log 2>&1 &
