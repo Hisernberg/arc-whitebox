@@ -5,7 +5,7 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
-| (pending) | 334031 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: single final-weight-8 member s21 epoch-8 checkpoint (held-out 0.9218) |
+| `334031-d4-M4-single21/` | 334031 | ✅ GRADED | 4.668e-09 | 2026-10-04 19:03 | multi_agent: single final-weight-8 member s21, epoch-8 checkpoint (held-out 0.9218). Raw 1.979e-08 |
 | `334032-d4-M5-pair17-21-leaf16/` | 334032 | ✅ GRADED | 4.744e-09 | 2026-10-04 19:04 | multi_agent: SAFE variant, the 334030 pair at leaf 16. Same raw (1.974e-08), cost +1.6%, but more wall-time margin under load (see README for the numbers) |
 | (pending) | 334034 | ⏳ SUBMITTED | — | 2026-10-04 | nabid_nur: pair 12-epoch s18 + fully trained final-weight-8 s21 (held-out 0.9180) |
 | (pending) | 334035 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: single fully trained final-weight-8 member s21 (held-out 0.9212) |
