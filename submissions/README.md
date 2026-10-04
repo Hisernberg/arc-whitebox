@@ -5,6 +5,12 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| (pending) | 334011 | ⏳ SUBMITTED | — | 2026-10-04 | nabid_nur: 2-member 12-epoch GRU ensemble (held-out 0.9187); all V32 lone L2, leaf 8, first-call L5 |
+| (pending) | 334012 | ⏳ SUBMITTED | — | 2026-10-04 | nabid_nur: 2-member 12-epoch GRU ensemble + lambda scale 1.00; all V32 lone L2, leaf 8, first-call L5 |
+| (pending) | 334013 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: single 12-epoch GRU member (held-out 0.9223); all V32 lone L2, leaf 8, first-call L5 |
+| (pending) | 334014 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: 2-member 12-epoch GRU ensemble + lambda scale 1.00 + nested rank 192; all V32 lone L2, leaf 8, first-call L5 |
+| (pending) | 334020 | ⏳ SUBMITTED | — | 2026-10-04 | nabid_nur: 3-member 12-epoch GRU ensemble (held-out 0.9180 vs 0.9213 for 333790's); all V32 lone L2, leaf 8, first-call L5 |
+| (pending) | 334021 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: 2-member 12-epoch GRU ensemble + nested rank 192 (isolates the rank trim); all V32 lone L2, leaf 8, first-call L5 |
 | `333790-day3-N1-long3/`        | 333790 | ✅ GRADED  | **4.689e-09** | 2026-10-03 15:52 | nabid_nur: V32 leaf 8 + first-call L5 + 3-member 8-epoch CDF GRU ensemble (the 333605 recipe; grader is deterministic, same score). Best so far on this account |
 | `333791-day3-N2-long2/`        | 333791 | ✅ GRADED  | **4.676e-09** | 2026-10-03 15:52 | nabid_nur: V32 leaf 8 + first-call L5 + 2-member 8-epoch CDF GRU ensemble. Same raw as 3 members (1.976e-08), one member less cost. Best so far |
 | `333792-day3-M1-long2/`        | 333792 | ✅ GRADED | 4.676e-09 | 2026-10-03 15:53 | multi_agent: identical file to 333791 (2-member 8-epoch ensemble); identical score, confirming the grader is deterministic across accounts |
