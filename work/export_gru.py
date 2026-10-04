@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """Convert a trained gru_model.npz (from gru_corr.py) into gru_model.json for the estimator."""
 import json, sys, numpy as np
-srcs, dst = sys.argv[1:-1], sys.argv[-1]
+argv = sys.argv[1:]
+alpha = 1.0
+if "--alpha" in argv:
+    i = argv.index("--alpha"); alpha = float(argv[i + 1]); del argv[i:i + 2]   # scales every member's correction
+srcs, dst = argv[:-1], argv[-1]
 outs = []
 for src in srcs:
   d = np.load(src, allow_pickle=False)
-  out = {"H": int(d["H"]), "sig_mu": float(d["sig_mu"]), "feats": [str(x) for x in d["feats"]], "act": (str(d["act"]) if "act" in d.files else "tanh"),
+  out = {"H": int(d["H"]), "sig_mu": float(d["sig_mu"]) * alpha, "feats": [str(x) for x in d["feats"]], "act": (str(d["act"]) if "act" in d.files else "tanh"),
        "mu_f": d["mu_f"].astype(np.float32).tolist(), "sd_f": d["sd_f"].astype(np.float32).tolist(),
        "Wih": d["cell.weight_ih"].tolist(), "Whh": d["cell.weight_hh"].tolist(),
        "bih": d["cell.bias_ih"].tolist(), "bhh": d["cell.bias_hh"].tolist(),
