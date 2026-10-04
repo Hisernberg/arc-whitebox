@@ -7,8 +7,8 @@ listing stable when statuses change.
 |--------|---------------|--------|-----|---------------|-------------|
 | `334031-d4-M4-single21/` | 334031 | ✅ GRADED | 4.668e-09 | 2026-10-04 19:03 | multi_agent: single final-weight-8 member s21, epoch-8 checkpoint (held-out 0.9218). Raw 1.979e-08 |
 | `334032-d4-M5-pair17-21-leaf16/` | 334032 | ✅ GRADED | 4.744e-09 | 2026-10-04 19:04 | multi_agent: SAFE variant, the 334030 pair at leaf 16. Same raw (1.974e-08), cost +1.6%, but more wall-time margin under load (see README for the numbers) |
-| (pending) | 334034 | ⏳ SUBMITTED | — | 2026-10-04 | nabid_nur: pair 12-epoch s18 + fully trained final-weight-8 s21 (held-out 0.9180) |
-| (pending) | 334035 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: single fully trained final-weight-8 member s21 (held-out 0.9212) |
+| `334034-d4-N5-pair18-21f/` | 334034 | ✅ GRADED | 4.658e-09 | 2026-10-04 19:32 | nabid_nur: pair 12-epoch s18 + fully trained final-weight-8 s21 (held-out 0.9180). **Best nabid_nur score**. Raw 1.969e-08 |
+| `334035-d4-M6-single21f/` | 334035 | ✅ GRADED | 4.674e-09 | 2026-10-04 19:32 | multi_agent: single fully trained final-weight-8 member s21 (held-out 0.9212). Raw 1.981e-08 |
 | `334030-d4-N4-pair17-21/`      | 334030 | ✅ GRADED  | 4.670e-09    | 2026-10-04 19:03 | nabid_nur: pair 12-epoch s17 + final-weight-8 s21 (epoch-8 checkpoint), held-out 0.9180. Raw 1.974e-08: same as the other pairs within 0.1% on the public 50 |
 | `334011-d4-N1-e12x2/`          | 334011 | ✅ GRADED  | **4.667e-09** | 2026-10-04 16:53 | nabid_nur: 2-member 12-epoch GRU ensemble (held-out 0.9187), V32 lone L2, leaf 8, first-call L5. Raw 1.972e-08. Best so far |
 | `334012-d4-N2-e12x2-lam1/`     | 334012 | ✅ GRADED  | 4.687e-09    | 2026-10-04 16:53 | nabid_nur: as 334011 + lambda scale 1.00. Raw 1.981e-08 (+0.4%): the corrector is tuned to the default chain, so chain knobs hurt |

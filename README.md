@@ -18,7 +18,7 @@ A personal archive of my submissions to the **ARC White-Box Estimation Challenge
 - **Solo participant** (no team)
 - **Challenge**: ARC White-Box Estimation Challenge 2026 (`arc-white-box-estimation-challenge-2026`, challenge ID 1174)
 - **Submissions**: 6 in total — all in **Phase 2** (round id 1429), Aug 22 – Oct 17, 2026
-- **Best score**: **MSE = 4.6665e-09** on submission `#334011` (graded 2026-10-04 17:58 UTC, `nabid_nur` account, team Hydrion-Labs): V32 with Strassen leaf 8 and first-call level 5 + a 2-member GRU corrector ensemble on a 12-epoch schedule (raw 1.972e-08, −7.5% vs V29); previous bests 4.6755e-09 (`#333791`), 4.6890e-09 (`#333790`), 4.7050e-09 (`#333578`), 4.8035e-09 (`#333564`), 4.9130e-09 (`#333531`), 5.1987e-09 (`#333530`), 5.3113e-09 (`#333508`), 5.3936e-09 (`#333364`, koushik_rudra account)
+- **Best score**: **MSE = 4.6582e-09** on submission `#334034` (graded 2026-10-04 20:06 UTC, `nabid_nur` account, team Hydrion-Labs): V32 with Strassen leaf 8 and first-call level 5 + a 2-member GRU corrector ensemble (12-epoch member + final-layer-weighted member; raw 1.969e-08, −7.7% vs V29). The `multi_agent` account's best is 4.6544e-09 (`#334013`, single member). Previous bests 4.6665e-09 (`#334011`), 4.6755e-09 (`#333791`), 4.6890e-09 (`#333790`), 4.7050e-09 (`#333578`), 4.8035e-09 (`#333564`), 4.9130e-09 (`#333531`), 5.1987e-09 (`#333530`), 5.3113e-09 (`#333508`), 5.3936e-09 (`#333364`, koushik_rudra account)
 - **Iteration trajectory** (graded submissions only, oldest → newest):
   - `#333177` (2026-09-30 17:22 UTC): MSE = 9.950e-09
   - `#333323` (2026-10-01 10:30 UTC): MSE = 5.418e-09
