@@ -5,6 +5,11 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| (pending) | 334031 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: single final-weight-8 member s21 epoch-8 checkpoint (held-out 0.9218) |
+| (pending) | 334032 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: SAFE variant, best pair at leaf 16 (measures wall-time margin) |
+| (pending) | 334034 | ⏳ SUBMITTED | — | 2026-10-04 | nabid_nur: pair 12-epoch s18 + fully trained final-weight-8 s21 (held-out 0.9180) |
+| (pending) | 334035 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: single fully trained final-weight-8 member s21 (held-out 0.9212) |
+| `334030-d4-N4-pair17-21/`      | 334030 | ✅ GRADED  | 4.670e-09    | 2026-10-04 19:03 | nabid_nur: pair 12-epoch s17 + final-weight-8 s21 (epoch-8 checkpoint), held-out 0.9180. Raw 1.974e-08: same as the other pairs within 0.1% on the public 50 |
 | `334011-d4-N1-e12x2/`          | 334011 | ✅ GRADED  | **4.667e-09** | 2026-10-04 16:53 | nabid_nur: 2-member 12-epoch GRU ensemble (held-out 0.9187), V32 lone L2, leaf 8, first-call L5. Raw 1.972e-08. Best so far |
 | `334012-d4-N2-e12x2-lam1/`     | 334012 | ✅ GRADED  | 4.687e-09    | 2026-10-04 16:53 | nabid_nur: as 334011 + lambda scale 1.00. Raw 1.981e-08 (+0.4%): the corrector is tuned to the default chain, so chain knobs hurt |
 | `334013-d4-M1-e12x1/`          | 334013 | ✅ GRADED | **4.654e-09** | 2026-10-04 16:53 | multi_agent: single 12-epoch GRU member (held-out 0.9223), V32 lone L2, leaf 8, first-call L5. Raw 1.973e-08 (same as the pair on the public 50), cost 0.2359 x B. Best so far |
