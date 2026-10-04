@@ -5,7 +5,7 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
-| (pending) | 334037 | ⏳ SUBMITTED | — | 2026-10-04 19:43 | nabid_nur: pair s20 + s21 (final-weight-8) with the correction scaled by 0.93 |
+| `334037-d4-N6-pair20-21f-a0.93/` | 334037 | ✅ GRADED | 4.666e-09 | 2026-10-04 19:43 | nabid_nur: pair s20 + s21 (final-weight-8), correction scaled by 0.93. Raw 1.972e-08 |
 | (pending) | 334040 | ⏳ SUBMITTED | — | 2026-10-04 20:07 | nabid_nur: SAFE nomination candidate, the 334034 pair at leaf 16 |
 | `334036-d4-M7-single21f-a0.9/` | 334036 | ✅ GRADED | 4.665e-09 | 2026-10-04 19:42 | multi_agent: single final-weight-8 member s21 with its correction scaled by 0.9. Raw 1.978e-08 vs 1.981e-08 unscaled (334035): the held-out-fitted scale transfers to the public board |
 | `334031-d4-M4-single21/` | 334031 | ✅ GRADED | 4.668e-09 | 2026-10-04 19:03 | multi_agent: single final-weight-8 member s21, epoch-8 checkpoint (held-out 0.9218). Raw 1.979e-08 |

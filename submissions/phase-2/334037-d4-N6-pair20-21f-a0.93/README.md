@@ -1,0 +1,30 @@
+# Submission #334037 — d4-N6-pair20-21f-a0.93
+
+| Field | Value |
+|---|---|
+| Submission ID | 334037 |
+| URL | <https://www.aicrowd.com/challenges/arc-white-box-estimation-challenge-2026/submissions/334037> |
+| Status | GRADED |
+| Created (UTC) | 2026-10-04T19:43:02Z |
+| Adjusted score (leaderboard) | 4.66596037069796e-09 |
+| Raw final-layer MSE | 1.9721222201951603e-08 |
+| Participant | nabid_nur |
+| Grading message | <p>Graded successfully</p> |
+
+## What was submitted
+
+V32 (lone L2, leaf 8, first-call L5) + 2 final-weight-8 CDF GRU members (s20, s21) with the correction scaled by 0.93 (held-out 0.9182 -> 0.9178); model embedded
+
+## Grading summary (from the evaluation report)
+
+- Public aggregate: adjusted 4.666e-09, raw final-layer MSE 1.972e-08, all-layers MSE 8.599e-09, mean multiplier 0.23662795451336932, failed MLPs 0
+- FLOPs per MLP: mean 5.1985e+11 (0.2364 x B), min 0.2362 x B, max 0.2407 x B
+- Grader timing per MLP: kernel 85.0 s mean, predict wall 96.3 s mean / 109.4 s max, residual 0.325 s mean / 0.356 s max (cap 0.4 s)
+- Smoke test: passed=True duration 47024.4483030001 ms, worker passes 5 / failures 0
+- MLPs completed: 100 / 100
+
+## Files
+
+- `submission-metadata.json` — Rails + GraphQL record (id, status, scores, participant, round).
+- `submission-report.json` — full evaluation report (per-MLP telemetry, public per-MLP scores, smoke test, runtime environment).
+- `estimator.py` — the exact single-file estimator that was packaged and submitted.
