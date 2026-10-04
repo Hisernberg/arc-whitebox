@@ -5,8 +5,14 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| (pending) | 334069 | ⏳ SUBMITTED | — | 2026-10-04 22:25 | nabid_nur: pair of weight-averaged final-weight-8 members soup21 + soup20 (held-out 0.9179); V32 lone L2, leaf 8, first-call L5 |
+| (pending) | 334070 | ⏳ SUBMITTED | — | 2026-10-04 22:25 | nabid_nur: pair 12-epoch s17 + final-weight-8 s21; V32 lone L2, leaf 8, first-call L5 |
+| (pending) | 334071 | ⏳ SUBMITTED | — | 2026-10-04 22:25 | nabid_nur: pair soup21 + 12-epoch s17; V32 lone L2, leaf 8, first-call L5 |
+| (pending) | 334072 | ⏳ SUBMITTED | — | 2026-10-04 22:25 | multi_agent: single soup21 (weight-averaged final-weight-8 member), scaled 0.94; V32 lone L2, leaf 8, first-call L5 |
+| (pending) | 334073 | ⏳ SUBMITTED | — | 2026-10-04 22:25 | multi_agent: pair soup21 + 12-epoch s18; V32 lone L2, leaf 8, first-call L5 |
+| (pending) | 334074 | ⏳ SUBMITTED | — | 2026-10-04 22:25 | multi_agent: single 12-epoch s17, correction scaled 0.88; V32 lone L2, leaf 8, first-call L5 |
 | `334037-d4-N6-pair20-21f-a0.93/` | 334037 | ✅ GRADED | 4.666e-09 | 2026-10-04 19:43 | nabid_nur: pair s20 + s21 (final-weight-8), correction scaled by 0.93. Raw 1.972e-08 |
-| (pending) | 334040 | ⏳ SUBMITTED | — | 2026-10-04 20:07 | nabid_nur: SAFE nomination candidate, the 334034 pair at leaf 16 |
+| `334040-d4-N7-pair18-21f-leaf16/` | 334040 | ✅ GRADED | 4.732e-09 | 2026-10-04 20:07 | nabid_nur: SAFE nomination candidate, the 334034 pair at leaf 16. Same raw (1.969e-08), cost +1.6 percent; wall max 90.9 s and residual max 0.312 s vs 111.1 s / 0.373 s at leaf 8 |
 | `334036-d4-M7-single21f-a0.9/` | 334036 | ✅ GRADED | 4.665e-09 | 2026-10-04 19:42 | multi_agent: single final-weight-8 member s21 with its correction scaled by 0.9. Raw 1.978e-08 vs 1.981e-08 unscaled (334035): the held-out-fitted scale transfers to the public board |
 | `334031-d4-M4-single21/` | 334031 | ✅ GRADED | 4.668e-09 | 2026-10-04 19:03 | multi_agent: single final-weight-8 member s21, epoch-8 checkpoint (held-out 0.9218). Raw 1.979e-08 |
 | `334032-d4-M5-pair17-21-leaf16/` | 334032 | ✅ GRADED | 4.744e-09 | 2026-10-04 19:04 | multi_agent: SAFE variant, the 334030 pair at leaf 16. Same raw (1.974e-08), cost +1.6%, but more wall-time margin under load (see README for the numbers) |
