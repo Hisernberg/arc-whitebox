@@ -8,7 +8,7 @@ listing stable when statuses change.
 | `334011-d4-N1-e12x2/`          | 334011 | ✅ GRADED  | **4.667e-09** | 2026-10-04 16:53 | nabid_nur: 2-member 12-epoch GRU ensemble (held-out 0.9187), V32 lone L2, leaf 8, first-call L5. Raw 1.972e-08. Best so far |
 | `334012-d4-N2-e12x2-lam1/`     | 334012 | ✅ GRADED  | 4.687e-09    | 2026-10-04 16:53 | nabid_nur: as 334011 + lambda scale 1.00. Raw 1.981e-08 (+0.4%): the corrector is tuned to the default chain, so chain knobs hurt |
 | `334013-d4-M1-e12x1/`          | 334013 | ✅ GRADED | **4.654e-09** | 2026-10-04 16:53 | multi_agent: single 12-epoch GRU member (held-out 0.9223), V32 lone L2, leaf 8, first-call L5. Raw 1.973e-08 (same as the pair on the public 50), cost 0.2359 x B. Best so far |
-| (pending) | 334014 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: 2-member 12-epoch GRU ensemble + lambda scale 1.00 + nested rank 192; all V32 lone L2, leaf 8, first-call L5 |
+| `334014-d4-M2-e12x2-lam1-r192/` | 334014 | ✅ GRADED | 4.701e-09 | 2026-10-04 16:54 | multi_agent: 2-member 12-epoch ensemble + lambda 1.00 + nested rank 192. Raw 2.015e-08 (+2.2%) for cost −1.3%: worse |
 | (pending) | 334020 | ⏳ SUBMITTED | — | 2026-10-04 | nabid_nur: 3-member 12-epoch GRU ensemble (held-out 0.9180 vs 0.9213 for 333790's); all V32 lone L2, leaf 8, first-call L5 |
 | (pending) | 334021 | ⏳ SUBMITTED | — | 2026-10-04 | multi_agent: 2-member 12-epoch GRU ensemble + nested rank 192 (isolates the rank trim); all V32 lone L2, leaf 8, first-call L5 |
 | `333790-day3-N1-long3/`        | 333790 | ✅ GRADED  | **4.689e-09** | 2026-10-03 15:52 | nabid_nur: V32 leaf 8 + first-call L5 + 3-member 8-epoch CDF GRU ensemble (the 333605 recipe; grader is deterministic, same score). Best so far on this account |
