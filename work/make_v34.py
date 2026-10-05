@@ -55,7 +55,8 @@ src = src.replace(old_init, "        self.pool = {}\n        self.flat = {}\n")
 old_lp = '        self._lone(A, B, out, LONE_LEV)\n        return out\n'
 assert src.count(old_lp) == 1
 src = src.replace(old_lp, '        if LP_LEV <= 0:\n            fnp.matmul(A, B, out=out)   # V34: dense (1 op instead of ~45 at level 2)\n        else:\n            self._lone(A, B, out, LP_LEV)\n        return out\n')
-old_k = 'LONE_LEV = int(_os.environ.get("V32_LONE_LEV", "2"))\n'
+_a = src.index('LONE_LEV = int(_os.environ.get("V32_LONE_LEV"'); _b = src.index("\n", _a) + 1
+old_k = src[_a:_b]
 assert src.count(old_k) == 1
 src = src.replace(old_k, old_k + 'LP_LEV = int(_os.environ.get("V34_LP_LEV", "0"))   # V34: level of the V33b rerouted join products (0 = dense)\n')
 open(sys.argv[2], "w").write(src)

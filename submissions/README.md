@@ -5,6 +5,9 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334170-d5-K4-v34-ft33pair/` | 334170 | ✅ GRADED | 4.392e-09 | 2026-10-05 07:36 | koushik_rudra: V34 + 2-member GRU fine-tuned on V34 features (held-out 0.9206). Raw 1.9996e-08 (best raw today) but C/B 0.2196: the second member's cost cancels its accuracy gain |
+| `334168-d5-K3-v34-ft33a-lone3/` | 334168 | ✅ GRADED | **4.340e-09** | 2026-10-05 07:12 | koushik_rudra: V34 + fine-tuned GRU (0.9247) + join lone products at Strassen level 3. Raw 2.013e-08, C/B 0.2157 (−1.3%), residual max 0.364 s (+0.036), wall max 106 s. **New koushik_rudra best** |
+| `334161-d5-K2-v34-ft33ep3/` | 334161 | ✅ GRADED | 4.381e-09 | 2026-10-05 06:34 | koushik_rudra: V34 + GRU fine-tuned on 142 V34 feature dumps (held-out 0.961 → 0.925). Raw 2.006e-08 (−3.4% vs 334146), C/B 0.2184; ties the account's previous best |
 | `334146-d5-K1-v34-AB-e12/` | 334146 | ✅ GRADED | 4.534e-09 | 2026-10-05 05:33 | koushik_rudra: V34 = dead-ReLU pruning (transport + hub/old tier, live sizes 896/960), shared Strassen scratch (estimator peak 6.9 GB), dense join products, D21 feedback rank 8, leaf 8 + single e12 GRU (not retrained). Raw 2.076e-08, C/B 0.2184 (−7.4% vs V32), residual max 0.327 s, wall max 99.8 s, 0 failures. Telemetry run: the GRU only gives a 0.961 ratio on V34 features (0.922 on V32) |
 | `334069-d4-N8-soup21-20/` | 334069 | ✅ GRADED | 4.664e-09 | 2026-10-04 22:25 | nabid_nur: pair of weight-averaged final-weight-8 members soup21 + soup20. Raw 1.971e-08 |
 | `334070-d4-N9-pair17-21f/` | 334070 | ✅ GRADED | 4.677e-09 | 2026-10-04 22:25 | nabid_nur: pair 12-epoch s17 + final-weight-8 s21. Raw 1.977e-08 |
