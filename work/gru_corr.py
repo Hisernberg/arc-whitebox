@@ -8,6 +8,8 @@ import glob, sys, time, json
 import numpy as np, torch, torch.nn as nn
 
 FE = "/home/user/arc-whitebox/work/feats"
+import sys as _sys
+if "--fe" in _sys.argv: FE = _sys.argv[_sys.argv.index("--fe") + 1]   # dump directory (e.g. work/feats33)
 args = sys.argv[1:]
 def arg(name, default, typ=float):
     return typ(args[args.index(name) + 1]) if name in args else default
@@ -136,6 +138,15 @@ def tens(i):
     Xs = torch.tensor((X - mu_f[:, None, :]) / sd_f[:, None, :]); E = torch.tensor(e / sig_mu); Wt = torch.tensor(np.asarray(get_W(Wref), dtype=np.float32))
     return Xs, E, Wt
 model = Model()
+INIT = arg("--init", "", str)   # fine-tune: start from this checkpoint and keep its normalization
+if INIT:
+    _ck = np.load(INIT, allow_pickle=False)
+    mu_f, sd_f, sig_mu = _ck["mu_f"], _ck["sd_f"], float(_ck["sig_mu"])
+    mu_f_t = torch.tensor(mu_f); sd_f_t = torch.tensor(sd_f)
+    model = Model(int(_ck["H"]))
+    model.load_state_dict({k: torch.tensor(_ck[k]) for k in model.state_dict().keys()})
+    H = int(_ck["H"])
+    print(f"init from {INIT} (best_ratio {float(_ck['best_ratio']) if 'best_ratio' in _ck.files else float('nan'):.4f})", flush=True)
 EVAL = arg("--eval", "", str)
 if EVAL:
     cks = [np.load(f, allow_pickle=False) for f in EVAL.split(",")]

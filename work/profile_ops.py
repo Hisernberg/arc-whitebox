@@ -6,9 +6,11 @@ import numpy as np, pyarrow.parquet as pq, flopscope as flops, flopscope.numpy a
 from whestbench.domain import MLP
 spec = importlib.util.spec_from_file_location("est", sys.argv[1]); M = importlib.util.module_from_spec(spec); spec.loader.exec_module(M)
 class C: seed = 0; width = 1024; depth = 16; flop_budget = 2 ** 41; api_version = "x"; scratch_dir = None; submission_dir = None
-sh = sorted(glob.glob(os.path.expanduser("~/.cache/huggingface/hub/datasets--aicrowd--arc-whestbench-public-2026/snapshots/*/data/mini-*.parquet")))[0]
-row = next(pq.ParquetFile(sh).iter_batches(batch_size=1, columns=["weights", "mlp_seed"])).to_pylist()[0]
-w = np.asarray(row["weights"], dtype=np.float32).reshape(16, 1024, 1024)
+T = np.load("/home/user/arc-whitebox/work/truth_all.npz")
+_i = [k for k in range(len(T["names"])) if str(T["names"][k]) == os.environ.get("PROF_MLP", "logan-fitzgerald")][0]
+from numpy.random import SeedSequence, default_rng
+_rng = default_rng(SeedSequence(int(T["seeds"][_i])).spawn(3)[0])
+w = np.stack([(_rng.standard_normal((1024, 1024)) * np.sqrt(2.0 / 1024)).astype(np.float16).astype(np.float32) for _ in range(16)]); del T
 mlp = MLP(width=1024, depth=16, weights=[fnp.asarray(x) for x in w], seed=1)
 est = M.Estimator(); est.setup(C())
 with flops.BudgetContext(flop_budget=10 ** 14, quiet=True):
@@ -32,5 +34,8 @@ for r in log:
 print("total C/B %.5f  units %.1f  ops %d" % (tot / 2 ** 41, tot / U, len(log)))
 for (nm, sh_), (fl, c) in sorted(agg.items(), key=lambda kv: -kv[1][0])[:28]:
     print("%7.2f u %5.1f%% %5d x  %-14s %s" % (fl / U, 100 * fl / tot, c, nm, sh_))
+byn = collections.Counter()
+for (nm, sh_), (fl, c) in agg.items(): byn[nm] += c
+print('by op name:', ', '.join('%s %d' % kv for kv in byn.most_common(25)))
 import resource
 print("peak RSS %.2f GB" % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1048576))

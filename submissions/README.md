@@ -5,6 +5,7 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334146-d5-K1-v34-AB-e12/` | 334146 | ✅ GRADED | 4.534e-09 | 2026-10-05 05:33 | koushik_rudra: V34 = dead-ReLU pruning (transport + hub/old tier, live sizes 896/960), shared Strassen scratch (estimator peak 6.9 GB), dense join products, D21 feedback rank 8, leaf 8 + single e12 GRU (not retrained). Raw 2.076e-08, C/B 0.2184 (−7.4% vs V32), residual max 0.327 s, wall max 99.8 s, 0 failures. Telemetry run: the GRU only gives a 0.961 ratio on V34 features (0.922 on V32) |
 | `334069-d4-N8-soup21-20/` | 334069 | ✅ GRADED | 4.664e-09 | 2026-10-04 22:25 | nabid_nur: pair of weight-averaged final-weight-8 members soup21 + soup20. Raw 1.971e-08 |
 | `334070-d4-N9-pair17-21f/` | 334070 | ✅ GRADED | 4.677e-09 | 2026-10-04 22:25 | nabid_nur: pair 12-epoch s17 + final-weight-8 s21. Raw 1.977e-08 |
 | `334071-d4-N10-soup21-s17/` | 334071 | ✅ GRADED | 4.672e-09 | 2026-10-04 22:25 | nabid_nur: pair soup21 + 12-epoch s17 (wall max 113.7 s). Raw 1.975e-08 |
