@@ -1,0 +1,163 @@
+/home/user/arc-whitebox/work/est_v34_rfb2.py:787: FlopscopeWarning: stats.norm.pdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  flops.stats.norm.pdf(v)
+/home/user/arc-whitebox/work/est_v34_rfb2.py:788: FlopscopeWarning: stats.norm.cdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  flops.stats.norm.cdf(v)
+/home/user/arc-whitebox/work/est_v34_rfb2.py:802: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("tij,ti,tj,tg->gij", t3, t3[:, :, 0], t3[:, 0, :], g3)
+/home/user/arc-whitebox/work/est_v34_rfb2.py:803: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("ti,ti,tg->gi", t3[:, :, 0], t3[:, :, 1], g3)
+/home/user/arc-whitebox/work/est_v34_rfb2.py:804: SymmetryLossWarning: Symmetry lost along dims (0, 1): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("iq,kqn->kin", m[:, :16], t3[:, :16, :])
+/home/user/arc-whitebox/work/est_v34_rfb2.py:804: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("iq,kqn->kin", m[:, :16], t3[:, :16, :])
+/home/user/arc-whitebox/work/est_v34_rfb2.py:805: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("ki,kc->ic", t3[:, :, 0], t3[:, :, 1])
+/home/user/arc-whitebox/work/est_v34_rfb2.py:807: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("kij,kj->ki", t3, t3[:, 0, :])
+/home/user/arc-whitebox/work/est_v34_rfb2.py:808: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("ki,ki->i", t3[:, :, 0], t3[:, :, 1])
+/home/user/arc-whitebox/work/est_v34_rfb2.py:809: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("kij,kqj->iq", t3, t3[:, :16, :])
+/home/user/arc-whitebox/work/est_v34_rfb2.py:1254: FlopscopeWarning: stats.norm.pdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  phi = flops.stats.norm.pdf(alpha).astype(f32)
+/home/user/arc-whitebox/work/est_v34_rfb2.py:1255: FlopscopeWarning: stats.norm.cdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  Phi = flops.stats.norm.cdf(alpha).astype(f32)
+/home/user/arc-whitebox/work/est_v34_rfb2.py:1199: FlopscopeWarning: stats.norm.cdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  lvc = self._live(flops.stats.norm.cdf(mu / fnp.sqrt(var)).astype(f32), n)
+[699] vickie-nicholson       mse=2.0369e-08 C/B=0.3258 t=62s
+[700] summer-webster         mse=2.5310e-08 C/B=0.3300 t=52s
+[701] colleen-macdonald      mse=1.7523e-08 C/B=0.3283 t=53s
+[702] christine-schmidt      mse=2.1189e-08 C/B=0.3266 t=49s
+[703] shelby-palmer          mse=2.0407e-08 C/B=0.3251 t=46s
+[704] angela-perry           mse=1.7838e-08 C/B=0.3251 t=35s
+[705] crystal-martinez       mse=2.1173e-08 C/B=0.3219 t=38s
+[706] howard-hess            mse=2.4675e-08 C/B=0.3236 t=35s
+[707] tiffany-avery          mse=2.1283e-08 C/B=0.3250 t=38s
+[708] ashley-hall            mse=1.6270e-08 C/B=0.3220 t=35s
+[709] glenn-leach            mse=1.7568e-08 C/B=0.3236 t=37s
+[710] ryan-hernandez         mse=2.0555e-08 C/B=0.3235 t=35s
+[711] denise-olsen           mse=2.2873e-08 C/B=0.3235 t=35s
+[712] arthur-mosley          mse=2.2976e-08 C/B=0.3283 t=36s
+[713] valerie-gates          mse=1.9981e-08 C/B=0.3267 t=37s
+[714] derek-ortega           mse=2.1572e-08 C/B=0.3267 t=36s
+[715] christopher-haas       mse=2.3785e-08 C/B=0.3236 t=37s
+[716] morgan-anderson        mse=2.1248e-08 C/B=0.3251 t=35s
+[717] claire-turner          mse=2.3618e-08 C/B=0.3250 t=36s
+[718] adriana-mckinney       mse=2.0780e-08 C/B=0.3283 t=37s
+[719] taylor-herrera         mse=2.1637e-08 C/B=0.3299 t=37s
+[720] christopher-jordan     mse=2.1575e-08 C/B=0.3235 t=38s
+[721] lisa-singleton         mse=2.4410e-08 C/B=0.3251 t=38s
+[722] jennifer-francis       mse=2.6004e-08 C/B=0.3235 t=36s
+[723] mathew-johnson         mse=1.9390e-08 C/B=0.3219 t=38s
+[724] jonathan-hughes        mse=2.0348e-08 C/B=0.3219 t=37s
+[725] ralph-frank            mse=1.8050e-08 C/B=0.3235 t=36s
+[726] ryan-cox               mse=1.8405e-08 C/B=0.3235 t=36s
+[727] kyle-murphy            mse=2.0978e-08 C/B=0.3267 t=37s
+[728] shannon-flores         mse=2.0152e-08 C/B=0.3250 t=36s
+[729] megan-cruz             mse=3.2994e-08 C/B=0.3266 t=36s
+[730] david-vance            mse=2.1740e-08 C/B=0.3284 t=35s
+[731] victoria-roberts       mse=2.6232e-08 C/B=0.3236 t=37s
+[732] jesus-brown            mse=2.0393e-08 C/B=0.3283 t=35s
+[733] alicia-harris          mse=2.5034e-08 C/B=0.3235 t=36s
+[734] donald-davis-2         mse=2.4817e-08 C/B=0.3251 t=36s
+[735] thomas-wang            mse=2.2220e-08 C/B=0.3267 t=37s
+[736] meghan-simpson         mse=2.1974e-08 C/B=0.3252 t=36s
+[737] david-gardner          mse=1.9878e-08 C/B=0.3235 t=37s
+[738] justin-taylor          mse=2.6707e-08 C/B=0.3283 t=37s
+[739] kyle-herrera           mse=2.4625e-08 C/B=0.3267 t=34s
+[740] corey-hill             mse=2.0306e-08 C/B=0.3282 t=36s
+[741] andrew-dawson          mse=2.1264e-08 C/B=0.3266 t=34s
+[742] holly-wright           mse=3.3462e-08 C/B=0.3251 t=36s
+[743] joshua-craig           mse=2.6120e-08 C/B=0.3219 t=35s
+[744] brendan-scott          mse=2.2796e-08 C/B=0.3283 t=34s
+[745] christina-smith        mse=2.8134e-08 C/B=0.3251 t=37s
+[746] christopher-hernandez  mse=2.4843e-08 C/B=0.3219 t=36s
+[747] tiffany-holden         mse=2.4420e-08 C/B=0.3267 t=34s
+[748] jesus-moore            mse=2.1567e-08 C/B=0.3236 t=35s
+[749] robert-jimenez         mse=2.0662e-08 C/B=0.3302 t=36s
+[750] evan-rose              mse=2.2839e-08 C/B=0.3283 t=38s
+[751] barbara-howard         mse=1.9766e-08 C/B=0.3235 t=36s
+[752] danny-saunders         mse=2.2164e-08 C/B=0.3252 t=36s
+[753] michelle-burns         mse=2.3580e-08 C/B=0.3235 t=37s
+[754] anthony-daniels        mse=2.1771e-08 C/B=0.3266 t=37s
+[755] carla-howe             mse=2.6554e-08 C/B=0.3251 t=39s
+[756] richard-palmer         mse=2.0111e-08 C/B=0.3250 t=37s
+[757] chad-smith             mse=2.6153e-08 C/B=0.3267 t=36s
+[758] jennifer-moore         mse=2.0896e-08 C/B=0.3269 t=35s
+[759] mary-wood              mse=1.9033e-08 C/B=0.3251 t=36s
+[760] robyn-hill             mse=2.3303e-08 C/B=0.3219 t=36s
+[761] christopher-davidson   mse=2.4030e-08 C/B=0.3251 t=35s
+[762] xavier-pennington      mse=2.6329e-08 C/B=0.3266 t=35s
+[763] matthew-newton         mse=1.7822e-08 C/B=0.3219 t=36s
+[764] michael-reilly         mse=1.8884e-08 C/B=0.3283 t=36s
+[765] jade-gonzales          mse=2.9418e-08 C/B=0.3283 t=38s
+[766] crystal-werner         mse=2.4331e-08 C/B=0.3236 t=37s
+[767] carolyn-howe           mse=2.1411e-08 C/B=0.3285 t=38s
+[768] sandra-wise            mse=1.8102e-08 C/B=0.3220 t=37s
+[769] natalie-mckay          mse=2.2681e-08 C/B=0.3235 t=38s
+[770] ann-bautista           mse=2.5833e-08 C/B=0.3251 t=38s
+[771] eric-martinez          mse=1.9998e-08 C/B=0.3267 t=38s
+[772] hannah-trevino         mse=2.2248e-08 C/B=0.3284 t=37s
+[773] kirk-perkins           mse=2.2992e-08 C/B=0.3235 t=36s
+[774] ronald-nguyen          mse=2.6724e-08 C/B=0.3283 t=37s
+[775] chad-castro            mse=2.1900e-08 C/B=0.3235 t=37s
+[776] sandra-andrade         mse=2.3373e-08 C/B=0.3300 t=36s
+[777] kristopher-gomez       mse=2.1432e-08 C/B=0.3300 t=39s
+[778] mitchell-gonzalez      mse=2.2910e-08 C/B=0.3251 t=36s
+[779] william-long           mse=2.0193e-08 C/B=0.3251 t=35s
+[780] lisa-diaz              mse=1.9207e-08 C/B=0.3283 t=39s
+[781] tracey-carter          mse=2.7794e-08 C/B=0.3267 t=37s
+[782] brenda-salazar         mse=2.0042e-08 C/B=0.3267 t=38s
+[783] david-miranda          mse=2.6748e-08 C/B=0.3283 t=37s
+[784] erin-baldwin           mse=2.1410e-08 C/B=0.3235 t=36s
+[785] betty-miller           mse=1.6792e-08 C/B=0.3251 t=37s
+[786] melissa-mcconnell      mse=2.3248e-08 C/B=0.3250 t=39s
+[787] amy-hill               mse=2.0843e-08 C/B=0.3251 t=37s
+[788] john-duncan            mse=2.3511e-08 C/B=0.3235 t=38s
+[789] shannon-harris         mse=1.7643e-08 C/B=0.3251 t=38s
+[790] joanne-frank           mse=2.0184e-08 C/B=0.3266 t=36s
+[791] david-daniel           mse=2.0486e-08 C/B=0.3235 t=36s
+[792] jared-norton           mse=2.2079e-08 C/B=0.3267 t=35s
+[793] christina-webster      mse=2.1217e-08 C/B=0.3235 t=36s
+[794] jason-smith-2          mse=2.5581e-08 C/B=0.3219 t=37s
+[795] tiffany-taylor         mse=2.3765e-08 C/B=0.3235 t=37s
+[796] eric-love              mse=2.2092e-08 C/B=0.3188 t=35s
+[797] suzanne-williams       mse=2.3486e-08 C/B=0.3268 t=38s
+[798] angela-powell          mse=2.3090e-08 C/B=0.3234 t=38s
+[799] kimberly-hines         mse=2.4674e-08 C/B=0.3301 t=35s
+[800] daniel-greene          mse=1.9626e-08 C/B=0.3235 t=38s
+[801] michael-davis          mse=2.3578e-08 C/B=0.3251 t=38s
+[802] sarah-walker           mse=2.6134e-08 C/B=0.3252 t=36s
+[803] larry-doyle            mse=2.3368e-08 C/B=0.3204 t=40s
+[804] paul-estrada           mse=2.8107e-08 C/B=0.3235 t=38s
+[805] matthew-singleton      mse=2.7907e-08 C/B=0.3236 t=38s
+[806] danielle-mason         mse=2.0341e-08 C/B=0.3220 t=38s
+[807] stephanie-bailey       mse=2.1885e-08 C/B=0.3251 t=40s
+[808] benjamin-jones         mse=2.4058e-08 C/B=0.3284 t=39s
+[809] mary-watson            mse=2.2478e-08 C/B=0.3298 t=38s
+[810] daniel-sellers         mse=1.7933e-08 C/B=0.3235 t=40s
+[811] kathryn-price          mse=2.3633e-08 C/B=0.3236 t=36s
+[812] kristy-quinn           mse=1.9537e-08 C/B=0.3250 t=36s
+[813] lisa-edwards           mse=1.8915e-08 C/B=0.3267 t=38s
+[814] deanna-wright          mse=2.1915e-08 C/B=0.3268 t=36s
+[815] david-lawrence         mse=2.1672e-08 C/B=0.3219 t=38s
+[816] natalie-rios           mse=2.0877e-08 C/B=0.3283 t=39s
+[817] corey-weber            mse=1.9587e-08 C/B=0.3220 t=38s
+[818] heather-gray           mse=2.1471e-08 C/B=0.3204 t=36s
+[819] paul-frey              mse=1.7009e-08 C/B=0.3284 t=39s
+[820] elizabeth-hernandez    mse=1.5527e-08 C/B=0.3251 t=39s
+[821] julie-thomas           mse=2.2643e-08 C/B=0.3235 t=40s
+[822] alyssa-allison         mse=1.6606e-08 C/B=0.3267 t=40s
+[823] christopher-spears     mse=2.2268e-08 C/B=0.3235 t=40s
+[824] lee-morgan             mse=2.1733e-08 C/B=0.3267 t=40s
+[825] amanda-carpenter       mse=2.7887e-08 C/B=0.3252 t=41s
+[826] heather-nelson         mse=2.0033e-08 C/B=0.3317 t=40s
+[827] jennifer-mitchell      mse=2.0395e-08 C/B=0.3336 t=39s
+[828] thomas-price           mse=2.0422e-08 C/B=0.3251 t=39s
+[829] cameron-taylor         mse=2.2727e-08 C/B=0.3251 t=39s
+[830] jason-snow             mse=2.8614e-08 C/B=0.3283 t=39s
+[831] billy-green            mse=2.1283e-08 C/B=0.3251 t=38s
+[832] olivia-moses           mse=2.1117e-08 C/B=0.3220 t=40s
+[833] bruce-bradley          mse=2.3065e-08 C/B=0.3234 t=37s
+[834] cynthia-nichols        mse=2.9028e-08 C/B=0.3204 t=40s
+[835] kevin-lewis            mse=2.7543e-08 C/B=0.3300 t=40s

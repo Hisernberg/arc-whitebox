@@ -90,7 +90,8 @@ del Xall
 FINAL_W = arg("--final-w", 4.0)   # loss weight of the scored (final) layer
 layer_w = torch.tensor([0.25] * 4 + [1.0] * 4 + [2.0] * 7 + [FINAL_W], dtype=torch.float32)
 
-ACT = arg("--act", "tanh", str)   # tanh: standard GRU (sigmoid/tanh, tanh-GELU); cdf: normal-CDF gates, 2*CDF-1 candidate, exact GELU
+ACT = arg("--act", "tanh", str)
+RESID = "--resid" in args   # V39: residual connection u = Phi*(u_prev @ W) + net output   # tanh: standard GRU (sigmoid/tanh, tanh-GELU); cdf: normal-CDF gates, 2*CDF-1 candidate, exact GELU
 
 def _cdf(x):
     return 0.5 * (1.0 + torch.erf(x / 1.4142135623730951))
@@ -129,6 +130,8 @@ class Model(nn.Module):
             h = self.cell(inp, h)
             out = self.ro(h)
             u, q = out[:, 0], out[:, 1]
+            if RESID:
+                u = u + pmu   # V39: linear error propagation hard-coded; the net learns the local term
             us.append(u)
         return torch.stack(us)   # (16, n)
 
@@ -204,7 +207,7 @@ for ep in range(EPOCHS):
         if hold and ho[0] < best[0]:
             best = (ho[0], ep, {k: v.detach().clone() for k, v in model.state_dict().items()})
             # checkpoint on every improvement (a killed run keeps its best model)
-            np.savez(OUT, mu_f=mu_f, sd_f=sd_f, sig_mu=sig_mu, feats=np.array(FEATS), H=H, act=ACT, best_ratio=best[0], best_epoch=best[1],
+            np.savez(OUT, mu_f=mu_f, sd_f=sd_f, sig_mu=sig_mu, feats=np.array(FEATS), H=H, act=ACT, resid=RESID, best_ratio=best[0], best_epoch=best[1],
                      **{k: v.numpy() for k, v in best[2].items()})
         print(f"ep {ep:3d} loss {tot / len(train):.4f}  final-layer MSE ratio train {tr[0]:.3f}  holdout {ho[0]:.3f} (median {ho[1]:.3f})  best {best[0]:.3f}@{best[1]}  t={time.time() - t0:.0f}s", flush=True)
 if best[2] is not None:
@@ -212,5 +215,5 @@ if best[2] is not None:
     print(f"BEST holdout ratio {best[0]:.4f} at epoch {best[1]} (saved)")
 # save weights + normalization for deployment
 sd = {k: v.detach().numpy() for k, v in model.state_dict().items()}
-np.savez(OUT, mu_f=mu_f, sd_f=sd_f, sig_mu=sig_mu, feats=np.array(FEATS), H=H, act=ACT, **sd)
+np.savez(OUT, mu_f=mu_f, sd_f=sd_f, sig_mu=sig_mu, feats=np.array(FEATS), H=H, act=ACT, resid=RESID, **sd)
 print("saved", OUT, "params", sum(p.numel() for p in model.parameters()))

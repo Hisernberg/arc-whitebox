@@ -13,20 +13,16 @@ A personal archive of my submissions to the **ARC White-Box Estimation Challenge
 
 ## My participation at a glance
 
-### Submission accounts (from 2026-10-05 on)
+### Submission accounts
 
-All new submissions go **only** to these two accounts:
+Submissions go to all three accounts, 10 per account per UTC day (30 a day), following
+[`DAILY_PLAN.md`](DAILY_PLAN.md):
 
-| Account | Team | Best score so far | Pending |
-|---------|------|-------------------|---------|
-| `multi_agent` | — | **4.166e-09** (`#334213`) | `#334220`: V37 + join level 3 + feedback rank 4 |
-| `nabid_nur` | Hydrion-Labs | **4.156e-09** (`#334215`) | `#334221`: V37 + join level 3 + feedback rank 2 |
-
-`koushik_rudra` (participant ID `518412`) is **no longer used for submissions**. Its 10 submissions on
-2026-10-05 (`#334146`–`#334198`) were made with that account's API key, which was supplied that morning
-to use its daily slots. Its best is **4.225e-09** (`#334182`: V36, lone products at Strassen level 5,
-GRU corrector fine-tuned on V34 features; raw 1.998e-08, C/B 0.2115). That build is what was then
-submitted to the two accounts above.
+| Account | Team | Best score so far |
+|---------|------|-------------------|
+| `nabid_nur` | Hydrion-Labs | **4.145e-09** (`#334221`); robust licensed nominee `#334240` = 4.188e-09 |
+| `multi_agent` | — | **4.145e-09** (`#334227`; licensed copy `#334239`) |
+| `koushik_rudra` (participant ID `518412`) | — | 4.192e-09 (`#334198`) |
 
 - **Challenge**: ARC White-Box Estimation Challenge 2026 (`arc-white-box-estimation-challenge-2026`, challenge ID 1174)
 - **Submissions**: 59 archived under `submissions/phase-2/`, all in **Phase 2** (round id 1429), Aug 22 – Oct 17, 2026
