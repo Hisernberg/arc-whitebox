@@ -167,12 +167,14 @@ if EVAL:
     for i in ids_eval:
         e15 = data[i][1][15].astype(np.float64)
         base = float(np.mean(e15 ** 2)); corr = float(np.mean((e15 - corrs[i]) ** 2))
-        rows.append((base, corr, i in hold))
+        rows.append((base, corr, i in hold)); _ec = globals().setdefault('_EC', []); _ec.append((float(np.mean(e15 * corrs[i])), float(np.mean(corrs[i] ** 2)), base, i in hold))
         print(f"[{str(i):>10s}] {data[i][3]:20s} V29 {base:.4e} corrected {corr:.4e} ratio {corr / base:.3f} ({'holdout' if i in hold else 'train'})")
     for name, flag in (("holdout", True), ("train", False)):
         r = [(b, c) for b, c, h in rows if h == flag]
         if r:
             print(f"ENSEMBLE {name}: n={len(r)} mean ratio {sum(c for _, c in r) / sum(b for b, _ in r):.4f}")
+            q = [(a, c, b) for a, c, b, h in _EC if h == flag]; A = sum(a for a, _, _ in q); Cc = sum(c for _, c, _ in q); B = sum(b for _, _, b in q)
+            al = A / Cc; print(f"ENSEMBLE {name}: alpha* {al:.3f} -> ratio {(B - 2 * al * A + al * al * Cc) / B:.4f}")
     sys.exit(0)
 opt = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=WD)
 sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=EPOCHS * len(train) * arg("--inner", 1, int))

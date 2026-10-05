@@ -5,6 +5,8 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334188-d5-K9-v36-ft33f-lone5/` | 334188 | ✅ GRADED | 4.227e-09 | 2026-10-05 10:04 | koushik_rudra: as 334182 with the continued fine-tune ft33f (held-out 0.9165 on 53, 0.9067 on 143 unseen MLPs). Raw 2.001e-08, C/B 0.2113: same as 334182 within noise; residual max 0.376 s (first 5 MLPs), wall max 116.8 s |
+| `334187-d5-K8-v36-ft33e-lone4/` | 334187 | ✅ GRADED | 4.285e-09 | 2026-10-05 09:49 | koushik_rudra: V36 lone level 4 + ft33e (held-out 0.920 on 53 MLPs). Raw 2.015e-08: worse than ft33c on the grader set, so a 53-MLP held-out gap of 0.2% is noise |
 | `334182-d5-K7-v36-ft33c-lone5/` | 334182 | ✅ GRADED | **4.225e-09** | 2026-10-05 09:24 | koushik_rudra: V36 (V35 + cached Strassen quadrant views; bit-identical) + ft33c GRU + lone products at level 5. Raw 1.998e-08, C/B 0.2115; residual median 0.268 s, max 0.382 s (first MLPs); wall max 116.8 s (thin margin). **New best** |
 | `334177-d5-K6-v35-ft33c-lone4/` | 334177 | ✅ GRADED | **4.255e-09** | 2026-10-05 08:46 | koushik_rudra: V35 (V34 + leaner Strassen helper: one-dict buffer fast path, cached slot views; bit-identical) + ft33c GRU + lone products at level 4. Raw 2.001e-08, C/B 0.2127; residual median 0.293 s (was 0.349) with the max 0.363 s on the first MLPs (cache warm-up). **New best** |
 | `334176-d5-K5-v34-ft33c-lone3/` | 334176 | ✅ GRADED | 4.304e-09 | 2026-10-05 08:13 | koushik_rudra: V34 + GRU fine-tuned on 418 V34 dumps (held-out 0.9218) + lone level 3. Raw 2.000e-08, C/B 0.2153, residual max 0.368 s |
