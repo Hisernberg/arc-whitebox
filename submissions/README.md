@@ -5,6 +5,15 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334215-d5-N4-v37-rfb2-ft33f/` | 334215 | ✅ GRADED | 4.156e-09 | 2026-10-05 | nabid_nur: V37 + D21 feedback rank 2 (C/B -2.7%, GRU unchanged). Raw 2.036e-08, C/B 0.2042, 0 failures |
+| `334213-d5-M4-v37-rfb4-ft33f/` | 334213 | ✅ GRADED | 4.166e-09 | 2026-10-05 | multi_agent: V37 + D21 feedback rank 4 (C/B -1.8%, GRU unchanged). Raw 2.022e-08, C/B 0.2061, 0 failures |
+| `334209-d5-N3-v37-ft33i/` | 334209 | ✅ GRADED | 4.198e-09 | 2026-10-05 | nabid_nur: V37 + ft33i GRU (all 598 dumps): raw 1.992e-08 but C/B +0.5% (the corrector shifts the pruning). Raw 1.992e-08, C/B 0.2109, 0 failures |
+| `334208-d5-M3-v37lp3-ft33f/` | 334208 | ✅ GRADED | 4.182e-09 | 2026-10-05 | multi_agent: V37 + join products at Strassen level 3 after the first 5 MLPs. Raw 1.999e-08, C/B 0.2093, 0 failures |
+| `334205-d5-N2-v37-ft33f/` | 334205 | ✅ GRADED | 4.192e-09 | 2026-10-05 | nabid_nur: V37 + ft33f (same build as 334198). Raw 1.999e-08, C/B 0.2098, 0 failures |
+| `334204-d5-M2-v37-ft33f/` | 334204 | ✅ GRADED | 4.192e-09 | 2026-10-05 | multi_agent: V37 + ft33f (same build as 334198). Raw 1.999e-08, C/B 0.2098, 0 failures |
+| `334203-d5-N1-v36-ft33c-lone5/` | 334203 | ✅ GRADED | 4.222e-09 | 2026-10-05 | nabid_nur: V36 lone level 5 + ft33c (same build as 334182). Raw 1.998e-08, C/B 0.2113, 0 failures |
+| `334202-d5-M1-v36-ft33c-lone5/` | 334202 | ✅ GRADED | 4.222e-09 | 2026-10-05 | multi_agent: V36 lone level 5 + ft33c (same build as 334182). Raw 1.998e-08, C/B 0.2113, 0 failures |
+| `334198-d5-K10-v37-ft33f-lone5-lp2/` | 334198 | ✅ GRADED | 4.192e-09 | 2026-10-05 | koushik_rudra: V37 (join products at Strassen level 2 after the first 5 MLPs) + ft33f. Raw 1.999e-08, C/B 0.2098, 0 failures |
 | `334188-d5-K9-v36-ft33f-lone5/` | 334188 | ✅ GRADED | 4.227e-09 | 2026-10-05 10:04 | koushik_rudra: as 334182 with the continued fine-tune ft33f (held-out 0.9165 on 53, 0.9067 on 143 unseen MLPs). Raw 2.001e-08, C/B 0.2113: same as 334182 within noise; residual max 0.376 s (first 5 MLPs), wall max 116.8 s |
 | `334187-d5-K8-v36-ft33e-lone4/` | 334187 | ✅ GRADED | 4.285e-09 | 2026-10-05 09:49 | koushik_rudra: V36 lone level 4 + ft33e (held-out 0.920 on 53 MLPs). Raw 2.015e-08: worse than ft33c on the grader set, so a 53-MLP held-out gap of 0.2% is noise |
 | `334182-d5-K7-v36-ft33c-lone5/` | 334182 | ✅ GRADED | **4.225e-09** | 2026-10-05 09:24 | koushik_rudra: V36 (V35 + cached Strassen quadrant views; bit-identical) + ft33c GRU + lone products at level 5. Raw 1.998e-08, C/B 0.2115; residual median 0.268 s, max 0.382 s (first MLPs); wall max 116.8 s (thin margin). **New best** |
