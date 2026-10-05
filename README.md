@@ -19,8 +19,8 @@ All new submissions go **only** to these two accounts:
 
 | Account | Team | Best score so far | Pending |
 |---------|------|-------------------|---------|
-| `multi_agent` | — | 4.6544e-09 (`#334013`) | `#334202`: V36 build from `#334182`, expected ≈ 4.225e-09 |
-| `nabid_nur` | Hydrion-Labs | 4.6582e-09 (`#334034`) | `#334203`: V36 build from `#334182`, expected ≈ 4.225e-09 |
+| `multi_agent` | — | **4.166e-09** (`#334213`) | `#334220`: V37 + join level 3 + feedback rank 4 |
+| `nabid_nur` | Hydrion-Labs | **4.156e-09** (`#334215`) | `#334221`: V37 + join level 3 + feedback rank 2 |
 
 `koushik_rudra` (participant ID `518412`) is **no longer used for submissions**. Its 10 submissions on
 2026-10-05 (`#334146`–`#334198`) were made with that account's API key, which was supplied that morning
@@ -30,7 +30,7 @@ submitted to the two accounts above.
 
 - **Challenge**: ARC White-Box Estimation Challenge 2026 (`arc-white-box-estimation-challenge-2026`, challenge ID 1174)
 - **Submissions**: 59 archived under `submissions/phase-2/`, all in **Phase 2** (round id 1429), Aug 22 – Oct 17, 2026
-- **Score history (all accounts)**: 4.225e-09 (`#334182`), 4.255e-09 (`#334177`), 4.304e-09 (`#334176`), 4.340e-09 (`#334168`), 4.381e-09 (`#334161`), 4.6544e-09 (`#334013`, multi_agent), 4.6582e-09 (`#334034`, nabid_nur), 5.3936e-09 (`#333364`)
+- **Score history (all accounts)**: 4.156e-09 (`#334215`, nabid_nur), 4.166e-09 (`#334213`, multi_agent), 4.182e-09 (`#334208`), 4.192e-09 (`#334198`/`#334204`/`#334205`), 4.225e-09 (`#334182`), 4.255e-09 (`#334177`), 4.304e-09 (`#334176`), 4.340e-09 (`#334168`), 4.381e-09 (`#334161`), 4.6544e-09 (`#334013`, multi_agent), 4.6582e-09 (`#334034`, nabid_nur), 5.3936e-09 (`#333364`)
 - **Iteration trajectory** (graded submissions only, oldest → newest):
   - `#333177` (2026-09-30 17:22 UTC): MSE = 9.950e-09
   - `#333323` (2026-10-01 10:30 UTC): MSE = 5.418e-09
