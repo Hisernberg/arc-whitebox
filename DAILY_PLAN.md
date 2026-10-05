@@ -25,3 +25,19 @@ Tuning the current chain gives ~0.5–1% per day; reaching the top needs a struc
 1. A cheaper chain (C/B ≈ 0.15) whose extra error the learned corrector absorbs, retrained on that chain.
 2. A stronger corrector (more training MLPs, training through the corrected chain instead of on uncorrected features).
 3. Memory-lean buffers so the main transport can use one more Strassen level (currently blocked by the 8 GB cap).
+
+## Research log
+### 2026-10-05
+- **Error anatomy** (53 held-out MLPs, chain without corrector): final-layer error grows linearly with depth
+  (0.7e-9 at layer 0 → 23e-9 at layer 15). 66% of it sits in nearly-always-active neurons (Φ > 0.9),
+  where ReLU is ~linear, so it is mean error inherited through W. No global or per-MLP bias (<0.5%).
+- **Corrector**: held-out ratio improves slowly with data (71 → 142 → 418 → ~950 MLPs: 0.928 → 0.925 →
+  0.917 → 0.913). A residual connection (u = Φ·(W·u_prev) + local term) was *worse* in a controlled pilot
+  (0.949 vs 0.944). Training from scratch on ~950 MLPs reached 0.917; fine-tuning the old model on them, 0.913.
+- **Cheaper chain + corrector does not work**: the corrector removes a fixed ~9% of whatever error the chain
+  leaves (AGE_OLD=3: ratio 0.924 on +15% raw; R_OLD2=192: 0.914 on +1.6% raw). The leaders' gap is not
+  "cheap chain + our corrector"; it needs either a better closure or a corrector with richer cross-neuron inputs.
+- **Cost levers that worked on the grader**: join products at Strassen level 2/3 after the first 5 MLPs,
+  D21 feedback rank 8 → 2 (C/B −2.7%, raw +1.9%, corrector unaffected). Level 4 overran the 120 s wall limit.
+- **Levers measured and rejected**: deeper Strassen on small blocks (V38), finer pruning sizes, pruning
+  threshold 0.002/0.003, QPASS2=1, R_OLD=352, AGE_OLD2 6/8, R_FB=1.
