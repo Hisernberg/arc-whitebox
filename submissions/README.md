@@ -5,6 +5,8 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334177-d5-K6-v35-ft33c-lone4/` | 334177 | ✅ GRADED | **4.255e-09** | 2026-10-05 08:46 | koushik_rudra: V35 (V34 + leaner Strassen helper: one-dict buffer fast path, cached slot views; bit-identical) + ft33c GRU + lone products at level 4. Raw 2.001e-08, C/B 0.2127; residual median 0.293 s (was 0.349) with the max 0.363 s on the first MLPs (cache warm-up). **New best** |
+| `334176-d5-K5-v34-ft33c-lone3/` | 334176 | ✅ GRADED | 4.304e-09 | 2026-10-05 08:13 | koushik_rudra: V34 + GRU fine-tuned on 418 V34 dumps (held-out 0.9218) + lone level 3. Raw 2.000e-08, C/B 0.2153, residual max 0.368 s |
 | `334170-d5-K4-v34-ft33pair/` | 334170 | ✅ GRADED | 4.392e-09 | 2026-10-05 07:36 | koushik_rudra: V34 + 2-member GRU fine-tuned on V34 features (held-out 0.9206). Raw 1.9996e-08 (best raw today) but C/B 0.2196: the second member's cost cancels its accuracy gain |
 | `334168-d5-K3-v34-ft33a-lone3/` | 334168 | ✅ GRADED | **4.340e-09** | 2026-10-05 07:12 | koushik_rudra: V34 + fine-tuned GRU (0.9247) + join lone products at Strassen level 3. Raw 2.013e-08, C/B 0.2157 (−1.3%), residual max 0.364 s (+0.036), wall max 106 s. **New koushik_rudra best** |
 | `334161-d5-K2-v34-ft33ep3/` | 334161 | ✅ GRADED | 4.381e-09 | 2026-10-05 06:34 | koushik_rudra: V34 + GRU fine-tuned on 142 V34 feature dumps (held-out 0.961 → 0.925). Raw 2.006e-08 (−3.4% vs 334146), C/B 0.2184; ties the account's previous best |
