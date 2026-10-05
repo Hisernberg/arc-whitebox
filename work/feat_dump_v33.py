@@ -61,10 +61,13 @@ def iter_rows():
 
 est = EV.Estimator()
 est.setup(_Ctx())
+_IDS = set(map(int, open(os.environ["DUMP_IDS"]).read().split())) if os.environ.get("DUMP_IDS") else None
 MODE = os.environ.get("FEAT_SRC", "mini")   # mini: parquet rows; full: truth_all.npz + regenerated weights
 PREFIX = "feat" if MODE == "mini" else "featf"
 for i, row in (iter_rows() if MODE == "mini" else iter_rows_truth()):
     if i < start:
+        continue
+    if _IDS is not None and i not in _IDS:
         continue
     if i >= stop:
         break

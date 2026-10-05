@@ -37,7 +37,7 @@ GRU_JSON = None   # optionally replaced by make_v31.py --embed with the model as
 def _gru_from_dict(d):
             f32 = fnp.float32
             g = {k: fnp.asarray(d[k], dtype=f32) for k in ("bih", "bhh", "b1", "b2", "mu_f", "sd_f")}
-            g["H"] = int(d["H"]); g["sig_mu"] = float(d["sig_mu"]); g["feats"] = list(d["feats"]); g["act"] = str(d.get("act", "tanh"))
+            g["H"] = int(d["H"]); g["sig_mu"] = float(d["sig_mu"]); g["feats"] = list(d["feats"]); g["act"] = str(d.get("act", "tanh")); g["resid"] = bool(d.get("resid", False))
             assert g["feats"] == GRU_FEATS, "feature list mismatch"
             # transposed (in, out) layouts built host-side in pure Python, uploaded once
             for k in ("Wih", "Whh", "W1"):
@@ -131,7 +131,8 @@ rep('''    def _dslices(self, A_st, P_st, Z_st, L_st, w2b_list, s_list, e_list,'
             cols.append(zeros())
             cols.append(zeros())
         else:
-            cols.append(fd["Phi"] * (W @ gst["u"]))      # transported previous correction
+            pmu = fd["Phi"] * (W @ gst["u"])
+            cols.append(pmu)      # transported previous correction
             cols.append((W * W) @ gst["q"])              # transported auxiliary state
         cols.append(zeros() + float(li / 15.0))
         inp = fnp.stack(cols, axis=1)                                             # (n, F+3)
@@ -159,6 +160,8 @@ rep('''    def _dslices(self, A_st, P_st, Z_st, L_st, w2b_list, s_list, e_list,'
             a = h @ g["W1T"] + g["b1"][None, :]
             a = 0.5 * a * (1.0 + fnp.tanh(0.7978845608028654 * (a + 0.044715 * a * a * a)))   # tanh-GELU
         gst["u"] = a @ g["w2u"] + g["b2u"]     # (n,) contiguous
+        if g["resid"] and gst["h"] is not None:
+            gst["u"] = gst["u"] + pmu   # V39: residual corrector (transported previous correction + local term)
         gst["q"] = a @ g["w2q"] + g["b2q"]
         gst["h"] = h
 

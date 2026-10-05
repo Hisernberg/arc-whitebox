@@ -5,6 +5,12 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334240-d5-N7-lic-robust-l4lp3rfb2/` | 334240 | ✅ GRADED | 4.188e-09 | 2026-10-05 | nabid_nur: robust nomination build: lone products at level 4 (wall median 101 s, max 113 s) + join level 3 + rank 2, MIT notice shipped. Raw 2.037e-08, C/B 0.2057, 0 failures |
+| `334239-d5-M7-lic-v37lp3-rfb2/` | 334239 | ✅ GRADED | 4.145e-09 | 2026-10-05 | multi_agent: the 334221 build with 504aldo's MIT notice shipped (prize-eligible copy of the best). Raw 2.036e-08, C/B 0.2037, 0 failures |
+| `334230-d5-N6-v37lp4-rfb2-ft33f/` | 334230 | ✅ GRADED | 0.01509 | 2026-10-05 | nabid_nur: join level 4 + rank 2: **1 MLP over the 120 s wall limit** (max 119.5 s on the rest), catastrophic score; level 4 is too slow on the grader. Raw 0.01509, C/B 0.2198, 1 failures |
+| `334227-d5-M6-v37lp3-rfb2-ft33f/` | 334227 | ✅ GRADED | 4.145e-09 | 2026-10-05 | multi_agent: the 334221 build. Raw 2.036e-08, C/B 0.2037, 0 failures |
+| `334221-d5-N5-v37lp3-rfb2-ft33f/` | 334221 | ✅ GRADED | 4.145e-09 | 2026-10-05 | nabid_nur: V37 + join level 3 + D21 feedback rank 2. **Best score**. Raw 2.036e-08, C/B 0.2037, 0 failures |
+| `334220-d5-M5-v37lp3-rfb4-ft33f/` | 334220 | ✅ GRADED | 4.157e-09 | 2026-10-05 | multi_agent: V37 + join level 3 + D21 feedback rank 4. Raw 2.024e-08, C/B 0.2055, 0 failures |
 | `334215-d5-N4-v37-rfb2-ft33f/` | 334215 | ✅ GRADED | 4.156e-09 | 2026-10-05 | nabid_nur: V37 + D21 feedback rank 2 (C/B -2.7%, GRU unchanged). Raw 2.036e-08, C/B 0.2042, 0 failures |
 | `334213-d5-M4-v37-rfb4-ft33f/` | 334213 | ✅ GRADED | 4.166e-09 | 2026-10-05 | multi_agent: V37 + D21 feedback rank 4 (C/B -1.8%, GRU unchanged). Raw 2.022e-08, C/B 0.2061, 0 failures |
 | `334209-d5-N3-v37-ft33i/` | 334209 | ✅ GRADED | 4.198e-09 | 2026-10-05 | nabid_nur: V37 + ft33i GRU (all 598 dumps): raw 1.992e-08 but C/B +0.5% (the corrector shifts the pruning). Raw 1.992e-08, C/B 0.2109, 0 failures |
