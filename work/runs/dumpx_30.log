@@ -1,0 +1,56 @@
+/home/user/arc-whitebox/work/est_v34_k1.py:787: FlopscopeWarning: stats.norm.pdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  flops.stats.norm.pdf(v)
+/home/user/arc-whitebox/work/est_v34_k1.py:788: FlopscopeWarning: stats.norm.cdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  flops.stats.norm.cdf(v)
+/home/user/arc-whitebox/work/est_v34_k1.py:802: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("tij,ti,tj,tg->gij", t3, t3[:, :, 0], t3[:, 0, :], g3)
+/home/user/arc-whitebox/work/est_v34_k1.py:803: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("ti,ti,tg->gi", t3[:, :, 0], t3[:, :, 1], g3)
+/home/user/arc-whitebox/work/est_v34_k1.py:804: SymmetryLossWarning: Symmetry lost along dims (0, 1): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("iq,kqn->kin", m[:, :16], t3[:, :16, :])
+/home/user/arc-whitebox/work/est_v34_k1.py:804: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("iq,kqn->kin", m[:, :16], t3[:, :16, :])
+/home/user/arc-whitebox/work/est_v34_k1.py:805: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("ki,kc->ic", t3[:, :, 0], t3[:, :, 1])
+/home/user/arc-whitebox/work/est_v34_k1.py:807: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("kij,kj->ki", t3, t3[:, 0, :])
+/home/user/arc-whitebox/work/est_v34_k1.py:808: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("ki,ki->i", t3[:, :, 0], t3[:, :, 1])
+/home/user/arc-whitebox/work/est_v34_k1.py:809: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("kij,kqj->iq", t3, t3[:, :16, :])
+/home/user/arc-whitebox/work/est_v34_k1.py:1254: FlopscopeWarning: stats.norm.pdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  phi = flops.stats.norm.pdf(alpha).astype(f32)
+/home/user/arc-whitebox/work/est_v34_k1.py:1255: FlopscopeWarning: stats.norm.cdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  Phi = flops.stats.norm.cdf(alpha).astype(f32)
+/home/user/arc-whitebox/work/est_v34_k1.py:1199: FlopscopeWarning: stats.norm.cdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  lvc = self._live(flops.stats.norm.cdf(mu / fnp.sqrt(var)).astype(f32), n)
+[030] craig-wall             mse=2.7173e-08 C/B=0.3346 t=58s
+[031] rebecca-rubio          mse=2.5720e-08 C/B=0.3325 t=48s
+[032] brittany-parker        mse=1.5858e-08 C/B=0.3323 t=46s
+[033] stephanie-christensen  mse=1.9143e-08 C/B=0.3324 t=46s
+[034] emma-proctor           mse=2.2030e-08 C/B=0.3307 t=52s
+[035] cheryl-burns           mse=2.2459e-08 C/B=0.3323 t=50s
+[036] elizabeth-smith        mse=2.5126e-08 C/B=0.3323 t=48s
+[037] theresa-cook           mse=2.4181e-08 C/B=0.3291 t=47s
+[038] frances-kirby          mse=2.5548e-08 C/B=0.3324 t=48s
+[039] brenda-watson          mse=2.0821e-08 C/B=0.3291 t=46s
+[040] jamie-rodriguez        mse=2.0601e-08 C/B=0.3291 t=50s
+[041] william-baker          mse=2.3648e-08 C/B=0.3307 t=49s
+[042] donald-davis           mse=2.2729e-08 C/B=0.3323 t=46s
+[043] taylor-mccann          mse=1.7282e-08 C/B=0.3306 t=46s
+[044] patricia-cruz          mse=2.6372e-08 C/B=0.3291 t=48s
+[045] felicia-richards       mse=2.1419e-08 C/B=0.3307 t=45s
+[046] debbie-sanchez         mse=2.7446e-08 C/B=0.3324 t=47s
+[047] ross-meza              mse=2.2604e-08 C/B=0.3291 t=49s
+[048] larry-davis            mse=2.1527e-08 C/B=0.3356 t=48s
+[049] lauren-murray          mse=2.1569e-08 C/B=0.3292 t=52s
+[050] luis-shaw              mse=1.7398e-08 C/B=0.3306 t=48s
+[051] john-horne             mse=2.6095e-08 C/B=0.3291 t=52s
+[052] angela-mitchell        mse=2.0259e-08 C/B=0.3291 t=50s
+[053] molly-foley            mse=2.4234e-08 C/B=0.3308 t=48s
+[054] christine-stone        mse=2.2599e-08 C/B=0.3276 t=49s
+[055] ellen-rodriguez        mse=2.4532e-08 C/B=0.3275 t=50s
+[056] melanie-buchanan       mse=2.3130e-08 C/B=0.3275 t=51s
+[057] jeremy-jones           mse=1.8528e-08 C/B=0.3323 t=48s
+[058] tonya-avila            mse=2.1099e-08 C/B=0.3307 t=47s
+[059] deborah-anderson       mse=2.5258e-08 C/B=0.3324 t=46s

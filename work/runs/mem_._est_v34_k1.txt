@@ -1,0 +1,14 @@
+after load: VmRSS 0.33 GB VmHWM 2.39 GB
+after predict 0 peak 6.93 GB
+after predict 1 peak 6.93 GB
+Traceback (most recent call last):
+  File "/home/user/arc-whitebox/work/mem_probe.py", line 49, in <module>
+    walk(est, "est")
+  File "/home/user/arc-whitebox/work/mem_probe.py", line 46, in walk
+    for k, v in vars(obj).items(): walk(v, path + "." + k, depth + 1)
+  File "/home/user/arc-whitebox/work/mem_probe.py", line 37, in walk
+    if hasattr(obj, "shape") and hasattr(obj, "dtype"):
+  File "/tmp/claude-0/-home-user-arc-whitebox/828b687d-6a50-5b7c-872b-6b10df70baf6/scratchpad/whest-starterkit/.venv/lib/python3.10/site-packages/flopscope/numpy/random/_counted_classes.py", line 213, in __getattribute__
+    raise UnsupportedFunctionError(
+flopscope.errors.UnsupportedFunctionError: numpy.flopscope does not count Generator.shape. This is either a new numpy method or one not yet wrapped. See https://github.com/AIcrowd/flopscope/issues/18 is not supported by flopscope.
+held buffers 0.00 GB in 0 arrays
