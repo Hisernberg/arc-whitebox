@@ -13,8 +13,10 @@ names = None
 for i in ids:
     d = np.load(f"{FE}/feat_{i:04d}.npz"); g = np.load(f"{FE}/G_{i:04d}.npz")
     born = g["born"].astype(np.float64)
+    k4names = list(g["k4m_names"]); k4arr = g["k4m"].astype(np.float64)
+    k4m = {m: {k4names[q]: k4arr[m, :, q] for q in range(len(k4names))} for m in range(16)}
     for m in range(16):
-        F = features(d, m)
+        F = features(d, m, k4m)
         if names is None:
             names = list(F.keys())
         H[m].append(np.stack([F[k] for k in names], 1)); B[m].append(born[m])

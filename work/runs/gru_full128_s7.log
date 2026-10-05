@@ -1,0 +1,10 @@
+730 MLPs: train 630 holdout 100
+F=30 sig_mu=1.218e-04
+/home/user/arc-whitebox/work/gru_corr.py:187: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss)
+ep   0 loss 1.2211  final-layer MSE ratio train 0.936  holdout 0.945 (median 0.943)  best 0.945@0  t=670s
+ep   1 loss 1.1594  final-layer MSE ratio train 0.933  holdout 0.940 (median 0.937)  best 0.940@1  t=1304s
+ep   2 loss 1.1423  final-layer MSE ratio train 0.921  holdout 0.933 (median 0.933)  best 0.933@2  t=1878s
+BEST holdout ratio 0.9330 at epoch 2 (saved)
+saved work/gru_full128_s7.npz params 96130

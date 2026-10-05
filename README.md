@@ -18,7 +18,7 @@ A personal archive of my submissions to the **ARC White-Box Estimation Challenge
 - **Solo participant** (no team)
 - **Challenge**: ARC White-Box Estimation Challenge 2026 (`arc-white-box-estimation-challenge-2026`, challenge ID 1174)
 - **Submissions**: 6 in total — all in **Phase 2** (round id 1429), Aug 22 – Oct 17, 2026
-- **Best score**: **MSE = 5.3936e-09** on submission `#333364` (graded 2026-10-01 16:00 UTC)
+- **Best score**: **MSE = 4.225e-09** on submission `#334182` (V36, lone level 5, ft33c GRU; raw 1.998e-08, C/B 0.2115). Previous: **4.255e-09** on submission `#334177` (graded 2026-10-05, `koushik_rudra` account): V35 (dead-ReLU pruning, shared Strassen scratch, dense join products, D21 feedback rank 8, lean Strassen helper, lone products at Strassen level 4) + a GRU corrector fine-tuned on V34 features (raw 2.001e-08, C/B 0.2127). Earlier bests: 4.304e-09 (`#334176`), 4.340e-09 (`#334168`), 4.381e-09 (`#334161`, ties koushik_rudra's 333689), 4.6544e-09 (`#334013`, multi_agent), 4.6582e-09 (`#334034`, nabid_nur), 5.3936e-09 (`#333364`)
 - **Iteration trajectory** (graded submissions only, oldest → newest):
   - `#333177` (2026-09-30 17:22 UTC): MSE = 9.950e-09
   - `#333323` (2026-10-01 10:30 UTC): MSE = 5.418e-09

@@ -28,6 +28,7 @@ GRU_FEATS = ["mu_pre", "var", "alpha", "phi", "Phi", "D3", "g4row", "K2v", "K3v"
              "d21T_abs", "d21_colsum", "d21_rowsum", "pred"]
 GRU_OFF = _os.environ.get("V31_GRU_OFF", "0") == "1"
 GRU_STEP = _os.environ.get("V31_GRU_STEP", "1") == "1"   # 0 -> load the model but never run the step (bisection)
+GRU_WARM = _os.environ.get("V31_GRU_WARM", "1") == "1"   # setup-time dry run of the step at n = 8
 
 
 GRU_JSON = None   # optionally replaced by make_v31.py --embed with the model as a JSON string literal
@@ -49,12 +50,17 @@ def _gru_from_dict(d):
             return g
 
 
+def _gru_from_obj(obj):
+    models = obj if isinstance(obj, list) else [obj]
+    return [_gru_from_dict(d) for d in models]
+
+
 def _load_gru(ctx):
-    """Model parameters: the embedded GRU_JSON literal, else gru_model.json beside this file or in
-    ctx.submission_dir. Any failure -> None (the estimator then runs as V29)."""
+    """Model parameters (one model or a list, averaged): the embedded GRU_JSON literal, else
+    gru_model.json beside this file or in ctx.submission_dir. Any failure -> None (V29 behaviour)."""
     try:
         if GRU_JSON is not None:
-            return _gru_from_dict(_json.loads(GRU_JSON))
+            return _gru_from_obj(_json.loads(GRU_JSON))
         cands = []
         sd = getattr(ctx, "submission_dir", None)
         if sd:
@@ -67,7 +73,7 @@ def _load_gru(ctx):
         for p in cands:
             if _os.path.exists(p):
                 with open(p) as fh:
-                    return _gru_from_dict(_json.load(fh))
+                    return _gru_from_obj(_json.load(fh))
     except Exception:
         return None
     return None
@@ -79,14 +85,34 @@ rep('''    def setup(self, ctx: SetupContext) -> None:
 ''', '''    def setup(self, ctx: SetupContext) -> None:
         self._setup_rng = fnp.random.default_rng(ctx.seed)
         self._gru = None if GRU_OFF else _load_gru(ctx)
+        if self._gru is not None and GRU_WARM:
+            # tiny dry run of the corrector step (n = 8, two layers): same ops as the suite path
+            f32 = fnp.float32
+            n8 = 8
+            Wt = fnp.zeros((n8, n8), dtype=f32) + 0.1
+            fd = {k: fnp.zeros(n8, dtype=f32) + 0.5 for k in GRU_FEATS}
+            fd["lam"] = 0.01
+            gst = [{"u": None, "q": None, "h": None} for _ in self._gru]
+            for li in range(2):
+                self._gru_step(li, fd, Wt, gst, n8)
+            _ = float(fnp.sum(gst[0]["u"]))
 ''')
 
 # 3. the GRU step method, inserted before _dslices
 rep('''    def _dslices(self, A_st, P_st, Z_st, L_st, w2b_list, s_list, e_list,''',
 '''    def _gru_step(self, li, fd, W, gst, n):
-        """One GRU corrector step on layer li's per-neuron features fd (dict of (n,) fnp arrays).
-        gst holds u (normalized mean correction), q (aux) and h (hidden) of the previous layer."""
-        g = self._gru
+        """One corrector step for every model: gst[m] holds u (normalized mean correction), q (aux)
+        and h (hidden) of model m at the previous layer. Returns the mean correction (activation
+        units) of this layer."""
+        corr = None
+        for g, st in zip(self._gru, gst):
+            self._gru_step1(g, li, fd, W, st, n)
+            c = st["u"] * float(g["sig_mu"] / len(self._gru))
+            corr = c if corr is None else corr + c
+        return corr
+
+    def _gru_step1(self, g, li, fd, W, gst, n):
+        """One GRU corrector step on layer li's per-neuron features fd (dict of (n,) fnp arrays)."""
         f32 = fnp.float32
         def zeros():
             return fnp.zeros(n, dtype=f32)   # a fresh array per use: never the same operand twice in one op
@@ -144,7 +170,8 @@ rep('''        rows = []
         w1_prev = None  # wick w(1) of the previous layer, folded into WD
 ''', '''        rows = []
         FEAT.clear()
-        gst = {"u": None, "q": None, "h": None}
+        gru_on = self._gru is not None and GRU_STEP and n == 1024 and L == 16   # suite shape only (16-row tables)
+        gst = [{"u": None, "q": None, "h": None} for _ in (self._gru or [])]
 
         w1_prev = None  # wick w(1) of the previous layer, folded into WD
 ''')
@@ -158,9 +185,8 @@ rep('''            if last:
 ''', '''            if last:
                 FEAT[-1].update(pred=_f(pk1v))
             if last:
-                if self._gru is not None and GRU_STEP:
-                    self._gru_step(li, FEAT[-1], W, gst, n)
-                    pk1v = pk1v + gst["u"] * float(self._gru["sig_mu"])
+                if gru_on:
+                    pk1v = pk1v + self._gru_step(li, FEAT[-1], W, gst, n)
                 rows.append(pk1v if delta is None else pk1v + delta)
                 break
 ''')
@@ -173,7 +199,7 @@ rep('''            if riders:
 ''', '''            if riders:
                 K4_vec = (K4v * float(st["k4_c4"])
                           + (K22 @ ones_n) * float(st["k4_c22"])) * float(n * st["P2"])
-            if self._gru is not None and GRU_STEP:
+            if gru_on:
                 self._gru_step(li, FEAT[-1], W, gst, n)
             rows.append(mu)
 ''')

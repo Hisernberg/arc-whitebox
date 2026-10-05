@@ -1,0 +1,57 @@
+/home/user/arc-whitebox/work/estimator_v33.py:771: FlopscopeWarning: stats.norm.pdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  flops.stats.norm.pdf(v)
+/home/user/arc-whitebox/work/estimator_v33.py:772: FlopscopeWarning: stats.norm.cdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  flops.stats.norm.cdf(v)
+/home/user/arc-whitebox/work/estimator_v33.py:786: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("tij,ti,tj,tg->gij", t3, t3[:, :, 0], t3[:, 0, :], g3)
+/home/user/arc-whitebox/work/estimator_v33.py:787: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("ti,ti,tg->gi", t3[:, :, 0], t3[:, :, 1], g3)
+/home/user/arc-whitebox/work/estimator_v33.py:788: SymmetryLossWarning: Symmetry lost along dims (0, 1): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("iq,kqn->kin", m[:, :16], t3[:, :16, :])
+/home/user/arc-whitebox/work/estimator_v33.py:788: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("iq,kqn->kin", m[:, :16], t3[:, :16, :])
+/home/user/arc-whitebox/work/estimator_v33.py:789: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("ki,kc->ic", t3[:, :, 0], t3[:, :, 1])
+/home/user/arc-whitebox/work/estimator_v33.py:791: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("kij,kj->ki", t3, t3[:, 0, :])
+/home/user/arc-whitebox/work/estimator_v33.py:792: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("ki,ki->i", t3[:, :, 0], t3[:, :, 1])
+/home/user/arc-whitebox/work/estimator_v33.py:793: SymmetryLossWarning: Symmetry lost along dims (1, 2): slicing removed all symmetric dim groups. Use as_symmetric() to re-tag if you know the result is symmetric. Suppress with flops.configure(symmetry_warnings=False).
+  fnp.einsum("kij,kqj->iq", t3, t3[:, :16, :])
+/home/user/arc-whitebox/work/estimator_v33.py:1238: FlopscopeWarning: stats.norm.pdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  phi = flops.stats.norm.pdf(alpha).astype(f32)
+/home/user/arc-whitebox/work/estimator_v33.py:1239: FlopscopeWarning: stats.norm.cdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  Phi = flops.stats.norm.cdf(alpha).astype(f32)
+/home/user/arc-whitebox/work/estimator_v33.py:1183: FlopscopeWarning: stats.norm.cdf promoted its float32 input to float64 to match scipy.stats. If float64 output was not intended, cast the result back with result.astype(np.float32) before downstream operations; float64 operations are billed at twice the float32 dtype rate.
+  lvc = self._live(flops.stats.norm.cdf(mu / fnp.sqrt(var)).astype(f32), n)
+OpRecord fields: ['count', 'cumulative', 'flop_cost', 'flopscope_backend_duration_s', 'flopscope_context_start_offset_s', 'flopscope_overhead_duration_s', 'index', 'namespace', 'op_name', 'resolved_dtype', 'shapes', 'subscripts']
+total C/B 0.21425  units 219.4  ops 23588
+  16.16 u   7.4%    28 x  matmul         ((1, 2401, 32, 32), (8, 2401, 32, 32))
+  15.13 u   6.9%    28 x  matmul         ((1, 2401, 32, 30), (8, 2401, 30, 32))
+  14.61 u   6.7%    51 x  matmul         ((1, 49, 256, 256), (1, 49, 256, 96))
+  14.20 u   6.5%    28 x  matmul         ((8, 2401, 30, 32), (8, 2401, 32, 30))
+  12.37 u   5.6%    28 x  matmul         ((8, 2401, 28, 32), (8, 2401, 32, 28))
+  12.12 u   5.5%    21 x  matmul         ((8, 2401, 32, 32), (8, 2401, 32, 32))
+  10.58 u   4.8%    21 x  matmul         ((1, 2401, 32, 28), (8, 2401, 28, 32))
+   9.95 u   4.5%    63 x  matmul         ((1, 2401, 32, 12), (6, 2401, 12, 32))
+   5.73 u   2.6%    20 x  matmul         ((1, 49, 96, 256), (1, 49, 256, 256))
+   5.59 u   2.5%    52 x  matmul         ((1, 49, 96, 256), (1, 49, 256, 96))
+   5.30 u   2.4%    98 x  matmul         ((3, 2401, 16, 32), (3, 2401, 32, 16))
+   4.50 u   2.1%     7 x  matmul         ((1, 49, 96, 96), (6, 49, 96, 256))
+   4.41 u   2.0%     7 x  matmul         ((1, 2401, 32, 28), (10, 2401, 28, 32))
+   4.26 u   1.9%    28 x  matmul         ((6, 2401, 30, 32), (6, 2401, 32, 12))
+   3.98 u   1.8%    28 x  matmul         ((6, 2401, 28, 32), (6, 2401, 32, 12))
+   3.46 u   1.6%    14 x  matmul         ((1, 343, 64, 14), (14, 343, 14, 64))
+   3.03 u   1.4%     7 x  matmul         ((1, 2401, 32, 32), (6, 2401, 32, 32))
+   3.03 u   1.4%     7 x  matmul         ((6, 2401, 32, 32), (6, 2401, 32, 32))
+   2.47 u   1.1%    14 x  einsum         ((52, 1024, 1024), (52, 1024), (52, 1024), (52, 3))
+   2.46 u   1.1%    10 x  linalg.qr      ((1024, 384),)
+   2.02 u   0.9%     7 x  matmul         ((1, 2401, 32, 32), (4, 2401, 32, 32))
+   2.02 u   0.9%     7 x  matmul         ((4, 2401, 32, 32), (4, 2401, 32, 32))
+   1.71 u   0.8%  3187 x  copyto         
+   1.56 u   0.7%     7 x  matmul         ((14, 343, 56, 64), (14, 343, 64, 14))
+   1.48 u   0.7%     7 x  matmul         ((1, 343, 64, 14), (12, 343, 14, 64))
+   1.42 u   0.6%    27 x  matmul         ((384, 384), (384, 384))
+   1.34 u   0.6%     7 x  matmul         ((12, 343, 56, 64), (12, 343, 64, 14))
+   1.24 u   0.6%     7 x  matmul         ((1, 343, 64, 14), (10, 343, 14, 64))
+peak RSS 11.16 GB

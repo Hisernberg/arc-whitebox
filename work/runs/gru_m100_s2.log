@@ -1,0 +1,20 @@
+100 MLPs: train 80 holdout 20
+F=30 sig_mu=1.221e-04
+/home/user/arc-whitebox/work/gru_corr.py:184: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss)
+ep   0 loss 1.2696  final-layer MSE ratio train 0.998  holdout 0.999 (median 1.000)  best 0.999@0  t=45s
+ep   5 loss 1.2544  final-layer MSE ratio train 0.988  holdout 0.991 (median 0.993)  best 0.991@5  t=232s
+ep  10 loss 1.1856  final-layer MSE ratio train 0.937  holdout 0.965 (median 0.956)  best 0.965@10  t=414s
+ep  15 loss 1.1516  final-layer MSE ratio train 0.913  holdout 0.979 (median 0.972)  best 0.965@10  t=697s
+ep  20 loss 1.1424  final-layer MSE ratio train 0.902  holdout 0.980 (median 0.981)  best 0.965@10  t=947s
+ep  25 loss 1.1233  final-layer MSE ratio train 0.886  holdout 0.979 (median 0.980)  best 0.965@10  t=1191s
+ep  30 loss 1.1175  final-layer MSE ratio train 0.875  holdout 0.984 (median 0.992)  best 0.965@10  t=1458s
+ep  35 loss 1.1070  final-layer MSE ratio train 0.872  holdout 1.003 (median 0.993)  best 0.965@10  t=1701s
+ep  40 loss 1.0987  final-layer MSE ratio train 0.866  holdout 1.000 (median 1.006)  best 0.965@10  t=1952s
+ep  45 loss 1.0941  final-layer MSE ratio train 0.860  holdout 0.994 (median 0.984)  best 0.965@10  t=2140s
+ep  50 loss 1.0919  final-layer MSE ratio train 0.857  holdout 0.999 (median 0.990)  best 0.965@10  t=2324s
+ep  55 loss 1.0904  final-layer MSE ratio train 0.857  holdout 1.000 (median 0.993)  best 0.965@10  t=2512s
+ep  59 loss 1.0899  final-layer MSE ratio train 0.857  holdout 1.000 (median 0.993)  best 0.965@10  t=2659s
+BEST holdout ratio 0.9651 at epoch 10 (saved)
+saved work/gru_m100_s2.npz params 16850
