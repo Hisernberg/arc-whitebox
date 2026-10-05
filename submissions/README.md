@@ -5,6 +5,9 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334265-d5-N9-lic-v37-allft/` | 334265 | ✅ GRADED | 4.133e-09 | 2026-10-05 | nabid_nur: licensed V37 + join level 3 + rank 2 + **GRU fine-tuned on ~1000 MLPs** (held-out 0.913). **Best score**. Raw 2.03e-08, C/B 0.2037, 0 failures |
+| `334261-d5-M8-lic-robust-l4lp3rfb2/` | 334261 | ✅ GRADED | 4.174e-09 | 2026-10-05 | multi_agent: robust licensed nominee (lone level 4). Raw 2.036e-08, C/B 0.2051, 0 failures |
+| `334260-d5-N8-lic-v37lp3-rfb2/` | 334260 | ✅ GRADED | 4.149e-09 | 2026-10-05 | nabid_nur: licensed copy of the 334221 build. Raw 2.035e-08, C/B 0.2039, 0 failures |
 | `334240-d5-N7-lic-robust-l4lp3rfb2/` | 334240 | ✅ GRADED | 4.188e-09 | 2026-10-05 | nabid_nur: robust nomination build: lone products at level 4 (wall median 101 s, max 113 s) + join level 3 + rank 2, MIT notice shipped. Raw 2.037e-08, C/B 0.2057, 0 failures |
 | `334239-d5-M7-lic-v37lp3-rfb2/` | 334239 | ✅ GRADED | 4.145e-09 | 2026-10-05 | multi_agent: the 334221 build with 504aldo's MIT notice shipped (prize-eligible copy of the best). Raw 2.036e-08, C/B 0.2037, 0 failures |
 | `334230-d5-N6-v37lp4-rfb2-ft33f/` | 334230 | ✅ GRADED | 0.01509 | 2026-10-05 | nabid_nur: join level 4 + rank 2: **1 MLP over the 120 s wall limit** (max 119.5 s on the rest), catastrophic score; level 4 is too slow on the grader. Raw 0.01509, C/B 0.2198, 1 failures |
