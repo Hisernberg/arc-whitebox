@@ -58,3 +58,11 @@ Tuning the current chain gives ~0.5–1% per day; reaching the top needs a struc
   (topics 18218, 18219) list no unexplored large lever, and wall time (max 118.5 s on 334393) blocks deeper
   Strassen. kaileh57 (rank 19) runs at our cost (C/B 0.19) with 30% lower MSE (1.41e-08): the gap is a better
   closure, not tuning. No submission was made for this target; copies of existing builds would not move the rank.
+- **Layer-transport error decomposition** (`work/lt/decomp.py`, 20 MLPs): the pre-activation mean is exactly linear in the
+  previous layer's mean, so each layer's error = Phi ⊙ (previous error @ W) + a new local error. The new local error is
+  3–4.5e-09 per layer; at the final layer 80% of the error is carried forward and 20% is new.
+- **Per-layer local-error corrector** (`work/lt/train_lt.py`): an MLP predicting each layer's local error from that layer's
+  per-neuron statistics, with the corrections carried forward through W. Trained on 972 MLPs, held-out 53: **ratio 0.900**
+  vs 0.913 for the production GRU (which already transports corrections through W). Local predictability is weak at depth
+  (unexplained 0.90–0.94 from layer 7 on): the closure error is not a function of per-neuron statistics. ~1.5% better than
+  the current corrector, below the 10% bar for a submission.
