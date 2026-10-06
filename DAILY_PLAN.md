@@ -41,3 +41,14 @@ Tuning the current chain gives ~0.5–1% per day; reaching the top needs a struc
   D21 feedback rank 8 → 2 (C/B −2.7%, raw +1.9%, corrector unaffected). Level 4 overran the 120 s wall limit.
 - **Levers measured and rejected**: deeper Strassen on small blocks (V38), finer pruning sizes, pruning
   threshold 0.002/0.003, QPASS2=1, R_OLD=352, AGE_OLD2 6/8, R_FB=1.
+### 2026-10-06
+- **Wall time is now the binding risk.** The 4.133e-09 build (lone products at Strassen level 5) overran the
+  120 s limit on 2 networks on koushik_rudra (334327, score 0.030) while the identical build passed on the other
+  accounts. With level-4 join products (334230) that makes two wall failures. Default exploration base is now
+  the robust lone-level-4 build (4.161e-09, wall max 108–110 s).
+- Corrector: hidden-state transport through W (`--hprop`) was worse (0.940 vs 0.930 at 2 epochs); a wider
+  hidden-96 model plateaued at 0.925 (overfits); the best pair (all-data fine-tune + from-scratch) gains only
+  0.3% (0.9105) — below the ~0.6% needed to pay for a second member. The corrector is saturated at ~0.913.
+- Chain from the other side: AGE_OLD=5 (−3.1% raw, +3.9% cost, 8.2 GB peak) and R_OLD=416 (−2.0% raw, +3.0%
+  cost) are net worse. D21 feedback rank 3 graded 4.143e-09 (rank 2 stays); nested-tier age gate 8 graded
+  4.133e-09 (neutral).
