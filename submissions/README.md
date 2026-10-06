@@ -5,6 +5,19 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334345-d6-N2-rb-lp2/` | 334345 | ✅ GRADED | 4.17e-09 | 2026-10-06 | nabid_nur: robust + join level 2 (wall max 105 s, safest). Raw 2.029e-08, C/B 0.2056, 0 failures |
+| `334344-d6-M2-rb-pair/` | 334344 | ✅ GRADED | 4.16e-09 | 2026-10-06 | multi_agent: robust + 2-member corrector (best robust). Raw 2.023e-08, C/B 0.2058, 0 failures |
+| `334343-d6-K3-rb-ageold2-8/` | 334343 | ✅ GRADED | 4.162e-09 | 2026-10-06 | koushik_rudra: robust + age gate 8. Raw 2.012e-08, C/B 0.2069, 0 failures |
+| `334338-d6-K2-lic-robust-allft/` | 334338 | ✅ GRADED | 4.161e-09 | 2026-10-06 | koushik_rudra: robust licensed all-data build. Raw 2.03e-08, C/B 0.2051, 0 failures |
+| `334329-d6-N1-allft-ageold2-8/` | 334329 | ✅ GRADED | 4.133e-09 | 2026-10-06 | nabid_nur: nested-tier age gate 8: neutral. Raw 2.012e-08, C/B 0.2055, 0 failures |
+| `334328-d6-M1-allft-rfb3/` | 334328 | ✅ GRADED | 4.143e-09 | 2026-10-06 | multi_agent: D21 feedback rank 3: worse than rank 2. Raw 2.022e-08, C/B 0.2050, 0 failures |
+| `334327-d6-K1-lic-v37-allft/` | 334327 | ✅ GRADED | 0.02995 | 2026-10-06 | koushik_rudra: the 4.133e-09 build: **2 networks over the 120 s wall limit** on a slow grader (identical build passed on the other accounts). Raw 0.02995, C/B 0.2359, 2 failures |
+| `334282-d5-N10-lic-robust-allft/` | 334282 | ✅ GRADED | 4.161e-09 | 2026-10-05 | nabid_nur: robust licensed nominee (lone level 4), wall max 108.2 s. Raw 2.03e-08, C/B 0.2051, 0 failures |
+| `334281-d5-M10-lic-robust-allft/` | 334281 | ✅ GRADED | 4.161e-09 | 2026-10-05 | multi_agent: robust licensed nominee (lone level 4), wall max 109.5 s. Raw 2.03e-08, C/B 0.2051, 0 failures |
+| `334280-d5-M9-lic-v37-allft/` | 334280 | ✅ GRADED | 4.133e-09 | 2026-10-05 | multi_agent: licensed all-data corrector build (lone level 5). Raw 2.03e-08, C/B 0.2037, 0 failures |
+| `334265-d5-N9-lic-v37-allft/` | 334265 | ✅ GRADED | 4.133e-09 | 2026-10-05 | nabid_nur: licensed V37 + join level 3 + rank 2 + **GRU fine-tuned on ~1000 MLPs** (held-out 0.913). **Best score**. Raw 2.03e-08, C/B 0.2037, 0 failures |
+| `334261-d5-M8-lic-robust-l4lp3rfb2/` | 334261 | ✅ GRADED | 4.174e-09 | 2026-10-05 | multi_agent: robust licensed nominee (lone level 4). Raw 2.036e-08, C/B 0.2051, 0 failures |
+| `334260-d5-N8-lic-v37lp3-rfb2/` | 334260 | ✅ GRADED | 4.149e-09 | 2026-10-05 | nabid_nur: licensed copy of the 334221 build. Raw 2.035e-08, C/B 0.2039, 0 failures |
 | `334240-d5-N7-lic-robust-l4lp3rfb2/` | 334240 | ✅ GRADED | 4.188e-09 | 2026-10-05 | nabid_nur: robust nomination build: lone products at level 4 (wall median 101 s, max 113 s) + join level 3 + rank 2, MIT notice shipped. Raw 2.037e-08, C/B 0.2057, 0 failures |
 | `334239-d5-M7-lic-v37lp3-rfb2/` | 334239 | ✅ GRADED | 4.145e-09 | 2026-10-05 | multi_agent: the 334221 build with 504aldo's MIT notice shipped (prize-eligible copy of the best). Raw 2.036e-08, C/B 0.2037, 0 failures |
 | `334230-d5-N6-v37lp4-rfb2-ft33f/` | 334230 | ✅ GRADED | 0.01509 | 2026-10-05 | nabid_nur: join level 4 + rank 2: **1 MLP over the 120 s wall limit** (max 119.5 s on the rest), catastrophic score; level 4 is too slow on the grader. Raw 0.01509, C/B 0.2198, 1 failures |

@@ -25,3 +25,30 @@ Tuning the current chain gives ~0.5–1% per day; reaching the top needs a struc
 1. A cheaper chain (C/B ≈ 0.15) whose extra error the learned corrector absorbs, retrained on that chain.
 2. A stronger corrector (more training MLPs, training through the corrected chain instead of on uncorrected features).
 3. Memory-lean buffers so the main transport can use one more Strassen level (currently blocked by the 8 GB cap).
+
+## Research log
+### 2026-10-05
+- **Error anatomy** (53 held-out MLPs, chain without corrector): final-layer error grows linearly with depth
+  (0.7e-9 at layer 0 → 23e-9 at layer 15). 66% of it sits in nearly-always-active neurons (Φ > 0.9),
+  where ReLU is ~linear, so it is mean error inherited through W. No global or per-MLP bias (<0.5%).
+- **Corrector**: held-out ratio improves slowly with data (71 → 142 → 418 → ~950 MLPs: 0.928 → 0.925 →
+  0.917 → 0.913). A residual connection (u = Φ·(W·u_prev) + local term) was *worse* in a controlled pilot
+  (0.949 vs 0.944). Training from scratch on ~950 MLPs reached 0.917; fine-tuning the old model on them, 0.913.
+- **Cheaper chain + corrector does not work**: the corrector removes a fixed ~9% of whatever error the chain
+  leaves (AGE_OLD=3: ratio 0.924 on +15% raw; R_OLD2=192: 0.914 on +1.6% raw). The leaders' gap is not
+  "cheap chain + our corrector"; it needs either a better closure or a corrector with richer cross-neuron inputs.
+- **Cost levers that worked on the grader**: join products at Strassen level 2/3 after the first 5 MLPs,
+  D21 feedback rank 8 → 2 (C/B −2.7%, raw +1.9%, corrector unaffected). Level 4 overran the 120 s wall limit.
+- **Levers measured and rejected**: deeper Strassen on small blocks (V38), finer pruning sizes, pruning
+  threshold 0.002/0.003, QPASS2=1, R_OLD=352, AGE_OLD2 6/8, R_FB=1.
+### 2026-10-06
+- **Wall time is now the binding risk.** The 4.133e-09 build (lone products at Strassen level 5) overran the
+  120 s limit on 2 networks on koushik_rudra (334327, score 0.030) while the identical build passed on the other
+  accounts. With level-4 join products (334230) that makes two wall failures. Default exploration base is now
+  the robust lone-level-4 build (4.161e-09, wall max 108–110 s).
+- Corrector: hidden-state transport through W (`--hprop`) was worse (0.940 vs 0.930 at 2 epochs); a wider
+  hidden-96 model plateaued at 0.925 (overfits); the best pair (all-data fine-tune + from-scratch) gains only
+  0.3% (0.9105) — below the ~0.6% needed to pay for a second member. The corrector is saturated at ~0.913.
+- Chain from the other side: AGE_OLD=5 (−3.1% raw, +3.9% cost, 8.2 GB peak) and R_OLD=416 (−2.0% raw, +3.0%
+  cost) are net worse. D21 feedback rank 3 graded 4.143e-09 (rank 2 stays); nested-tier age gate 8 graded
+  4.133e-09 (neutral).

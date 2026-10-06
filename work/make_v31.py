@@ -37,7 +37,7 @@ GRU_JSON = None   # optionally replaced by make_v31.py --embed with the model as
 def _gru_from_dict(d):
             f32 = fnp.float32
             g = {k: fnp.asarray(d[k], dtype=f32) for k in ("bih", "bhh", "b1", "b2", "mu_f", "sd_f")}
-            g["H"] = int(d["H"]); g["sig_mu"] = float(d["sig_mu"]); g["feats"] = list(d["feats"]); g["act"] = str(d.get("act", "tanh")); g["resid"] = bool(d.get("resid", False))
+            g["H"] = int(d["H"]); g["sig_mu"] = float(d["sig_mu"]); g["feats"] = list(d["feats"]); g["act"] = str(d.get("act", "tanh")); g["resid"] = bool(d.get("resid", False)); g["hprop"] = bool(d.get("hprop", False))
             assert g["feats"] == GRU_FEATS, "feature list mismatch"
             # transposed (in, out) layouts built host-side in pure Python, uploaded once
             for k in ("Wih", "Whh", "W1"):
@@ -141,6 +141,8 @@ rep('''    def _dslices(self, A_st, P_st, Z_st, L_st, w2b_list, s_list, e_list,'
         inp = fnp.concatenate([X, inp[:, nf:]], axis=1)
         H = g["H"]
         h_prev = gst["h"] if gst["h"] is not None else fnp.zeros((n, H), dtype=f32)
+        if g["hprop"] and gst["h"] is not None:
+            h_prev = W @ h_prev   # V40: hidden state carried through the weights (trainer: h @ W[m])
         gi = inp @ g["WihT"] + g["bih"][None, :]
         gh = h_prev @ g["WhhT"] + g["bhh"][None, :]
         if g["act"] == "cdf":
