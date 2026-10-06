@@ -52,3 +52,9 @@ Tuning the current chain gives ~0.5–1% per day; reaching the top needs a struc
 - Chain from the other side: AGE_OLD=5 (−3.1% raw, +3.9% cost, 8.2 GB peak) and R_OLD=416 (−2.0% raw, +3.0%
   cost) are net worse. D21 feedback rank 3 graded 4.143e-09 (rank 2 stays); nested-tier age gate 8 graded
   4.133e-09 (neutral).
+- **Rank 18–22 target (asked 10-06)**: needs ~2.7–2.8e-09, i.e. −33% vs 4.13e-09 (MSE 1.37e-08 at our C/B 0.204, or
+  C/B 0.139 at our MSE). Every lever in this chain family moves raw and cost along a near-neutral frontier
+  (AGE_OLD=5: −3.1% raw / +3.9% cost; R_OLD=416: −2.0% / +3.0%), 504aldo's ablation table and the forum
+  (topics 18218, 18219) list no unexplored large lever, and wall time (max 118.5 s on 334393) blocks deeper
+  Strassen. kaileh57 (rank 19) runs at our cost (C/B 0.19) with 30% lower MSE (1.41e-08): the gap is a better
+  closure, not tuning. No submission was made for this target; copies of existing builds would not move the rank.
