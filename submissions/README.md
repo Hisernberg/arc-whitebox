@@ -5,6 +5,9 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334393-d6-K5-allft-ao8/` | 334393 | ✅ GRADED | 4.133e-09 | 2026-10-06 | koushik_rudra: best build (lone L5 + age gate 8) on the account that had failed it; passed, but wall max 118.5 s (limit 120). Raw 2.012e-08, C/B 0.2044, 0 failures |
+| `334355-d6-N3-rb-pair-nominee/` | 334355 | ✅ GRADED | 4.160e-09 | 2026-10-06 | nabid_nur: robust + 2-member corrector (nominee copy), wall max 105.8 s. Raw 2.023e-08, C/B 0.2046, 0 failures |
+| `334354-d6-K4-rb-pair-nominee/` | 334354 | ✅ GRADED | 4.160e-09 | 2026-10-06 | koushik_rudra: robust + 2-member corrector (nominee copy), wall max 111.3 s. Raw 2.023e-08, C/B 0.2046, 0 failures |
 | `334345-d6-N2-rb-lp2/` | 334345 | ✅ GRADED | 4.17e-09 | 2026-10-06 | nabid_nur: robust + join level 2 (wall max 105 s, safest). Raw 2.029e-08, C/B 0.2056, 0 failures |
 | `334344-d6-M2-rb-pair/` | 334344 | ✅ GRADED | 4.16e-09 | 2026-10-06 | multi_agent: robust + 2-member corrector (best robust). Raw 2.023e-08, C/B 0.2058, 0 failures |
 | `334343-d6-K3-rb-ageold2-8/` | 334343 | ✅ GRADED | 4.162e-09 | 2026-10-06 | koushik_rudra: robust + age gate 8. Raw 2.012e-08, C/B 0.2069, 0 failures |
