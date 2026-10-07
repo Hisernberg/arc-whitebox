@@ -20,9 +20,9 @@ Submissions go to all three accounts, 10 per account per UTC day (30 a day), fol
 
 | Account | Team | Best score so far |
 |---------|------|-------------------|
-| `nabid_nur` | Hydrion-Labs | **4.133e-09** (`#334265`, licensed); robust nominee 4.161e-09 (`#334282`) |
-| `multi_agent` | — | **4.133e-09** (`#334280`, licensed); robust nominee 4.160e-09 (`#334344`) |
-| `koushik_rudra` (participant ID `518412`) | — | 4.063e-09 (`#334556`, V41 LT corrector) |
+| `nabid_nur` | Hydrion-Labs | **4.063e-09** (`#334568`, V41 LT corrector); robust nominee 4.092e-09 (`#334569`) |
+| `multi_agent` | — | **4.063e-09** (`#334570`, V41 LT corrector); robust nominee 4.092e-09 (`#334571`) |
+| `koushik_rudra` (participant ID `518412`) | — | **4.063e-09** (`#334556`, V41 LT corrector); robust nominee 4.092e-09 (`#334555`) |
 
 - **Challenge**: ARC White-Box Estimation Challenge 2026 (`arc-white-box-estimation-challenge-2026`, challenge ID 1174)
 - **Submissions**: 59 archived under `submissions/phase-2/`, all in **Phase 2** (round id 1429), Aug 22 – Oct 17, 2026
