@@ -101,3 +101,7 @@ known path yet, so every day must buy either a measured gain or a measured fact.
   blend of both 0.897 (not worth two models). Local whest A/B on 2 mini MLPs: MSE ratio 0.974 / 0.997, cost +0.08%.
   Submitted on koushik_rudra: 334554 (L5 build) and 334555 (robust L4 build), plus accidental repeats 334556 / 334557.
 - LT seed ensemble (3 seeds): 0.8996 vs 0.900 single — no gain; seeds converge to the same function.
+- **V42 (LT + cross-neuron inputs)**: previous layer's var, phi, Phi, K3v, K4v, pred, g_post, e_b carried through W and W²
+  as 16 extra inputs. Held-out 0.892 (vs 0.900); local A/B vs V41: 1.944e-08 vs 1.990e-08 and 1.983e-08 vs 2.009e-08,
+  cost +0.13%. Submitted on all three accounts (334627–334632); predicted L5 ~4.02–4.03e-09, robust ~4.06e-09.
+- LT hidden 256 / 8 epochs with x2: held-out 0.889 (−0.3%) for ~4x the corrector FLOPs (~+1% C/B): net zero, not built.
