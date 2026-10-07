@@ -5,6 +5,14 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334571-d7-A2-v41-lt-robust/` | 334571 | ✅ GRADED | 4.092e-09 | 2026-10-07 | multi_agent: V41 LT on the robust build (nominee). Raw 1.977e-08, C/B 0.2060, wall max 107.4 s, 0 failures |
+| `334570-d7-A2-v41-lt/` | 334570 | ✅ GRADED | **4.063e-09** | 2026-10-07 | multi_agent: V41 LT on L5 + age gate 8 — new best. Raw 1.977e-08, C/B 0.2045, wall max 118.6 s, 0 failures |
+| `334569-d7-A1-v41-lt-robust/` | 334569 | ✅ GRADED | 4.092e-09 | 2026-10-07 | nabid_nur: V41 LT on the robust build (nominee). Raw 1.977e-08, C/B 0.2060, wall max 108.0 s, 0 failures |
+| `334568-d7-A1-v41-lt/` | 334568 | ✅ GRADED | **4.063e-09** | 2026-10-07 | nabid_nur: V41 LT on L5 + age gate 8 — new best. Raw 1.977e-08, C/B 0.2045, wall max 116.8 s, 0 failures |
+| `334557-d7-K4-v41-lt-robust-ao7/` | 334557 | ✅ GRADED | 4.093e-09 | 2026-10-07 | koushik_rudra: V41 LT corrector on the robust build, age gate 7. Raw 1.995e-08, C/B 0.2041, wall max 106.7 s, 0 failures |
+| `334556-d7-K3-v41-lt-repeat/` | 334556 | ✅ GRADED | **4.063e-09** | 2026-10-07 | koushik_rudra: V41 LT corrector (replaces GRU) on L5 + age gate 8 — **new best**. Raw 1.977e-08, C/B 0.2045, wall max 113.7 s, 0 failures |
+| `334555-d7-K2-v41-lt-robust/` | 334555 | ✅ GRADED | 4.092e-09 | 2026-10-07 | koushik_rudra: V41 LT corrector on the robust lone-level-4 build (nominee). Raw 1.977e-08, C/B 0.2060, wall max 109.1 s, 0 failures |
+| `334554-d7-K1-v41-lt/` | 334554 | ✅ GRADED | 0.0204 | 2026-10-07 | koushik_rudra: same file as 334556; **1 network over the 120 s wall limit** (119.7 s). C/B 0.2044 |
 | `334393-d6-K5-allft-ao8/` | 334393 | ✅ GRADED | 4.133e-09 | 2026-10-06 | koushik_rudra: best build (lone L5 + age gate 8) on the account that had failed it; passed, but wall max 118.5 s (limit 120). Raw 2.012e-08, C/B 0.2044, 0 failures |
 | `334355-d6-N3-rb-pair-nominee/` | 334355 | ✅ GRADED | 4.160e-09 | 2026-10-06 | nabid_nur: robust + 2-member corrector (nominee copy), wall max 105.8 s. Raw 2.023e-08, C/B 0.2046, 0 failures |
 | `334354-d6-K4-rb-pair-nominee/` | 334354 | ✅ GRADED | 4.160e-09 | 2026-10-06 | koushik_rudra: robust + 2-member corrector (nominee copy), wall max 111.3 s. Raw 2.023e-08, C/B 0.2046, 0 failures |
