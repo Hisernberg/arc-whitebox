@@ -21,12 +21,17 @@ t0 = time.time(); Xtr, Etr = load(train); print('loaded', Xtr.shape, time.time()
 F = Xtr.shape[-1]
 # per-layer per-feature standardisation (signed log for heavy tails)
 def tf(X): return np.sign(X) * np.log1p(np.abs(X) * 1e3)
-Ztr = tf(Xtr); mu = Ztr.mean(axis=(0, 2), keepdims=True)[0]; sd = Ztr.std(axis=(0, 2), keepdims=True)[0] + 1e-6
+S = np.zeros((16, F)); S2 = np.zeros((16, F))   # streamed (chunked) per-layer moments: same values, less memory
+for c in range(0, len(Xtr), 50):
+    Zc = tf(Xtr[c:c + 50]).astype(np.float64); S += Zc.sum(axis=(0, 2)); S2 += (Zc ** 2).sum(axis=(0, 2)); del Zc
+cnt = len(Xtr) * 1024; mu = (S / cnt)[:, None, :].astype(np.float32); sd = (np.sqrt(np.maximum(S2 / cnt - (S / cnt) ** 2, 0)) + 1e-6)[:, None, :].astype(np.float32)
 es = np.sqrt((Etr ** 2).mean(axis=(0, 2)))[:, None]   # per-layer target scale
 def prep(X):
     Z = (tf(X) - mu) / sd; L = np.broadcast_to(np.eye(16, dtype=np.float32)[:, None, :], (X.shape[0], 16, 1024, 16)) if X.ndim == 4 else None
     return np.concatenate([Z, L], -1).astype(np.float32)
-Ptr = prep(Xtr).reshape(-1, F + 16); Ytr = (Etr / es[None]).reshape(-1).astype(np.float32); del Xtr, Ztr
+Ptr = np.empty((len(Xtr), 16, 1024, F + 16), np.float32)
+for c in range(0, len(Xtr), 50): Ptr[c:c + 50] = prep(Xtr[c:c + 50])
+Ptr = Ptr.reshape(-1, F + 16); Ytr = (Etr / es[None]).reshape(-1).astype(np.float32); del Xtr
 if a.lin: net = torch.nn.Linear(F + 16, 1)
 else: net = torch.nn.Sequential(torch.nn.Linear(F + 16, a.hidden), torch.nn.GELU(), torch.nn.Linear(a.hidden, a.hidden), torch.nn.GELU(), torch.nn.Linear(a.hidden, a.hidden), torch.nn.GELU(), torch.nn.Linear(a.hidden, 1))
 opt = torch.optim.AdamW(net.parameters(), lr=2e-3, weight_decay=1e-4)
