@@ -26,6 +26,36 @@ Tuning the current chain gives ~0.5–1% per day; reaching the top needs a struc
 2. A stronger corrector (more training MLPs, training through the corrected chain instead of on uncorrected features).
 3. Memory-lean buffers so the main transport can use one more Strassen level (currently blocked by the 8 GB cap).
 
+## Competition plan (from 2026-10-07, 11 days left)
+**Where we are**: all three accounts 4.063e-09 (rank ~48). #1 J2W 1.5e-09 (raw 1.47e-08 at C/B 0.105);
+top 10 ≤ 2.1e-09. Our raw 1.98e-08 at C/B 0.204. Rank 1 needs both ~25% lower error and ~half the cost: no
+known path yet, so every day must buy either a measured gain or a measured fact.
+
+**Rules for every one of the 30 daily slots**
+1. One hypothesis per submission, with a written local prediction (score, C/B, wall max) logged before submitting;
+   graded vs predicted goes in the research log. Never a blind copy.
+2. Exploration slots go to builds whose local/offline measurement is at least neutral; the grader is deterministic,
+   so a graded repeat only buys wall-time information.
+3. Every account ends the day holding the day's best build and a robust nominee (wall max < 112 s, 0 failures).
+
+**Daily schedule (UTC)**
+| Time | Work |
+|---|---|
+| 00:20 | Archive late grades; leaderboard + forum scan (new write-ups, rank deltas, score/C-B of movers); carry the best build to any account below it |
+| 00:30–06:00 | Round 1: 3 variants per account (9 slots), each a different measured change |
+| 06:00–14:00 | Research block: train/measure the next lever offline (corrector, closure, cost); round 2 (9 slots) |
+| 14:00–22:00 | Round 3 (9 slots): combine the winners of rounds 1–2 |
+| 22:00–23:59 | Close: best build + robust nominee on every account (3 slots) |
+
+**Research tracks, by expected gain**
+| Track | Lever | Status / next step |
+|---|---|---|
+| A. Corrector | V41 LT (per-layer local error, carried through W) gave −1.7% | add cross-neuron inputs (W-weighted aggregates of the previous layer's features and predicted errors); train end-to-end through the transport; retrain on dumps from the exact production config |
+| B. Closure | 66% of error in Φ>0.9 neurons; local error 3–4.5e-09/layer | find which closure term the local error tracks (per-feature attribution of the LT model), then replace that term |
+| C. Cost | C/B 0.204; L5 build hits 116–119.7 s wall | cut ops (wall) to make L5/LP4 safe; measure cheaper chain + LT retrained on it |
+| D. Robustness | final hidden eval: one long-lived worker, op-log memory grows per MLP (forum 18238) | measure RSS growth over 20+ MLPs in one process; nominate builds with margin |
+| E. Intelligence | leaderboard + forum daily | log movers' raw/C-B to infer their method class |
+
 ## Research log
 ### 2026-10-05
 - **Error anatomy** (53 held-out MLPs, chain without corrector): final-layer error grows linearly with depth
@@ -71,3 +101,12 @@ Tuning the current chain gives ~0.5–1% per day; reaching the top needs a struc
   blend of both 0.897 (not worth two models). Local whest A/B on 2 mini MLPs: MSE ratio 0.974 / 0.997, cost +0.08%.
   Submitted on koushik_rudra: 334554 (L5 build) and 334555 (robust L4 build), plus accidental repeats 334556 / 334557.
 - LT seed ensemble (3 seeds): 0.8996 vs 0.900 single — no gain; seeds converge to the same function.
+- **V42 (LT + cross-neuron inputs)**: previous layer's var, phi, Phi, K3v, K4v, pred, g_post, e_b carried through W and W²
+  as 16 extra inputs. Held-out 0.892 (vs 0.900); local A/B vs V41: 1.944e-08 vs 1.990e-08 and 1.983e-08 vs 2.009e-08,
+  cost +0.13%. Submitted on all three accounts (334627–334632); predicted L5 ~4.02–4.03e-09, robust ~4.06e-09.
+- LT hidden 256 / 8 epochs with x2: held-out 0.889 (−0.3%) for ~4x the corrector FLOPs (~+1% C/B): net zero, not built.
+- LT x3 (+18 remaining previous-layer features through W): held-out 0.8906 vs 0.8919 for x2 (−0.15%) — saturating;
+  not built. Corrector track is near its ceiling (~0.89 of raw); next gains must come from the chain or the cost.
+- **V42 graded** 4.0449e-09 (L5) / 4.0734e-09 (robust) vs predicted 4.02–4.03 / 4.06: raw fell 0.6% (1.9654e-08 vs
+  1.9769e-08) — the offline held-out gain (0.9%) only partly transfers — and C/B rose 0.3% (16 matvecs + W*W per layer).
+  Lesson: discount offline corrector gains by ~half; charge the corrector's own FLOPs.
