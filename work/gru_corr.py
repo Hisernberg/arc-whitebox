@@ -169,6 +169,8 @@ if EVAL:
                 Xs, E, Wt = tens(i); U = model(Xs, Wt)
                 c = U[15].numpy() * sig_mu / len(cks)
                 corrs[i] = c if corrs[i] is None else corrs[i] + c
+    if __import__('os').environ.get('GRU_CORR_OUT'):
+        np.savez(__import__('os').environ['GRU_CORR_OUT'], **{str(data[i][3]): corrs[i] for i in ids_eval})
     rows = []
     for i in ids_eval:
         e15 = data[i][1][15].astype(np.float64)
