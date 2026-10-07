@@ -66,3 +66,8 @@ Tuning the current chain gives ~0.5–1% per day; reaching the top needs a struc
   vs 0.913 for the production GRU (which already transports corrections through W). Local predictability is weak at depth
   (unexplained 0.90–0.94 from layer 7 on): the closure error is not a function of per-neuron statistics. ~1.5% better than
   the current corrector, below the 10% bar for a submission.
+### 2026-10-07
+- **V41 (LT corrector replaces the GRU)**: offline on the 53 held-out MLPs LT 0.900 vs GRU 0.922 (same dumps); leave-one-out
+  blend of both 0.897 (not worth two models). Local whest A/B on 2 mini MLPs: MSE ratio 0.974 / 0.997, cost +0.08%.
+  Submitted on koushik_rudra: 334554 (L5 build) and 334555 (robust L4 build), plus accidental repeats 334556 / 334557.
+- LT seed ensemble (3 seeds): 0.8996 vs 0.900 single — no gain; seeds converge to the same function.
