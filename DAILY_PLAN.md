@@ -105,3 +105,5 @@ known path yet, so every day must buy either a measured gain or a measured fact.
   as 16 extra inputs. Held-out 0.892 (vs 0.900); local A/B vs V41: 1.944e-08 vs 1.990e-08 and 1.983e-08 vs 2.009e-08,
   cost +0.13%. Submitted on all three accounts (334627–334632); predicted L5 ~4.02–4.03e-09, robust ~4.06e-09.
 - LT hidden 256 / 8 epochs with x2: held-out 0.889 (−0.3%) for ~4x the corrector FLOPs (~+1% C/B): net zero, not built.
+- LT x3 (+18 remaining previous-layer features through W): held-out 0.8906 vs 0.8919 for x2 (−0.15%) — saturating;
+  not built. Corrector track is near its ceiling (~0.89 of raw); next gains must come from the chain or the cost.
