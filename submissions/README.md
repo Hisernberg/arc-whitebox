@@ -5,6 +5,10 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334630-d7-V42rb-a1/` | 334630 | ✅ GRADED | 4.073e-09 | 2026-10-07 | nabid_nur: V42 on the robust build (nominee). Raw 1.965e-08, C/B 0.2064, wall max 110.6 s, 0 failures |
+| `334629-d7-V42-a1/` | 334629 | ✅ GRADED | **4.045e-09** | 2026-10-07 | nabid_nur: V42 (LT + cross-neuron inputs) on L5 — new best; predicted 4.02–4.03. Raw 1.965e-08, C/B 0.2051, wall max 118.5 s, 0 failures |
+| `334628-d7-V42rb-a3/` | 334628 | ✅ GRADED | 4.073e-09 | 2026-10-07 | koushik_rudra: V42 on the robust build (nominee). Raw 1.965e-08, C/B 0.2063, wall max 103.0 s, 0 failures |
+| `334627-d7-V42-a3/` | 334627 | ✅ GRADED | **4.045e-09** | 2026-10-07 | koushik_rudra: V42 on L5 — new best; predicted 4.02–4.03. Raw 1.965e-08, C/B 0.2052, wall max 116.5 s, 0 failures |
 | `334571-d7-A2-v41-lt-robust/` | 334571 | ✅ GRADED | 4.092e-09 | 2026-10-07 | multi_agent: V41 LT on the robust build (nominee). Raw 1.977e-08, C/B 0.2060, wall max 107.4 s, 0 failures |
 | `334570-d7-A2-v41-lt/` | 334570 | ✅ GRADED | **4.063e-09** | 2026-10-07 | multi_agent: V41 LT on L5 + age gate 8 — new best. Raw 1.977e-08, C/B 0.2045, wall max 118.6 s, 0 failures |
 | `334569-d7-A1-v41-lt-robust/` | 334569 | ✅ GRADED | 4.092e-09 | 2026-10-07 | nabid_nur: V41 LT on the robust build (nominee). Raw 1.977e-08, C/B 0.2060, wall max 108.0 s, 0 failures |

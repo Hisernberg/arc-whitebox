@@ -107,3 +107,6 @@ known path yet, so every day must buy either a measured gain or a measured fact.
 - LT hidden 256 / 8 epochs with x2: held-out 0.889 (−0.3%) for ~4x the corrector FLOPs (~+1% C/B): net zero, not built.
 - LT x3 (+18 remaining previous-layer features through W): held-out 0.8906 vs 0.8919 for x2 (−0.15%) — saturating;
   not built. Corrector track is near its ceiling (~0.89 of raw); next gains must come from the chain or the cost.
+- **V42 graded** 4.0449e-09 (L5) / 4.0734e-09 (robust) vs predicted 4.02–4.03 / 4.06: raw fell 0.6% (1.9654e-08 vs
+  1.9769e-08) — the offline held-out gain (0.9%) only partly transfers — and C/B rose 0.3% (16 matvecs + W*W per layer).
+  Lesson: discount offline corrector gains by ~half; charge the corrector's own FLOPs.
