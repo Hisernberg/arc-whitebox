@@ -26,6 +26,36 @@ Tuning the current chain gives ~0.5–1% per day; reaching the top needs a struc
 2. A stronger corrector (more training MLPs, training through the corrected chain instead of on uncorrected features).
 3. Memory-lean buffers so the main transport can use one more Strassen level (currently blocked by the 8 GB cap).
 
+## Competition plan (from 2026-10-07, 11 days left)
+**Where we are**: all three accounts 4.063e-09 (rank ~48). #1 J2W 1.5e-09 (raw 1.47e-08 at C/B 0.105);
+top 10 ≤ 2.1e-09. Our raw 1.98e-08 at C/B 0.204. Rank 1 needs both ~25% lower error and ~half the cost: no
+known path yet, so every day must buy either a measured gain or a measured fact.
+
+**Rules for every one of the 30 daily slots**
+1. One hypothesis per submission, with a written local prediction (score, C/B, wall max) logged before submitting;
+   graded vs predicted goes in the research log. Never a blind copy.
+2. Exploration slots go to builds whose local/offline measurement is at least neutral; the grader is deterministic,
+   so a graded repeat only buys wall-time information.
+3. Every account ends the day holding the day's best build and a robust nominee (wall max < 112 s, 0 failures).
+
+**Daily schedule (UTC)**
+| Time | Work |
+|---|---|
+| 00:20 | Archive late grades; leaderboard + forum scan (new write-ups, rank deltas, score/C-B of movers); carry the best build to any account below it |
+| 00:30–06:00 | Round 1: 3 variants per account (9 slots), each a different measured change |
+| 06:00–14:00 | Research block: train/measure the next lever offline (corrector, closure, cost); round 2 (9 slots) |
+| 14:00–22:00 | Round 3 (9 slots): combine the winners of rounds 1–2 |
+| 22:00–23:59 | Close: best build + robust nominee on every account (3 slots) |
+
+**Research tracks, by expected gain**
+| Track | Lever | Status / next step |
+|---|---|---|
+| A. Corrector | V41 LT (per-layer local error, carried through W) gave −1.7% | add cross-neuron inputs (W-weighted aggregates of the previous layer's features and predicted errors); train end-to-end through the transport; retrain on dumps from the exact production config |
+| B. Closure | 66% of error in Φ>0.9 neurons; local error 3–4.5e-09/layer | find which closure term the local error tracks (per-feature attribution of the LT model), then replace that term |
+| C. Cost | C/B 0.204; L5 build hits 116–119.7 s wall | cut ops (wall) to make L5/LP4 safe; measure cheaper chain + LT retrained on it |
+| D. Robustness | final hidden eval: one long-lived worker, op-log memory grows per MLP (forum 18238) | measure RSS growth over 20+ MLPs in one process; nominate builds with margin |
+| E. Intelligence | leaderboard + forum daily | log movers' raw/C-B to infer their method class |
+
 ## Research log
 ### 2026-10-05
 - **Error anatomy** (53 held-out MLPs, chain without corrector): final-layer error grows linearly with depth
