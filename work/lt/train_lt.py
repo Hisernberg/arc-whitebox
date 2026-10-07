@@ -4,8 +4,8 @@ import sys, glob, os, time, argparse, numpy as np, torch
 from numpy.random import SeedSequence, default_rng
 ap = argparse.ArgumentParser(); ap.add_argument('--ntest', type=int, default=100); ap.add_argument('--ntrain', type=int, default=100000)
 ap.add_argument('--epochs', type=int, default=6); ap.add_argument('--hidden', type=int, default=128); ap.add_argument('--out', default='/home/user/arc-whitebox/work/lt/lt_model.pt')
-ap.add_argument('--lin', action='store_true'); ap.add_argument('--evalonly', action='store_true')
-a = ap.parse_args(); torch.manual_seed(0); torch.set_num_threads(4)
+ap.add_argument('--lin', action='store_true'); ap.add_argument('--seed', type=int, default=0); ap.add_argument('--evalonly', action='store_true')
+a = ap.parse_args(); torch.manual_seed(a.seed); torch.set_num_threads(4)
 files = sorted(glob.glob('/home/user/arc-whitebox/work/lt/ds/*.npz'))
 test = [f for f in files if '/feat_' in f][:a.ntest]; train = [f for f in files if '/featf_' in f][:a.ntrain]
 def load(fs):
