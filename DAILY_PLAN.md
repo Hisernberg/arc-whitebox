@@ -117,3 +117,8 @@ known path yet, so every day must buy either a measured gain or a measured fact.
   count/restarts), so C/B and the score move with it. Lever: fewer early calls (V37_NEARLY 5 → 2/3), ~−0.5% C/B,
   at some wall risk on cold first calls. Round 1: 334741 (multi_agent, LP4 carry, pred ~4.04), 334742 (koushik_rudra,
   NEARLY=2, pred ~4.02–4.03), 334743 (nabid_nur, NEARLY=3, pred ~4.025–4.03).
+- **Chain knob frontier** (`work/cost_sweep.sh`, 2 mini MLPs, V42+LP4, warm-up off): base raw 1.960e-08 / C/B 0.2080 /
+  4.076e-09. Every cost cut loses: R_OLD 256 (C/B −11%, raw +34%) 4.84e-09; AGE_OLD 3 (−4%, +19%) 4.67e-09; NO_FEED
+  (0%, +6%) 4.32e-09; NO_WK431 (0%, +24%) 5.03e-09; NO_SRC_LAST and NO_REGEN ~10x worse. NO_FB crashed; R_OLD2 160
+  unfinished. The chain sits at its knob optimum: lode_dockx's raw 2.1e-08 at C/B 0.10 must be a different method,
+  not a tuned version of ours.
