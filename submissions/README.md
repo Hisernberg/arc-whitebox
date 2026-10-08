@@ -5,6 +5,7 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334765-d8-R3-rb-e2-a1/` | 334765 | ✅ GRADED | 4.063e-09 | 2026-10-08 | nabid_nur: robust V42 + warm-up 2 — nominee (pred 4.0627) |
 | `334759-d8-R3-rb-e2-a2/` | 334759 | ✅ GRADED | 4.063e-09 | 2026-10-08 | multi_agent: robust V42 + warm-up 2 — nominee (pred 4.06–4.065). Wall max 105.9 s, residual max 0.338 s, 0 failures |
 | `334758-d8-R3-rb-e2-a3/` | 334758 | ✅ GRADED | 4.063e-09 | 2026-10-08 | koushik_rudra: robust V42 + warm-up 2 — nominee. Wall max 105.1 s, residual max 0.345 s, 0 failures |
 | `334751-d8-N2-v42lp4-e2/` | 334751 | ✅ GRADED | **4.023e-09** | 2026-10-08 | nabid_nur: V42 + LP4 + warm-up 2 — new best (pred 4.02–4.03). Wall max 112.5 s, 0 failures |
