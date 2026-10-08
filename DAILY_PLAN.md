@@ -146,3 +146,8 @@ known path yet, so every day must buy either a measured gain or a measured fact.
   transport family W·A_j / W·P_j / W·C and the D21 hub — none symmetric. The only large symmetric product, C_pre =
   W C Wᵀ, already computes 3 of 4 blocks; a 4×4 split (10/16 blocks) would save ~1% of total FLOPs, Sj/S_s Grams
   ~0.7%, small r×r ~0.3%. Ceiling ~2–2.5%; C_pre 4×4 split (~1%) is the only item worth building.
+- **V43 (C_pre 4×4 symmetric split) rejected**: local C/B 0.21047→0.21026 and 0.20548→0.20504 (−0.1/−0.2%); raw moved
+  ±0.7% from rounding order (1.931→1.946e-08, 1.989→1.980e-08) — net zero. The symmetric-product track is closed.
+- **End of day-8 research**: corrector (~0.89 ceiling), chain knobs (at optimum), warm-up schedule (2 is the floor),
+  symmetric products (<0.3%) are all exhausted. Remaining slots are held rather than spent on unmeasured builds. The
+  next real step needs a different chain (leaders reach raw 1.2–1.5e-08 at C/B 0.10–0.14).
