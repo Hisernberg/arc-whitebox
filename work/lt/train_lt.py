@@ -4,7 +4,7 @@ import sys, glob, os, time, argparse, numpy as np, torch
 from numpy.random import SeedSequence, default_rng
 ap = argparse.ArgumentParser(); ap.add_argument('--ntest', type=int, default=100); ap.add_argument('--ntrain', type=int, default=100000)
 ap.add_argument('--epochs', type=int, default=6); ap.add_argument('--hidden', type=int, default=128); ap.add_argument('--out', default='/home/user/arc-whitebox/work/lt/lt_model.pt')
-ap.add_argument('--lin', action='store_true'); ap.add_argument('--x2', action='store_true'); ap.add_argument('--x3', action='store_true'); ap.add_argument('--seed', type=int, default=0); ap.add_argument('--evalonly', action='store_true')
+ap.add_argument('--lin', action='store_true'); ap.add_argument('--x2', action='store_true'); ap.add_argument('--x3', action='store_true'); ap.add_argument('--lw', type=float, default=0.0); ap.add_argument('--seed', type=int, default=0); ap.add_argument('--evalonly', action='store_true')
 a = ap.parse_args(); torch.manual_seed(a.seed); torch.set_num_threads(4)
 files = sorted(glob.glob('/home/user/arc-whitebox/work/lt/ds/*.npz'))
 test = [f for f in files if '/feat_' in f][:a.ntest]; train = [f for f in files if '/featf_' in f][:a.ntrain]
@@ -33,16 +33,17 @@ def prep(X):
 Ptr = np.empty((len(Xtr), 16, 1024, F + 16), np.float32)
 for c in range(0, len(Xtr), 50): Ptr[c:c + 50] = prep(Xtr[c:c + 50])
 Ptr = Ptr.reshape(-1, F + 16); Ytr = (Etr / es[None]).reshape(-1).astype(np.float32); del Xtr
+Wl = np.broadcast_to((1.0 + a.lw * np.arange(16) / 15.0)[None, :, None], Etr.shape).reshape(-1).astype(np.float32)   # per-layer loss weight
 if a.lin: net = torch.nn.Linear(F + 16, 1)
 else: net = torch.nn.Sequential(torch.nn.Linear(F + 16, a.hidden), torch.nn.GELU(), torch.nn.Linear(a.hidden, a.hidden), torch.nn.GELU(), torch.nn.Linear(a.hidden, a.hidden), torch.nn.GELU(), torch.nn.Linear(a.hidden, 1))
 opt = torch.optim.AdamW(net.parameters(), lr=2e-3, weight_decay=1e-4)
-Pt, Yt = torch.from_numpy(Ptr), torch.from_numpy(Ytr); N = len(Yt); bs = 8192
+Pt, Yt, Wt_ = torch.from_numpy(Ptr), torch.from_numpy(Ytr), torch.from_numpy(np.ascontiguousarray(Wl)); N = len(Yt); bs = 8192
 steps = a.epochs * (N // bs); sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=2e-3, total_steps=steps)
 s = 0
 for ep in range(a.epochs):
     perm = torch.randperm(N); tot = 0
     for i in range(N // bs):
-        idx = perm[i*bs:(i+1)*bs]; p = net(Pt[idx]).squeeze(-1); loss = ((p - Yt[idx]) ** 2).mean()
+        idx = perm[i*bs:(i+1)*bs]; p = net(Pt[idx]).squeeze(-1); loss = (Wt_[idx] * (p - Yt[idx]) ** 2).mean()
         opt.zero_grad(); loss.backward(); opt.step(); sched.step(); tot += loss.item()
     print(f'ep {ep} train nmse {tot / (N // bs):.4f} t={time.time()-t0:.0f}', flush=True)
 torch.save({'net': net.state_dict(), 'mu': mu, 'sd': sd, 'es': es, 'F': F, 'hidden': a.hidden, 'lin': a.lin}, a.out)
