@@ -168,3 +168,5 @@ known path yet, so every day must buy either a measured gain or a measured fact.
   (score 4.076 → 3.992e-09), but local wall +40–50% (201→277 s, 133→198 s): the L5 build already sits at 112–118 s
   of the 120 s grader limit, so the full change cannot ship. Testing hub-only level 6 on the robust build (wall ~105 s,
   ~12–15 s headroom). L7 run did not finish.
+- Hub-only Strassen level 6 (V26_STRASSEN_HUB=6) on the robust build: bit-identical to base (the hub level is capped by
+  `min(STRASSEN_HUB, self._s_hub)`), so it is a no-op. Track B needs per-family level control in code, not a knob.
