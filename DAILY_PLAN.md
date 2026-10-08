@@ -142,3 +142,7 @@ known path yet, so every day must buy either a measured gain or a measured fact.
   already beats both, but computing only the upper-triangle blocks of symmetric-output products would cut those
   products ~in half under any pricing. Mapping which large products have symmetric outputs (research agent running).
 - LT x2 + GRU blend: leave-one-out 0.8905 vs 0.8919 LT alone (−0.15%) — not worth the GRU's FLOPs.
+- **Symmetric-output products** (code audit, `work/runs/symreport_day8.md`): the dominant Strassen leaves are the
+  transport family W·A_j / W·P_j / W·C and the D21 hub — none symmetric. The only large symmetric product, C_pre =
+  W C Wᵀ, already computes 3 of 4 blocks; a 4×4 split (10/16 blocks) would save ~1% of total FLOPs, Sj/S_s Grams
+  ~0.7%, small r×r ~0.3%. Ceiling ~2–2.5%; C_pre 4×4 split (~1%) is the only item worth building.
