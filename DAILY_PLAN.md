@@ -110,3 +110,10 @@ known path yet, so every day must buy either a measured gain or a measured fact.
 - **V42 graded** 4.0449e-09 (L5) / 4.0734e-09 (robust) vs predicted 4.02–4.03 / 4.06: raw fell 0.6% (1.9654e-08 vs
   1.9769e-08) — the offline held-out gain (0.9%) only partly transfers — and C/B rose 0.3% (16 matvecs + W*W per layer).
   Lesson: discount offline corrector gains by ~half; charge the corrector's own FLOPs.
+### 2026-10-08
+- **Late grades**: V42+LP4 passed twice (4.036e-09 nabid_nur, 4.051e-09 koushik_rudra; wall max 116.5 / 112.3 s).
+- **Grader spread on identical builds (~0.4%) explained**: the V37 warm-up schedule runs each worker's first 5 calls
+  at the expensive early levels (C/B ~0.212 vs ~0.2035 late). The number of such MLPs varies 9–15 per run (worker
+  count/restarts), so C/B and the score move with it. Lever: fewer early calls (V37_NEARLY 5 → 2/3), ~−0.5% C/B,
+  at some wall risk on cold first calls. Round 1: 334741 (multi_agent, LP4 carry, pred ~4.04), 334742 (koushik_rudra,
+  NEARLY=2, pred ~4.02–4.03), 334743 (nabid_nur, NEARLY=3, pred ~4.025–4.03).

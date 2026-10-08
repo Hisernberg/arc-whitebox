@@ -5,6 +5,10 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334643-d7-V42lp4-a1/` | 334643 | ✅ GRADED | **4.036e-09** | 2026-10-07 | nabid_nur: V42 + join products at Strassen level 4 — new best. Raw 1.965e-08, C/B 0.2043 (9 early-level MLPs), wall max 116.5 s, 0 failures |
+| `334642-d7-V42lp4-a3/` | 334642 | ✅ GRADED | 4.051e-09 | 2026-10-07 | koushik_rudra: same file as 334643; C/B 0.2047 (15 early-level MLPs: grader spread comes from how many MLPs hit the per-worker warm-up schedule). Wall max 112.3 s, 0 failures |
+| `334632-d7-V42rb-a2/` | 334632 | ✅ GRADED | 4.080e-09 | 2026-10-07 | multi_agent: V42 on the robust build (nominee). Raw 1.965e-08, C/B 0.2065, wall max 107.1 s, 0 failures |
+| `334631-d7-V42-a2/` | 334631 | ✅ GRADED | 4.052e-09 | 2026-10-07 | multi_agent: V42 on L5 — new best. Raw 1.966e-08, C/B 0.2052, wall max 114.1 s, 0 failures |
 | `334630-d7-V42rb-a1/` | 334630 | ✅ GRADED | 4.073e-09 | 2026-10-07 | nabid_nur: V42 on the robust build (nominee). Raw 1.965e-08, C/B 0.2064, wall max 110.6 s, 0 failures |
 | `334629-d7-V42-a1/` | 334629 | ✅ GRADED | **4.045e-09** | 2026-10-07 | nabid_nur: V42 (LT + cross-neuron inputs) on L5 — new best; predicted 4.02–4.03. Raw 1.965e-08, C/B 0.2051, wall max 118.5 s, 0 failures |
 | `334628-d7-V42rb-a3/` | 334628 | ✅ GRADED | 4.073e-09 | 2026-10-07 | koushik_rudra: V42 on the robust build (nominee). Raw 1.965e-08, C/B 0.2063, wall max 103.0 s, 0 failures |
