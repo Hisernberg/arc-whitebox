@@ -151,3 +151,7 @@ known path yet, so every day must buy either a measured gain or a measured fact.
 - **End of day-8 research**: corrector (~0.89 ceiling), chain knobs (at optimum), warm-up schedule (2 is the floor),
   symmetric products (<0.3%) are all exhausted. Remaining slots are held rather than spent on unmeasured builds. The
   next real step needs a different chain (leaders reach raw 1.2–1.5e-08 at C/B 0.10–0.14).
+- **Deeper Strassen (V26_STRASSEN 5→6)** on V42+LP4+warm-up 2, local: C/B 0.2080 → 0.2032 (−2.3%), raw unchanged
+  (score 4.076 → 3.992e-09), but local wall +40–50% (201→277 s, 133→198 s): the L5 build already sits at 112–118 s
+  of the 120 s grader limit, so the full change cannot ship. Testing hub-only level 6 on the robust build (wall ~105 s,
+  ~12–15 s headroom). L7 run did not finish.
