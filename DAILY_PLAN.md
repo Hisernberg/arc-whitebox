@@ -137,3 +137,8 @@ known path yet, so every day must buy either a measured gain or a measured fact.
 - **Production-config features**: the deployed V42 corrector scores 0.892 on dumps from the exact production chain
   (same as on the older dumps), so feature mismatch does not explain why the grader shows only half the offline gain;
   retraining on production dumps is not worth it. Dumps stopped at 101 full + 53 mini.
+- **Symmetric billing (flopscope)**: einsum('ij,kj->ik', A, A) is billed half of A@B (1.07e9 vs 2.15e9 at n=1024) and
+  returns a SymmetricTensor; W·S·Wᵀ with a symmetric-tagged S is billed 3.22e9 vs 4.29e9 dense. Strassen L5 (~0.51x)
+  already beats both, but computing only the upper-triangle blocks of symmetric-output products would cut those
+  products ~in half under any pricing. Mapping which large products have symmetric outputs (research agent running).
+- LT x2 + GRU blend: leave-one-out 0.8905 vs 0.8919 LT alone (−0.15%) — not worth the GRU's FLOPs.
