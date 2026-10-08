@@ -170,3 +170,14 @@ known path yet, so every day must buy either a measured gain or a measured fact.
   ~12–15 s headroom). L7 run did not finish.
 - Hub-only Strassen level 6 (V26_STRASSEN_HUB=6) on the robust build: bit-identical to base (the hub level is capped by
   `min(STRASSEN_HUB, self._s_hub)`), so it is a no-op. Track B needs per-family level control in code, not a knob.
+### Track C sweep (robust V42 + warm-up 2, 2 mini MLPs, warm-up off; base raw 1.9661e-08 / C/B 0.2099 / 4.1273e-09)
+| Knob | raw | C/B | score | vs base |
+|---|---|---|---|---|
+| V17_LAM_SCALE 0.90 | 1.9544e-08 | 0.2099 | 4.1027e-09 | **−0.6%** |
+| V24_R_OLD2 192 | 1.9838e-08 | 0.2075 | 4.1162e-09 | −0.3% |
+| V24_R_OLD2 256 | 1.9707e-08 | 0.2124 | 4.1842e-09 | +1.4% |
+| V24_AGE_OLD2 6 / 10 | 2.0531 / 1.9719e-08 | 0.2066 / 0.2135 | 4.2387 / 4.2090e-09 | +2.7% / +2.0% |
+| V33_R_FB 3 | 1.9734e-08 | 0.2109 | 4.1611e-09 | +0.8% |
+| V33_PRUNE_THR 0.001 / 0.002 | 1.9756e-08 / = base | 0.2112 / = base | 4.1734e-09 / = base | +1.1% / 0 |
+| V17_LAM_SCALE 1.0 | 2.0021e-08 | 0.2099 | 4.2025e-09 | +1.8% |
+Follow-ups running: LAM 0.85, 0.80, LAM 0.90 + R_OLD2 192.
