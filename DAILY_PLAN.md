@@ -131,3 +131,9 @@ known path yet, so every day must buy either a measured gain or a measured fact.
   warm-up 1 **failed** (MLPs 30/31 TIME_EXHAUSTED at 109.6 s, ~1 s overhead, likely a restarted worker's unprotected
   second call): warm-up 2 is the floor. Round 3: robust nominee + warm-up 2 (334758 koushik_rudra, 334759 multi_agent;
   pred 4.06–4.065, wall max ~105–110 s).
+- **Round 3 graded**: nabid_nur warm-up 2 4.0231e-09 (third identical grade); robust + warm-up 2 4.0627e-09 on
+  koushik_rudra and multi_agent (pred 4.06–4.065; wall max 105–106 s, 0 failures) — the new nominee build; sent to
+  nabid_nur too (334765).
+- **Production-config features**: the deployed V42 corrector scores 0.892 on dumps from the exact production chain
+  (same as on the older dumps), so feature mismatch does not explain why the grader shows only half the offline gain;
+  retraining on production dumps is not worth it. Dumps stopped at 101 full + 53 mini.
