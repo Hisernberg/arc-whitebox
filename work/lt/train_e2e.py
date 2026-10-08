@@ -34,7 +34,7 @@ def evaluate():
             P, Phi, e, s = load(f); c = corr(P, Phi, torch.from_numpy(W_of(s)))
             B += float((e.double() ** 2).mean()); C += float(((e - c).double() ** 2).mean())
     return C / B
-print('init held-out ratio %.4f' % evaluate(), flush=True)
+best = evaluate(); print('init held-out ratio %.4f' % best, flush=True)
 opt = torch.optim.Adam(net.parameters(), lr=LR); sc = float(np.mean([1.0]))
 t0 = time.time(); rng = np.random.default_rng(0)
 for ep in range(EP):
@@ -45,4 +45,5 @@ for ep in range(EP):
         opt.zero_grad(); loss.backward(); opt.step(); tot += loss.item()
         if (k + 1) % 200 == 0: print(f'ep {ep} step {k+1} mean nloss {tot/(k+1):.4f} t={time.time()-t0:.0f}', flush=True)
     r = evaluate(); print(f'ep {ep} held-out ratio {r:.4f} t={time.time()-t0:.0f}', flush=True)
-    torch.save(dict(ck, net=net.state_dict()), out)
+    if r < best:
+        best = r; torch.save(dict(ck, net=net.state_dict()), out); print('  saved best', flush=True)

@@ -193,3 +193,5 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   fell. **Lesson: 2-MLP local sweeps have ~1% noise; Track C knob decisions now need ≥8 MLPs (dense-mode raw on the
   feature dumps) before a slot is spent.**
 - Track A end-to-end: 0.8896 → 0.8915 → 0.8893 → 0.8881 (epochs 3–5 of 6).
+- Track A e2e epoch 6 jumped to 0.8986 (lr 3e-4 too high; the per-epoch save overwrote the 0.8881 checkpoint).
+  Fixed: save-best only. Rerun from the 0.8896 checkpoint at lr 1e-4, 4 epochs.
