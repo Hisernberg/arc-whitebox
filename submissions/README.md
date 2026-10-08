@@ -5,6 +5,8 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334890-d8-C2-rb-lam090-r192/` | 334890 | ✅ GRADED | 4.066e-09 | 2026-10-08 | koushik_rudra Track C nominee: robust + LAM 0.90 + R_OLD2 192 (pred ~4.02): slightly worse than 4.063. Raw 1.990e-08 |
+| `334889-d8-C1-l5-lam090-r192/` | 334889 | ✅ GRADED | 4.023e-09 | 2026-10-08 | koushik_rudra Track C: L5 + LAM 0.90 + R_OLD2 192 (pred 3.98–3.99): no change (raw 1.988e-08 up, C/B down) |
 | `334765-d8-R3-rb-e2-a1/` | 334765 | ✅ GRADED | 4.063e-09 | 2026-10-08 | nabid_nur: robust V42 + warm-up 2 — nominee (pred 4.0627) |
 | `334759-d8-R3-rb-e2-a2/` | 334759 | ✅ GRADED | 4.063e-09 | 2026-10-08 | multi_agent: robust V42 + warm-up 2 — nominee (pred 4.06–4.065). Wall max 105.9 s, residual max 0.338 s, 0 failures |
 | `334758-d8-R3-rb-e2-a3/` | 334758 | ✅ GRADED | 4.063e-09 | 2026-10-08 | koushik_rudra: robust V42 + warm-up 2 — nominee. Wall max 105.1 s, residual max 0.345 s, 0 failures |

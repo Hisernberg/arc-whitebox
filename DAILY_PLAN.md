@@ -188,3 +188,8 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   (`work/lt/train_e2e.py`): loss on the final-layer error after the transport, init from lt_x2, 2 epochs.
 - **Track A end-to-end fine-tune**: held-out 0.8919 → 0.8918 (epoch 1) → **0.8896** (epoch 2), still improving; 4 more
   epochs running from the epoch-2 checkpoint.
+- **Track C graded**: 334889 (L5 + LAM 0.90 + R_OLD2 192) 4.0231e-09 = previous best; 334890 (robust) 4.0659e-09 vs
+  4.0627. The local −1.0% (2 MLPs) did not transfer: on the grader's 100 MLPs raw rose (1.965 → 1.988e-08) as C/B
+  fell. **Lesson: 2-MLP local sweeps have ~1% noise; Track C knob decisions now need ≥8 MLPs (dense-mode raw on the
+  feature dumps) before a slot is spent.**
+- Track A end-to-end: 0.8896 → 0.8915 → 0.8893 → 0.8881 (epochs 3–5 of 6).
