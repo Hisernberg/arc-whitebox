@@ -21,7 +21,7 @@ Submissions go to all three accounts, 10 per account per UTC day (30 a day), fol
 | Account | Team | Best score so far |
 |---------|------|-------------------|
 | `nabid_nur` | Hydrion-Labs | **4.030e-09** (`#334743`, V42 + LP4 + warm-up 3); robust nominee 4.073e-09 (`#334630`) |
-| `multi_agent` | — | **4.036e-09** (`#334741`, V42 + LP4); robust nominee 4.080e-09 (`#334632`) |
+| `multi_agent` | — | **4.023e-09** (`#334750`, V42 + LP4 + warm-up 2); robust nominee 4.080e-09 (`#334632`) |
 | `koushik_rudra` (participant ID `518412`) | — | **4.023e-09** (`#334742`, V42 + LP4 + warm-up 2); robust nominee 4.073e-09 (`#334628`) |
 
 - **Challenge**: ARC White-Box Estimation Challenge 2026 (`arc-white-box-estimation-challenge-2026`, challenge ID 1174)

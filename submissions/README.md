@@ -5,6 +5,8 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334750-d8-M2-v42lp4-e2/` | 334750 | ✅ GRADED | **4.023e-09** | 2026-10-08 | multi_agent: V42 + LP4 + warm-up 2 — new best (pred 4.02–4.03) |
+| `334749-d8-K2-v42lp4-e1/` | 334749 | ✅ GRADED | 0.0320 | 2026-10-08 | koushik_rudra: warm-up on 1 call/worker — **2 MLPs (30, 31) TIME_EXHAUSTED**; warm-up 1 is too aggressive |
 | `334743-d8-N1-v42lp4-e3/` | 334743 | ✅ GRADED | **4.030e-09** | 2026-10-08 | nabid_nur: V42 + LP4, warm-up on 3 calls/worker — new best (pred 4.025–4.03). C/B 0.2043 (10 early MLPs), wall max 117.2 s; 3 MLPs cut by the grader near the end (TIME_EXHAUSTED at ~109 s with ~1 s overhead), score unaffected |
 | `334742-d8-K1-v42lp4-e2/` | 334742 | ✅ GRADED | **4.023e-09** | 2026-10-08 | koushik_rudra: V42 + LP4, warm-up on 2 calls/worker — new best (pred 4.02–4.03). C/B 0.2041 (7 early MLPs), wall max 118.7 s; 2 grader-side cuts as above |
 | `334741-d8-M1-v42lp4/` | 334741 | ✅ GRADED | **4.036e-09** | 2026-10-08 | multi_agent: V42 + LP4 carry — new best (pred ~4.04). C/B 0.2043, wall max 118.4 s, 0 failures |

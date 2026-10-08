@@ -127,3 +127,7 @@ known path yet, so every day must buy either a measured gain or a measured fact.
   334742/334743 are grader-side cuts (TIME_EXHAUSTED at ~109 s participant wall with ~1 s overhead and 0 residual);
   the score was computed regardless. Round 2: koushik_rudra warm-up 1 (334749, pred ~4.015–4.02), multi_agent and
   nabid_nur warm-up 2 (334750, 334751, pred 4.02–4.03).
+- **Round 2 graded**: multi_agent warm-up 2 4.0231e-09 (pred 4.02–4.03; second identical 4.0231 grade). koushik_rudra
+  warm-up 1 **failed** (MLPs 30/31 TIME_EXHAUSTED at 109.6 s, ~1 s overhead, likely a restarted worker's unprotected
+  second call): warm-up 2 is the floor. Round 3: robust nominee + warm-up 2 (334758 koushik_rudra, 334759 multi_agent;
+  pred 4.06–4.065, wall max ~105–110 s).
