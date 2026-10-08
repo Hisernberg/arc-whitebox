@@ -26,6 +26,19 @@ Tuning the current chain gives ~0.5–1% per day; reaching the top needs a struc
 2. A stronger corrector (more training MLPs, training through the corrected chain instead of on uncorrected features).
 3. Memory-lean buffers so the main transport can use one more Strassen level (currently blocked by the 8 GB cap).
 
+## Account tracks (from 2026-10-09): three accounts, three independent research lines
+Each account runs its own line of builds; **no build is ever submitted to two accounts**. A gain found on one track is
+re-implemented in that track's own lineage only if it fits that track's approach, never copied across as-is.
+
+| Account | Track | Approach | Starting point | Next experiments (one hypothesis per slot) |
+|---|---|---|---|---|
+| `nabid_nur` | **A. Learned corrector** | Better learning on top of the chain: what the error is predicted from and how the correction is carried through the network | V42 (LT + cross-neuron inputs), 4.023e-09 | x3 inputs; end-to-end training through the transport (loss on the final layer); per-layer loss weighting; two-layer-back inputs; corrector width/depth vs. its own FLOPs; ensembles only if they pay for their FLOPs |
+| `multi_agent` | **B. Cost and wall-time engineering** | Same maths, fewer FLOPs and less wall time: Strassen depth per product family, warm-up schedule, block layouts, op-count/overhead cuts that buy wall headroom for deeper Strassen | V42 + LP4 + warm-up 2 | hub-only / C_pre-only Strassen level 6; cutting Python/op overhead (12 s of the 120 s) to make level 6 fit; LP5; memory/op-log robustness |
+| `koushik_rudra` | **C. Chain closure and structure** | Change what the chain computes: ranks, ages, feedback, pruning, closure terms; trade accuracy against cost at the source | robust V42 + warm-up 2 lineage | R_OLD2 / AGE_OLD2 / QPASS re-tunes under the LT corrector; pruning threshold and set sizes; LAM_SCALE; closure-term ablations with the corrector retrained on each |
+
+Daily rhythm per track: round 1 (3–4 slots) from the previous evening's offline results; research block; round 2
+(3–4 slots); close with that track's own robust nominee (1–2 slots). Grades are compared against the logged prediction.
+
 ## Competition plan (from 2026-10-07, 11 days left)
 **Where we are**: all three accounts 4.063e-09 (rank ~48). #1 J2W 1.5e-09 (raw 1.47e-08 at C/B 0.105);
 top 10 ≤ 2.1e-09. Our raw 1.98e-08 at C/B 0.204. Rank 1 needs both ~25% lower error and ~half the cost: no
