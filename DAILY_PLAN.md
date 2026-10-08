@@ -184,3 +184,5 @@ Follow-ups running: LAM 0.85, 0.80, LAM 0.90 + R_OLD2 192.
 Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LAM 0.90 + R_OLD2 192: 4.0865e-09
 (−1.0% vs base)**. Submitted on koushik_rudra (Track C): 334889 (L5 + LP4 + warm-up 2, pred ~3.98–3.99e-09),
 334890 (robust nominee, pred ~4.02e-09).
+- **Track A**: per-layer loss weighting (later layers ×4) 0.8917 vs 0.8919 — no gain. Started end-to-end fine-tune
+  (`work/lt/train_e2e.py`): loss on the final-layer error after the transport, init from lt_x2, 2 epochs.
