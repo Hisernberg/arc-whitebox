@@ -5,6 +5,9 @@ listing stable when statuses change.
 
 | Folder | Submission ID | Status | MSE | Created (UTC) | Description |
 |--------|---------------|--------|-----|---------------|-------------|
+| `334743-d8-N1-v42lp4-e3/` | 334743 | ✅ GRADED | **4.030e-09** | 2026-10-08 | nabid_nur: V42 + LP4, warm-up on 3 calls/worker — new best (pred 4.025–4.03). C/B 0.2043 (10 early MLPs), wall max 117.2 s; 3 MLPs cut by the grader near the end (TIME_EXHAUSTED at ~109 s with ~1 s overhead), score unaffected |
+| `334742-d8-K1-v42lp4-e2/` | 334742 | ✅ GRADED | **4.023e-09** | 2026-10-08 | koushik_rudra: V42 + LP4, warm-up on 2 calls/worker — new best (pred 4.02–4.03). C/B 0.2041 (7 early MLPs), wall max 118.7 s; 2 grader-side cuts as above |
+| `334741-d8-M1-v42lp4/` | 334741 | ✅ GRADED | **4.036e-09** | 2026-10-08 | multi_agent: V42 + LP4 carry — new best (pred ~4.04). C/B 0.2043, wall max 118.4 s, 0 failures |
 | `334643-d7-V42lp4-a1/` | 334643 | ✅ GRADED | **4.036e-09** | 2026-10-07 | nabid_nur: V42 + join products at Strassen level 4 — new best. Raw 1.965e-08, C/B 0.2043 (9 early-level MLPs), wall max 116.5 s, 0 failures |
 | `334642-d7-V42lp4-a3/` | 334642 | ✅ GRADED | 4.051e-09 | 2026-10-07 | koushik_rudra: same file as 334643; C/B 0.2047 (15 early-level MLPs: grader spread comes from how many MLPs hit the per-worker warm-up schedule). Wall max 112.3 s, 0 failures |
 | `334632-d7-V42rb-a2/` | 334632 | ✅ GRADED | 4.080e-09 | 2026-10-07 | multi_agent: V42 on the robust build (nominee). Raw 1.965e-08, C/B 0.2065, wall max 107.1 s, 0 failures |

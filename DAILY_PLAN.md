@@ -122,3 +122,8 @@ known path yet, so every day must buy either a measured gain or a measured fact.
   (0%, +6%) 4.32e-09; NO_WK431 (0%, +24%) 5.03e-09; NO_SRC_LAST and NO_REGEN ~10x worse. NO_FB crashed; R_OLD2 160
   unfinished. The chain sits at its knob optimum: lode_dockx's raw 2.1e-08 at C/B 0.10 must be a different method,
   not a tuned version of ours.
+- **Round 1 graded (all within prediction)**: multi_agent LP4 4.036e-09 (pred ~4.04); koushik_rudra warm-up 2
+  4.023e-09 (pred 4.02–4.03, 7 early MLPs); nabid_nur warm-up 3 4.030e-09 (pred 4.025–4.03). The "failed" MLPs in
+  334742/334743 are grader-side cuts (TIME_EXHAUSTED at ~109 s participant wall with ~1 s overhead and 0 residual);
+  the score was computed regardless. Round 2: koushik_rudra warm-up 1 (334749, pred ~4.015–4.02), multi_agent and
+  nabid_nur warm-up 2 (334750, 334751, pred 4.02–4.03).
