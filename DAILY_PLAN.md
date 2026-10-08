@@ -186,3 +186,5 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
 334890 (robust nominee, pred ~4.02e-09).
 - **Track A**: per-layer loss weighting (later layers ×4) 0.8917 vs 0.8919 — no gain. Started end-to-end fine-tune
   (`work/lt/train_e2e.py`): loss on the final-layer error after the transport, init from lt_x2, 2 epochs.
+- **Track A end-to-end fine-tune**: held-out 0.8919 → 0.8918 (epoch 1) → **0.8896** (epoch 2), still improving; 4 more
+  epochs running from the epoch-2 checkpoint.
