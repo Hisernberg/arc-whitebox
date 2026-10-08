@@ -181,3 +181,6 @@ known path yet, so every day must buy either a measured gain or a measured fact.
 | V33_PRUNE_THR 0.001 / 0.002 | 1.9756e-08 / = base | 0.2112 / = base | 4.1734e-09 / = base | +1.1% / 0 |
 | V17_LAM_SCALE 1.0 | 2.0021e-08 | 0.2099 | 4.2025e-09 | +1.8% |
 Follow-ups running: LAM 0.85, 0.80, LAM 0.90 + R_OLD2 192.
+Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LAM 0.90 + R_OLD2 192: 4.0865e-09
+(−1.0% vs base)**. Submitted on koushik_rudra (Track C): 334889 (L5 + LP4 + warm-up 2, pred ~3.98–3.99e-09),
+334890 (robust nominee, pred ~4.02e-09).
