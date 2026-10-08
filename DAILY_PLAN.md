@@ -110,3 +110,44 @@ known path yet, so every day must buy either a measured gain or a measured fact.
 - **V42 graded** 4.0449e-09 (L5) / 4.0734e-09 (robust) vs predicted 4.02–4.03 / 4.06: raw fell 0.6% (1.9654e-08 vs
   1.9769e-08) — the offline held-out gain (0.9%) only partly transfers — and C/B rose 0.3% (16 matvecs + W*W per layer).
   Lesson: discount offline corrector gains by ~half; charge the corrector's own FLOPs.
+### 2026-10-08
+- **Late grades**: V42+LP4 passed twice (4.036e-09 nabid_nur, 4.051e-09 koushik_rudra; wall max 116.5 / 112.3 s).
+- **Grader spread on identical builds (~0.4%) explained**: the V37 warm-up schedule runs each worker's first 5 calls
+  at the expensive early levels (C/B ~0.212 vs ~0.2035 late). The number of such MLPs varies 9–15 per run (worker
+  count/restarts), so C/B and the score move with it. Lever: fewer early calls (V37_NEARLY 5 → 2/3), ~−0.5% C/B,
+  at some wall risk on cold first calls. Round 1: 334741 (multi_agent, LP4 carry, pred ~4.04), 334742 (koushik_rudra,
+  NEARLY=2, pred ~4.02–4.03), 334743 (nabid_nur, NEARLY=3, pred ~4.025–4.03).
+- **Chain knob frontier** (`work/cost_sweep.sh`, 2 mini MLPs, V42+LP4, warm-up off): base raw 1.960e-08 / C/B 0.2080 /
+  4.076e-09. Every cost cut loses: R_OLD 256 (C/B −11%, raw +34%) 4.84e-09; AGE_OLD 3 (−4%, +19%) 4.67e-09; NO_FEED
+  (0%, +6%) 4.32e-09; NO_WK431 (0%, +24%) 5.03e-09; NO_SRC_LAST and NO_REGEN ~10x worse. NO_FB crashed; R_OLD2 160
+  unfinished. The chain sits at its knob optimum: lode_dockx's raw 2.1e-08 at C/B 0.10 must be a different method,
+  not a tuned version of ours.
+- **Round 1 graded (all within prediction)**: multi_agent LP4 4.036e-09 (pred ~4.04); koushik_rudra warm-up 2
+  4.023e-09 (pred 4.02–4.03, 7 early MLPs); nabid_nur warm-up 3 4.030e-09 (pred 4.025–4.03). The "failed" MLPs in
+  334742/334743 are grader-side cuts (TIME_EXHAUSTED at ~109 s participant wall with ~1 s overhead and 0 residual);
+  the score was computed regardless. Round 2: koushik_rudra warm-up 1 (334749, pred ~4.015–4.02), multi_agent and
+  nabid_nur warm-up 2 (334750, 334751, pred 4.02–4.03).
+- **Round 2 graded**: multi_agent warm-up 2 4.0231e-09 (pred 4.02–4.03; second identical 4.0231 grade). koushik_rudra
+  warm-up 1 **failed** (MLPs 30/31 TIME_EXHAUSTED at 109.6 s, ~1 s overhead, likely a restarted worker's unprotected
+  second call): warm-up 2 is the floor. Round 3: robust nominee + warm-up 2 (334758 koushik_rudra, 334759 multi_agent;
+  pred 4.06–4.065, wall max ~105–110 s).
+- **Round 3 graded**: nabid_nur warm-up 2 4.0231e-09 (third identical grade); robust + warm-up 2 4.0627e-09 on
+  koushik_rudra and multi_agent (pred 4.06–4.065; wall max 105–106 s, 0 failures) — the new nominee build; sent to
+  nabid_nur too (334765).
+- **Production-config features**: the deployed V42 corrector scores 0.892 on dumps from the exact production chain
+  (same as on the older dumps), so feature mismatch does not explain why the grader shows only half the offline gain;
+  retraining on production dumps is not worth it. Dumps stopped at 101 full + 53 mini.
+- **Symmetric billing (flopscope)**: einsum('ij,kj->ik', A, A) is billed half of A@B (1.07e9 vs 2.15e9 at n=1024) and
+  returns a SymmetricTensor; W·S·Wᵀ with a symmetric-tagged S is billed 3.22e9 vs 4.29e9 dense. Strassen L5 (~0.51x)
+  already beats both, but computing only the upper-triangle blocks of symmetric-output products would cut those
+  products ~in half under any pricing. Mapping which large products have symmetric outputs (research agent running).
+- LT x2 + GRU blend: leave-one-out 0.8905 vs 0.8919 LT alone (−0.15%) — not worth the GRU's FLOPs.
+- **Symmetric-output products** (code audit, `work/runs/symreport_day8.md`): the dominant Strassen leaves are the
+  transport family W·A_j / W·P_j / W·C and the D21 hub — none symmetric. The only large symmetric product, C_pre =
+  W C Wᵀ, already computes 3 of 4 blocks; a 4×4 split (10/16 blocks) would save ~1% of total FLOPs, Sj/S_s Grams
+  ~0.7%, small r×r ~0.3%. Ceiling ~2–2.5%; C_pre 4×4 split (~1%) is the only item worth building.
+- **V43 (C_pre 4×4 symmetric split) rejected**: local C/B 0.21047→0.21026 and 0.20548→0.20504 (−0.1/−0.2%); raw moved
+  ±0.7% from rounding order (1.931→1.946e-08, 1.989→1.980e-08) — net zero. The symmetric-product track is closed.
+- **End of day-8 research**: corrector (~0.89 ceiling), chain knobs (at optimum), warm-up schedule (2 is the floor),
+  symmetric products (<0.3%) are all exhausted. Remaining slots are held rather than spent on unmeasured builds. The
+  next real step needs a different chain (leaders reach raw 1.2–1.5e-08 at C/B 0.10–0.14).
