@@ -295,6 +295,17 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   round trip with predict ~108–110 s; same code cost as 1.0, so grader-side round-trip cuts). Builds with the e2e corrector sit at
   a median predict of ~108 s (V44 105.6), close enough to the limit for random cuts to sink a submission. **Tomorrow:
   get ≥8 s more wall margin before stacking anything on V44 + corrector.**
+- **Round 2 check-in (09:11 UTC)**, vs best 3.9561e-09 (334963, PRUNE_THR 0.003):
+  - Track B pruning curve: 0.002 3.9800e-09, **0.003 3.9561** (round 1), 0.005 3.9660, 0.0075 3.9633, 0.01 4.0036.
+    Flat from 0.003 to 0.0075 (±0.25%, inside grader noise); 0.01 starts costing accuracy (raw 2.018e-08). No new best;
+    keep 0.003–0.005. Robust V44 (334977) **4.0356e-09**, the new multi_agent robust best (was 4.063).
+  - Track A: scale 2.0 (334971) 0.1339, with 9 MLPs TIME_EXHAUSTED (median predict 106.2 s, max 112.9 s). Robust 1.25
+    (334972) 4.0625e-09 with no cuts (median 99.7 s), not better than nabid_nur's robust 4.055. The full curve
+    (0 / 0.5 / 1.0 / 1.5 / 1.75) still puts the optimum at s ≈ 1.0.
+  - Track C: AGE_OLD2 7 (334982) failed on the grader: 16 completed, 4 TIME_EXHAUSTED, 80 marked failed with no
+    error (scoring aborted, "Error while scoring your submission"). Median predict was a normal 107.5 s, so the
+    grader looks at fault, not the build. LAM 0.975 / 1.05, R_OLD2 240, R_OLD 448, AGE_OLD 5 and B robust+0.003 are
+    still pending.
 - The round-2 watcher hit the 2 h background limit; the rest is archived by `work/archive_pending.sh
   work/runs/round2_args.txt` (one pass, no loop) from scheduled check-ins.
 

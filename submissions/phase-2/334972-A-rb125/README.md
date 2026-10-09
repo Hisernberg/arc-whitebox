@@ -1,0 +1,30 @@
+# Submission #334972 — A-rb125
+
+| Field | Value |
+|---|---|
+| Submission ID | 334972 |
+| URL | <https://www.aicrowd.com/challenges/arc-white-box-estimation-challenge-2026/submissions/334972> |
+| Status | GRADED |
+| Created (UTC) | 2026-10-09T06:12:42Z |
+| Adjusted score (leaderboard) | 4.0625129730349295e-09 |
+| Raw final-layer MSE | 1.978190429241522e-08 |
+| Participant | nabid_nur |
+| Grading message | <p>Graded successfully</p> |
+
+## What was submitted
+
+Day 9 round 2 A-rb125
+
+## Grading summary (from the evaluation report)
+
+- Public aggregate: adjusted 4.063e-09, raw final-layer MSE 1.978e-08, all-layers MSE 8.718e-09, mean multiplier 0.20542424665407452, failed MLPs 0
+- FLOPs per MLP: mean 4.4996e+11 (0.2046 x B), min 0.2013 x B, max 0.2147 x B
+- Grader timing per MLP: kernel 89.9 s mean, predict wall 100.2 s mean / 110.6 s max, residual 0.289 s mean / 0.357 s max (cap 0.4 s)
+- Smoke test: passed=True duration 47252.35732200235 ms, worker passes 5 / failures 0
+- MLPs completed: 100 / 100
+
+## Files
+
+- `submission-metadata.json` — Rails + GraphQL record (id, status, scores, participant, round).
+- `submission-report.json` — full evaluation report (per-MLP telemetry, public per-MLP scores, smoke test, runtime environment).
+- `estimator.py` — the exact single-file estimator that was packaged and submitted.
