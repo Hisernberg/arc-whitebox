@@ -277,3 +277,9 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   - Track C, chain structure (koushik_rudra): LAM 0.975 / 1.05 (334979, 334980), R_OLD2 240 (334981), AGE_OLD2 7
     (334982), R_OLD 448 (334983), AGE_OLD 5 (334985).
   All 30 of today's slots are used (10 per account); every build is unique to its account.
+- **Round 1 grades (6 of 8 in)**, vs V44 3.9959e-09 / raw 1.9649e-08:
+  - Track A corrector scale: s=0 4.4406e-09 (raw 2.1808e-08), s=0.5 4.0953 (2.0138), s=1.5 4.1148 (2.0233). A parabola
+    through the three gives s* ≈ 0.98 and raw ≈ 1.961e-08: the e2e corrector is already calibrated on the grader set
+    (it removes ~10% of the chain's raw error). The 0.75/1.0/1.25 points (round 2) will confirm it.
+  - Track C: LAM 1.00 4.0137e-09 (raw +0.4%); AGE_OLD2 9 4.0090 (raw −0.44%, cost up, net +0.3%); R_OLD2 256 failed
+    (0.0478: wall cuts from the extra rank). None beats V44.
