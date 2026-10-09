@@ -314,6 +314,12 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   ~100 s). R_OLD 192 + R_OLD2 112 (half ranks): raw 3.967e-08 (+111%), C/B 0.1630 (−19%), score 6.465e-09 (+70%),
   wall ~76 s. **No-go**: rank truncation costs far more accuracy than it saves. Cost cuts have to come from cheaper
   transport at the same rank, not from lower rank.
+- **Round 2 complete (14:40 UTC)**: B robust V44 + PRUNE_THR 0.003 (334978) **4.0013e-09**, no cuts (median predict
+  96.5 s, max 106.4 s), the new multi_agent robust best. C LAM 0.975 (334979) 3.9985e-09; R_OLD2 240 (334981)
+  4.0103e-09 (raw 1.960e-08, −0.25%, but cost up). AGE_OLD 5 (334985) 0.0846: 4 MLPs TIME_EXHAUSTED (median 104.1 s,
+  max 119.5 s). LAM 1.05 (334980) failed with 12 TIME_EXHAUSTED (median 107.9 s). R_OLD 448 (334983) failed: 14
+  completed, 4 timed out, 82 aborted by the grader (median 110.6 s). No Track C knob beats V44; overall best is
+  still 3.9561e-09 (334963). The robust builds (median ~97–100 s) are the only ones with no timeouts in this round.
 - The round-2 watcher hit the 2 h background limit; the rest is archived by `work/archive_pending.sh
   work/runs/round2_args.txt` (one pass, no loop) from scheduled check-ins.
 
