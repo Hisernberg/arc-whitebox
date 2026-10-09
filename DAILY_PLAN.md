@@ -26,6 +26,19 @@ Tuning the current chain gives ~0.5–1% per day; reaching the top needs a struc
 2. A stronger corrector (more training MLPs, training through the corrected chain instead of on uncorrected features).
 3. Memory-lean buffers so the main transport can use one more Strassen level (currently blocked by the 8 GB cap).
 
+## Account tracks (from 2026-10-09): three accounts, three independent research lines
+Each account runs its own line of builds; **no build is ever submitted to two accounts**. A gain found on one track is
+re-implemented in that track's own lineage only if it fits that track's approach, never copied across as-is.
+
+| Account | Track | Approach | Starting point | Next experiments (one hypothesis per slot) |
+|---|---|---|---|---|
+| `nabid_nur` | **A. Learned corrector** | Better learning on top of the chain: what the error is predicted from and how the correction is carried through the network | V42 (LT + cross-neuron inputs), 4.023e-09 | x3 inputs; end-to-end training through the transport (loss on the final layer); per-layer loss weighting; two-layer-back inputs; corrector width/depth vs. its own FLOPs; ensembles only if they pay for their FLOPs |
+| `multi_agent` | **B. Cost and wall-time engineering** | Same maths, fewer FLOPs and less wall time: Strassen depth per product family, warm-up schedule, block layouts, op-count/overhead cuts that buy wall headroom for deeper Strassen | V42 + LP4 + warm-up 2 | hub-only / C_pre-only Strassen level 6; cutting Python/op overhead (12 s of the 120 s) to make level 6 fit; LP5; memory/op-log robustness |
+| `koushik_rudra` | **C. Chain closure and structure** | Change what the chain computes: ranks, ages, feedback, pruning, closure terms; trade accuracy against cost at the source | robust V42 + warm-up 2 lineage | R_OLD2 / AGE_OLD2 / QPASS re-tunes under the LT corrector; pruning threshold and set sizes; LAM_SCALE; closure-term ablations with the corrector retrained on each |
+
+Daily rhythm per track: round 1 (3–4 slots) from the previous evening's offline results; research block; round 2
+(3–4 slots); close with that track's own robust nominee (1–2 slots). Grades are compared against the logged prediction.
+
 ## Competition plan (from 2026-10-07, 11 days left)
 **Where we are**: all three accounts 4.063e-09 (rank ~48). #1 J2W 1.5e-09 (raw 1.47e-08 at C/B 0.105);
 top 10 ≤ 2.1e-09. Our raw 1.98e-08 at C/B 0.204. Rank 1 needs both ~25% lower error and ~half the cost: no
@@ -151,3 +164,99 @@ known path yet, so every day must buy either a measured gain or a measured fact.
 - **End of day-8 research**: corrector (~0.89 ceiling), chain knobs (at optimum), warm-up schedule (2 is the floor),
   symmetric products (<0.3%) are all exhausted. Remaining slots are held rather than spent on unmeasured builds. The
   next real step needs a different chain (leaders reach raw 1.2–1.5e-08 at C/B 0.10–0.14).
+- **Deeper Strassen (V26_STRASSEN 5→6)** on V42+LP4+warm-up 2, local: C/B 0.2080 → 0.2032 (−2.3%), raw unchanged
+  (score 4.076 → 3.992e-09), but local wall +40–50% (201→277 s, 133→198 s): the L5 build already sits at 112–118 s
+  of the 120 s grader limit, so the full change cannot ship. Testing hub-only level 6 on the robust build (wall ~105 s,
+  ~12–15 s headroom). L7 run did not finish.
+- Hub-only Strassen level 6 (V26_STRASSEN_HUB=6) on the robust build: bit-identical to base (the hub level is capped by
+  `min(STRASSEN_HUB, self._s_hub)`), so it is a no-op. Track B needs per-family level control in code, not a knob.
+### Track C sweep (robust V42 + warm-up 2, 2 mini MLPs, warm-up off; base raw 1.9661e-08 / C/B 0.2099 / 4.1273e-09)
+| Knob | raw | C/B | score | vs base |
+|---|---|---|---|---|
+| V17_LAM_SCALE 0.90 | 1.9544e-08 | 0.2099 | 4.1027e-09 | **−0.6%** |
+| V24_R_OLD2 192 | 1.9838e-08 | 0.2075 | 4.1162e-09 | −0.3% |
+| V24_R_OLD2 256 | 1.9707e-08 | 0.2124 | 4.1842e-09 | +1.4% |
+| V24_AGE_OLD2 6 / 10 | 2.0531 / 1.9719e-08 | 0.2066 / 0.2135 | 4.2387 / 4.2090e-09 | +2.7% / +2.0% |
+| V33_R_FB 3 | 1.9734e-08 | 0.2109 | 4.1611e-09 | +0.8% |
+| V33_PRUNE_THR 0.001 / 0.002 | 1.9756e-08 / = base | 0.2112 / = base | 4.1734e-09 / = base | +1.1% / 0 |
+| V17_LAM_SCALE 1.0 | 2.0021e-08 | 0.2099 | 4.2025e-09 | +1.8% |
+Follow-ups running: LAM 0.85, 0.80, LAM 0.90 + R_OLD2 192.
+Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LAM 0.90 + R_OLD2 192: 4.0865e-09
+(−1.0% vs base)**. Submitted on koushik_rudra (Track C): 334889 (L5 + LP4 + warm-up 2, pred ~3.98–3.99e-09),
+334890 (robust nominee, pred ~4.02e-09).
+- **Track A**: per-layer loss weighting (later layers ×4) 0.8917 vs 0.8919 — no gain. Started end-to-end fine-tune
+  (`work/lt/train_e2e.py`): loss on the final-layer error after the transport, init from lt_x2, 2 epochs.
+- **Track A end-to-end fine-tune**: held-out 0.8919 → 0.8918 (epoch 1) → **0.8896** (epoch 2), still improving; 4 more
+  epochs running from the epoch-2 checkpoint.
+- **Track C graded**: 334889 (L5 + LAM 0.90 + R_OLD2 192) 4.0231e-09 = previous best; 334890 (robust) 4.0659e-09 vs
+  4.0627. The local −1.0% (2 MLPs) did not transfer: on the grader's 100 MLPs raw rose (1.965 → 1.988e-08) as C/B
+  fell. **Lesson: 2-MLP local sweeps have ~1% noise; Track C knob decisions now need ≥8 MLPs (dense-mode raw on the
+  feature dumps) before a slot is spent.**
+- Track A end-to-end: 0.8896 → 0.8915 → 0.8893 → 0.8881 (epochs 3–5 of 6).
+- Track A e2e epoch 6 jumped to 0.8986 (lr 3e-4 too high; the per-epoch save overwrote the 0.8881 checkpoint).
+  Fixed: save-best only. Rerun from the 0.8896 checkpoint at lr 1e-4, 4 epochs.
+- **Track A e2e (lr 1e-4, save-best)**: 0.8896 → 0.8897 → 0.8869 → **0.8866** → 0.8906; best kept. Built as
+  `sub128_A_e2e` (sub121 lineage, only the model literal changed) and submitted on nabid_nur: 334900, pred ~4.01e-09.
+- **Track A graded**: 334900 nabid_nur 4.0155e-09 (pred ~4.01) — new best; raw 1.9612e-08 vs 1.9649e-08 (−0.2%, about
+  half the offline −0.6%, as for V42). The three accounts now differ: A 4.0155, B 4.0231, C 4.0231.
+### 2026-10-09 (first three-track day)
+- Leaderboard/forum: no change at the top (J2W 1.5e-09; top 10 ≤ 2.1e-09); no new forum posts. Ours ~4.0e-09 (#50–56).
+- **Track A round 1**: 334917 nabid_nur robust nominee with the end-to-end corrector (pred ~4.055e-09).
+- **Track B round 1 (local first)**: C_pre family at Strassen level 6 (V29_CPRE_LEV) and join products at level 5
+  (V37_LP_LATE) on multi_agent's lineage; FLOP-only changes, so 2 MLPs suffice for C/B and wall.
+- **Track C**: 8-MLP local measurements queued after Track B.
+- **Track B local**: C_pre level 6 (V29_CPRE_LEV=6) bit-identical to base (capped like the hub); join level 5
+  (V37_LP_LATE=5) C/B −0.14% (0.21047→0.21018, 0.20548→0.20519), raw within noise, wall ±2%. Knob space exhausted;
+  Track B moves to code: wall-time profile by op family (`work/prof_time.py`) at Strassen L5 vs L6, to find the time
+  that does not buy FLOPs and make L6 fit the 120 s limit.
+- **Track A graded**: 334917 nabid_nur robust + e2e 4.0552e-09 (pred ~4.055; robust floor improved from 4.0627).
+- **Track B profile** (L5, local, steady state): backend 125 s + overhead 11.5 s; Strassen add/sub ~67 s, the single
+  `"tij,ti,tj,tg->gij"` PK2 einsum (52×1024×1024, 14 calls) 20.4 s (~16%), matmul 16.8 s.
+- **V44** (`work/make_v44.py`): PK2 einsum → two in-place broadcasts + sums over the contiguous IND2 groups.
+  Local (2 MLPs): raw bit-identical (1.9601e-08), C/B 0.2080 → 0.2066 (−0.67%), wall 135 → 116 s (−14%).
+  Submitted on multi_agent: 334922 `sub130_B_v44`, pred ~3.996e-09. The freed ~18 s of wall is the budget for the
+  next Track B step (deeper Strassen where it now fits).
+- **Track C (queued, 8 MLPs, paired)**: the 334889 grade raised raw, so which knob did it? Robust base vs
+  LAM 0.90 alone vs R_OLD2 192 alone on 8 mini MLPs (`NM=8 work/cost_sweep.sh`). A knob ships on koushik_rudra only if
+  it wins on the 8-MLP mean.
+- **Track B graded**: 334922 multi_agent V44 **3.9959e-09** (pred ~3.996) — new overall best; raw 1.9649e-08 unchanged,
+  C/B down as measured.
+- **Track B L6 per family (local)**: `V28_STRASSEN_SB=6` and `V32_LONE_LEV=6` on V44 are bit-identical (capped by block
+  divisibility). Built `sub131_B_fam` (V44 + `V44_LEG_LEV` cap) to run leg transport, hub and C_pre at L6 one at a
+  time (queued).
+- **Track C 8-MLP paired result** (robust base 4.2738e-09): LAM 0.90 alone raw −0.57% (6/8 MLPs better), C/B same →
+  4.2492 (−0.58%); R_OLD2 192 alone raw +0.75% (+2.7% worst), C/B −1.2% → 4.2553 (−0.43%), uneven. The 334889 raw rise
+  came from R_OLD2 192. Submitted LAM 0.90 alone on sub121: 334929 koushik_rudra, pred ~4.00e-09.
+- **Track C graded**: 334929 koushik_rudra LAM 0.90 alone **4.0435e-09** vs 4.0231 for the same build at LAM 0.95
+  (334742): raw 1.9749 vs 1.9649e-08 (+0.5%). The grader scores **the same 100 MLPs in every submission** (names
+  identical across 334742 / 334922 / 334929; only 1 of them in our 1100 local MLPs), so this is an exact paired
+  comparison: LAM 0.90 is worse on the grader set although it won on 8 local mini MLPs (−0.6%, 6/8, SE ~0.17%).
+  **Lesson: the mini split does not predict chain-knob effects on the grader set.** Track C now tests chain changes
+  on ≥24 MLPs from the `full` split before any slot, and prefers structural changes over scale knobs (LAM 0.95 and
+  R_OLD2 are at their grader optima).
+- Ops: the queued Track B family runs waited on `pgrep -f trackC8.sh`, which matched its own command line, so they never
+  started (2 h lost). Restarted directly at 03:20.
+- **Track B L6 per family** (`sub131_B_fam`, 2 MLPs vs V44 4.0486e-09 / C/B 0.2066 / wall 166,116 s):
+  legs L6 4.0129 (C/B −1.2%, raw +0.3%, wall +25 s); hub L6 4.0234 (−0.6%, +24 s); C_pre L6 4.0586 (no C/B change).
+- **Grader wall telemetry**: V44 saved only ~3% on the grader (median 108.9 → 105.6 s, max 118.7 → 111.4 s), not the
+  local 14%. The real limit is the **120 s round trip** (predict + ~10 s worker setup on some calls): 334742 and
+  334749 each had 2 MLPs cut at 120.2 s round trip with predict ~109 s. 334922 is the first build with no cuts (max round trip 111.7 s), so
+  the legs-L6 +25 s cannot ship. Op count per predict 34.4k (add 14.9k, subtract 7.0k, copyto 4.2k), ~0.32 ms grader
+  overhead each.
+- **Track B round 2**: 334940 multi_agent V44 + warm-up 1 (`sub133_B_e1`); uses the V44 headroom to cut the op-lean
+  calls; pred ~3.985e-09 or a fail.
+- **Track A**: e2e continuation from the best checkpoint at lr 3e-5 (train ≈ held-out ≈ 0.888 on ~1000 MLPs: the
+  corrector is feature-limited, not data-limited; new error features are the next Track A step).
+- **Track A**: e2e continuation at lr 3e-5: 0.8866 → 0.8880 → 0.8869 (no gain; converged). A var-correction head adds
+  no new signal (the per-layer mean target g_l already absorbs pre-activation variance errors through the ReLU mean).
+  Dataset `n_samples` = 1e9, so the grader truth's MC floor (~7.5e-11) is negligible: the gap to the leaders is all
+  method. **Strategic note**: lode_dockx reaches raw 2.1e-08 (≈ ours) at C/B 0.10 (half ours); halving our cost at
+  equal raw would put us at ~2.0e-09 (top 10). Track A pivots to cost-at-equal-raw work on the chain (rank/tier
+  structure re-derived for C/B 0.10) after today's slots, measured on ≥24 `full` MLPs.
+- **Per-family FLOP attribution** (`work/profile_ns.py`, V44, steady-state predict, C/B 0.2057, 34.4k ops):
+  leg transport (mm L1226/L1233) 26.8%; hub L2045 12.3%, hub L1777 (slot sum) 11.4%, hubs L2052/L2057/L2077 9.0%;
+  inline 10.9% (6.3k ops, 15.5 s); shared-basis mm L1208/L1214 11.3%; lone products ~14% in total (≈1% each, ~1.1k ops each);
+  C_pre 3.0%; lp 3.3%; corrector 0.5%. No family dominates: halving cost needs fewer/lower-rank slots across
+  legs + hubs together (≈65% of C/B scales with slot count × rank), not a single-kernel fix.
+- **Track B graded**: 334940 V44 + warm-up 1 3.99597e-09 vs 3.99594 (334922, warm-up 2): no failures (round trip
+  max 114.2 s) but no gain either; warm-up 2 stays. Track B best remains 334922.
