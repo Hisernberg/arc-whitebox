@@ -330,3 +330,11 @@ be bigger. Break-even for top 10: raw ≤ 1.8e-08 at C/B 0.11.
    Each slot carries a logged prediction; anything adding ≥ 4 s median predict on V44 is not submitted.
 4. Realistic targets: rank 45 tomorrow (3.85–3.95e-09). Top 10 only if the lean chain plus corrector clears its
    go/no-go; that is a 2–4 day build, finishing before the 10-17 deadline.
+- **Infra (Day 9 evening)**: the `full` split is ~70 GB and filled the disk allowance (ENOSPC); deleted the partial
+  download (13 GB of mini blobs kept). New `work/eval_seeds.py` regenerates `full`-split MLPs from their seeds and
+  scores them against truth_all (no download). Found and fixed: the dataset weights are `(N(0,1)·sqrt(2/1024))`
+  cast to float32, **not fp16-rounded**; the fp16 cast copied into profile_ops/profile_ns/eval scripts gave 10×
+  wrong MSE (2.03e-07 vs the exact 1.9312e-08, which now matches whest). The corrector's feature dumps were
+  computed on the exact weights (final (T−P)² median 2.3e-08), so training targets are clean. Only the
+  transport term in build_ds/train_e2e uses the fp16 weights, a small error worth removing in the next retrain.
+- Lean-chain ladder started on 8 `full` MLPs: V44 base vs R_OLD 192 + R_OLD2 112.

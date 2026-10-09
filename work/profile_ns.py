@@ -27,7 +27,7 @@ for n in ("_sym_product", "_lone", "_lp", "_gru_step", "_expand"):
 class C: seed = 0; width = 1024; depth = 16; flop_budget = 2 ** 41; api_version = "x"; scratch_dir = None; submission_dir = None
 from numpy.random import SeedSequence, default_rng
 _rng = default_rng(SeedSequence(int(os.environ.get("PROF_SEED", "12345"))).spawn(3)[0])
-w = np.stack([(_rng.standard_normal((1024, 1024)) * np.sqrt(2.0 / 1024)).astype(np.float16).astype(np.float32) for _ in range(16)])
+w = np.stack([(_rng.standard_normal((1024, 1024)) * np.sqrt(2.0 / 1024)).astype(np.float32) for _ in range(16)])
 mlp = MLP(width=1024, depth=16, weights=[fnp.asarray(x) for x in w], seed=1)
 est = M.Estimator(); est.setup(C())
 with flops.BudgetContext(flop_budget=10 ** 14, quiet=True):
