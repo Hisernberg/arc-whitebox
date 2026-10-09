@@ -197,3 +197,5 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   Fixed: save-best only. Rerun from the 0.8896 checkpoint at lr 1e-4, 4 epochs.
 - **Track A e2e (lr 1e-4, save-best)**: 0.8896 → 0.8897 → 0.8869 → **0.8866** → 0.8906; best kept. Built as
   `sub128_A_e2e` (sub121 lineage, only the model literal changed) and submitted on nabid_nur: 334900, pred ~4.01e-09.
+- **Track A graded**: 334900 nabid_nur 4.0155e-09 (pred ~4.01) — new best; raw 1.9612e-08 vs 1.9649e-08 (−0.2%, about
+  half the offline −0.6%, as for V42). The three accounts now differ: A 4.0155, B 4.0231, C 4.0231.
