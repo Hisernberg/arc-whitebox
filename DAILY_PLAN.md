@@ -269,3 +269,11 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
     the next round follows the winners' direction.
   - Track B (multi_agent): V44 + LP_LATE 5 (334961), PRUNE_THR 0.003 (334963). STRASSEN_MIN 4 rejected locally (raw
     +0.6%, C/B up, wall +12 s).
+- **Round 2 (user: submit all remaining slots now, three different styles)**, 06:12–06:13 UTC, 18 builds:
+  - Track A, corrector-strength curve (nabid_nur): scale 0.75 / 1.0 / 1.25 / 1.75 / 2.0 (334967–334971) + robust
+    nominee at 1.25 (lone L4, 334972). With round 1's 0 / 0.5 / 1.5 this traces the full curve on the grader set.
+  - Track B, cost via pruning (multi_agent): PRUNE_THR 0.002 / 0.005 / 0.0075 / 0.01 (334973–334976), robust V44
+    (334977), robust V44 + PRUNE_THR 0.003 (334978).
+  - Track C, chain structure (koushik_rudra): LAM 0.975 / 1.05 (334979, 334980), R_OLD2 240 (334981), AGE_OLD2 7
+    (334982), R_OLD 448 (334983), AGE_OLD 5 (334985).
+  All 30 of today's slots are used (10 per account); every build is unique to its account.
