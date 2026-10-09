@@ -219,3 +219,11 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
 - **Track C (queued, 8 MLPs, paired)**: the 334889 grade raised raw, so which knob did it? Robust base vs
   LAM 0.90 alone vs R_OLD2 192 alone on 8 mini MLPs (`NM=8 work/cost_sweep.sh`). A knob ships on koushik_rudra only if
   it wins on the 8-MLP mean.
+- **Track B graded**: 334922 multi_agent V44 **3.9959e-09** (pred ~3.996) — new overall best; raw 1.9649e-08 unchanged,
+  C/B down as measured.
+- **Track B L6 per family (local)**: `V28_STRASSEN_SB=6` and `V32_LONE_LEV=6` on V44 are bit-identical (capped by block
+  divisibility). Built `sub131_B_fam` (V44 + `V44_LEG_LEV` cap) to run leg transport, hub and C_pre at L6 one at a
+  time (queued).
+- **Track C 8-MLP paired result** (robust base 4.2738e-09): LAM 0.90 alone raw −0.57% (6/8 MLPs better), C/B same →
+  4.2492 (−0.58%); R_OLD2 192 alone raw +0.75% (+2.7% worst), C/B −1.2% → 4.2553 (−0.43%), uneven. The 334889 raw rise
+  came from R_OLD2 192. Submitted LAM 0.90 alone on sub121: 334929 koushik_rudra, pred ~4.00e-09.
