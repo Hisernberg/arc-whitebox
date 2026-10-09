@@ -236,3 +236,14 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   R_OLD2 are at their grader optima).
 - Ops: the queued Track B family runs waited on `pgrep -f trackC8.sh`, which matched its own command line, so they never
   started (2 h lost). Restarted directly at 03:20.
+- **Track B L6 per family** (`sub131_B_fam`, 2 MLPs vs V44 4.0486e-09 / C/B 0.2066 / wall 166,116 s):
+  legs L6 4.0129 (C/B −1.2%, raw +0.3%, wall +25 s); hub L6 4.0234 (−0.6%, +24 s); C_pre L6 4.0586 (no C/B change).
+- **Grader wall telemetry**: V44 saved only ~3% on the grader (median 108.9 → 105.6 s, max 118.7 → 111.4 s), not the
+  local 14%. The real limit is the **120 s round trip** (predict + ~10 s worker setup on some calls): 334742 and
+  334749 each had 2 MLPs cut at 120.2 s round trip with predict ~109 s. 334922 is the first build with no cuts (max round trip 111.7 s), so
+  the legs-L6 +25 s cannot ship. Op count per predict 34.4k (add 14.9k, subtract 7.0k, copyto 4.2k), ~0.32 ms grader
+  overhead each.
+- **Track B round 2**: 334940 multi_agent V44 + warm-up 1 (`sub133_B_e1`); uses the V44 headroom to cut the op-lean
+  calls; pred ~3.985e-09 or a fail.
+- **Track A**: e2e continuation from the best checkpoint at lr 3e-5 (train ≈ held-out ≈ 0.888 on ~1000 MLPs: the
+  corrector is feature-limited, not data-limited; new error features are the next Track A step).
