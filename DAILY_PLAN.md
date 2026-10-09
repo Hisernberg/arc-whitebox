@@ -287,3 +287,6 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   3 MLPs TIME_EXHAUSTED → 0.0158; C R_OLD2 256 (334959) median 112.0 s, 7 cut → 0.0478. Concurrent V44 builds stayed
   at median 105–108 s with no cuts. **Rule: on V44, anything adding ≥4 s median predict fails** (headroom ~8 s at
   the round-trip tail).
+- **Track B graded**: 334963 V44 + PRUNE_THR 0.003 **3.9561e-09** — new overall best (−1.0% vs V44); raw 1.9663e-08
+  (+0.07%), so the gain is C/B from pruning more dead neurons. Round 2's 0.002 / 0.005 / 0.0075 / 0.01 trace the
+  curve.
