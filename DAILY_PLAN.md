@@ -260,3 +260,12 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   legs + hubs together (≈65% of C/B scales with slot count × rank), not a single-kernel fix.
 - **Track B graded**: 334940 V44 + warm-up 1 3.99597e-09 vs 3.99594 (334922, warm-up 2): no failures (round trip
   max 114.2 s) but no gain either; warm-up 2 stays. Track B best remains 334922.
+- **Remaining-slot plan (user: use every slot today)**: the grader scores the same 100 MLPs every time, so each slot
+  is an exact paired measurement on the test set. All three tracks are rebased on V44's wall relief (sub121 lineage
+  had round-trip cuts at 120.2 s); builds differ per account.
+  - Track A (nabid_nur): `sub134_A_cs` = V44 + e2e corrector + `V45_CORR_SCALE` (scale on the corrector output);
+    grid s = 0, 0.5, 1.5 (334955–334957), then a parabola fit for s*, then the robust nominee.
+  - Track C (koushik_rudra): V44 + one chain knob each: LAM 1.00 (334958), R_OLD2 256 (334959), AGE_OLD2 9 (334960);
+    the next round follows the winners' direction.
+  - Track B (multi_agent): V44 + LP_LATE 5 (334961), PRUNE_THR 0.003 (334963). STRASSEN_MIN 4 rejected locally (raw
+    +0.6%, C/B up, wall +12 s).
