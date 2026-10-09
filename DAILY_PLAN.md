@@ -253,3 +253,8 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   method. **Strategic note**: lode_dockx reaches raw 2.1e-08 (≈ ours) at C/B 0.10 (half ours); halving our cost at
   equal raw would put us at ~2.0e-09 (top 10). Track A pivots to cost-at-equal-raw work on the chain (rank/tier
   structure re-derived for C/B 0.10) after today's slots, measured on ≥24 `full` MLPs.
+- **Per-family FLOP attribution** (`work/profile_ns.py`, V44, steady-state predict, C/B 0.2057, 34.4k ops):
+  leg transport (mm L1226/L1233) 26.8%; hub L2045 12.3%, hub L1777 (slot sum) 11.4%, hubs L2052/L2057/L2077 9.0%;
+  inline 10.9% (6.3k ops, 15.5 s); shared-basis mm L1208/L1214 11.3%; lone products ~14% in total (≈1% each, ~1.1k ops each);
+  C_pre 3.0%; lp 3.3%; corrector 0.5%. No family dominates: halving cost needs fewer/lower-rank slots across
+  legs + hubs together (≈65% of C/B scales with slot count × rank), not a single-kernel fix.
