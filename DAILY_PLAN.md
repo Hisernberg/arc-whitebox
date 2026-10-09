@@ -283,3 +283,7 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
     (it removes ~10% of the chain's raw error). The 0.75/1.0/1.25 points (round 2) will confirm it.
   - Track C: LAM 1.00 4.0137e-09 (raw +0.4%); AGE_OLD2 9 4.0090 (raw −0.44%, cost up, net +0.3%); R_OLD2 256 failed
     (0.0478: wall cuts from the extra rank). None beats V44.
+- Round 1 failures are the builds' own wall time, not grader contention: B LP_LATE 5 (334961) median predict 110.3 s,
+  3 MLPs TIME_EXHAUSTED → 0.0158; C R_OLD2 256 (334959) median 112.0 s, 7 cut → 0.0478. Concurrent V44 builds stayed
+  at median 105–108 s with no cuts. **Rule: on V44, anything adding ≥4 s median predict fails** (headroom ~8 s at
+  the round-trip tail).
