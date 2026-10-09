@@ -216,3 +216,6 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   Local (2 MLPs): raw bit-identical (1.9601e-08), C/B 0.2080 → 0.2066 (−0.67%), wall 135 → 116 s (−14%).
   Submitted on multi_agent: 334922 `sub130_B_v44`, pred ~3.996e-09. The freed ~18 s of wall is the budget for the
   next Track B step (deeper Strassen where it now fits).
+- **Track C (queued, 8 MLPs, paired)**: the 334889 grade raised raw, so which knob did it? Robust base vs
+  LAM 0.90 alone vs R_OLD2 192 alone on 8 mini MLPs (`NM=8 work/cost_sweep.sh`). A knob ships on koushik_rudra only if
+  it wins on the 8-MLP mean.
