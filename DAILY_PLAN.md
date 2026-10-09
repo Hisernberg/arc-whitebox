@@ -295,6 +295,31 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   round trip with predict ~108–110 s; same code cost as 1.0, so grader-side round-trip cuts). Builds with the e2e corrector sit at
   a median predict of ~108 s (V44 105.6), close enough to the limit for random cuts to sink a submission. **Tomorrow:
   get ≥8 s more wall margin before stacking anything on V44 + corrector.**
+- **Round 2 check-in (09:11 UTC)**, vs best 3.9561e-09 (334963, PRUNE_THR 0.003):
+  - Track B pruning curve: 0.002 3.9800e-09, **0.003 3.9561** (round 1), 0.005 3.9660, 0.0075 3.9633, 0.01 4.0036.
+    Flat from 0.003 to 0.0075 (±0.25%, inside grader noise); 0.01 starts costing accuracy (raw 2.018e-08). No new best;
+    keep 0.003–0.005. Robust V44 (334977) **4.0356e-09**, the new multi_agent robust best (was 4.063).
+  - Track A: scale 2.0 (334971) 0.1339, with 9 MLPs TIME_EXHAUSTED (median predict 106.2 s, max 112.9 s). Robust 1.25
+    (334972) 4.0625e-09 with no cuts (median 99.7 s), not better than nabid_nur's robust 4.055. The full curve
+    (0 / 0.5 / 1.0 / 1.5 / 1.75) still puts the optimum at s ≈ 1.0.
+  - Track C: AGE_OLD2 7 (334982) failed on the grader: 16 completed, 4 TIME_EXHAUSTED, 80 marked failed with no
+    error (scoring aborted, "Error while scoring your submission"). Median predict was a normal 107.5 s, so the
+    grader looks at fault, not the build. LAM 0.975 / 1.05, R_OLD2 240, R_OLD 448, AGE_OLD 5 and B robust+0.003 are
+    still pending.
+- **Leaderboard (09:20 UTC)**: the board rounds scores to 2 significant figures. All three accounts tie at **#51**
+  (4.0e-09) with five other teams: multi_agent 3.956e-09, Hydrion-Labs (nabid_nur), Nanoloom (koushik_rudra). #46
+  shows 3.9e-09, so beating 3.95e-09 moves us up ~5 places. Top 10 is ≤ 2.0e-09; #1 J2W 1.5e-09 (raw 1.47e-08,
+  C/B 0.105).
+- **Lean-chain ladder (8 full MLPs, eval_seeds.py)**: V44 base raw 1.880e-08, C/B 0.2020, score 3.797e-09 (wall
+  ~100 s). R_OLD 192 + R_OLD2 112 (half ranks): raw 3.967e-08 (+111%), C/B 0.1630 (−19%), score 6.465e-09 (+70%),
+  wall ~76 s. **No-go**: rank truncation costs far more accuracy than it saves. Cost cuts have to come from cheaper
+  transport at the same rank, not from lower rank.
+- **Round 2 complete (14:40 UTC)**: B robust V44 + PRUNE_THR 0.003 (334978) **4.0013e-09**, no cuts (median predict
+  96.5 s, max 106.4 s), the new multi_agent robust best. C LAM 0.975 (334979) 3.9985e-09; R_OLD2 240 (334981)
+  4.0103e-09 (raw 1.960e-08, −0.25%, but cost up). AGE_OLD 5 (334985) 0.0846: 4 MLPs TIME_EXHAUSTED (median 104.1 s,
+  max 119.5 s). LAM 1.05 (334980) failed with 12 TIME_EXHAUSTED (median 107.9 s). R_OLD 448 (334983) failed: 14
+  completed, 4 timed out, 82 aborted by the grader (median 110.6 s). No Track C knob beats V44; overall best is
+  still 3.9561e-09 (334963). The robust builds (median ~97–100 s) are the only ones with no timeouts in this round.
 - The round-2 watcher hit the 2 h background limit; the rest is archived by `work/archive_pending.sh
   work/runs/round2_args.txt` (one pass, no loop) from scheduled check-ins.
 
@@ -330,3 +355,11 @@ be bigger. Break-even for top 10: raw ≤ 1.8e-08 at C/B 0.11.
    Each slot carries a logged prediction; anything adding ≥ 4 s median predict on V44 is not submitted.
 4. Realistic targets: rank 45 tomorrow (3.85–3.95e-09). Top 10 only if the lean chain plus corrector clears its
    go/no-go; that is a 2–4 day build, finishing before the 10-17 deadline.
+- **Infra (Day 9 evening)**: the `full` split is ~70 GB and filled the disk allowance (ENOSPC); deleted the partial
+  download (13 GB of mini blobs kept). New `work/eval_seeds.py` regenerates `full`-split MLPs from their seeds and
+  scores them against truth_all (no download). Found and fixed: the dataset weights are `(N(0,1)·sqrt(2/1024))`
+  cast to float32, **not fp16-rounded**; the fp16 cast copied into profile_ops/profile_ns/eval scripts gave 10×
+  wrong MSE (2.03e-07 vs the exact 1.9312e-08, which now matches whest). The corrector's feature dumps were
+  computed on the exact weights (final (T−P)² median 2.3e-08), so training targets are clean. Only the
+  transport term in build_ds/train_e2e uses the fp16 weights, a small error worth removing in the next retrain.
+- Lean-chain ladder started on 8 `full` MLPs: V44 base vs R_OLD 192 + R_OLD2 112.

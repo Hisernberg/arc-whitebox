@@ -10,7 +10,7 @@ T = np.load("/home/user/arc-whitebox/work/truth_all.npz")
 _i = [k for k in range(len(T["names"])) if str(T["names"][k]) == os.environ.get("PROF_MLP", "logan-fitzgerald")][0]
 from numpy.random import SeedSequence, default_rng
 _rng = default_rng(SeedSequence(int(T["seeds"][_i])).spawn(3)[0])
-w = np.stack([(_rng.standard_normal((1024, 1024)) * np.sqrt(2.0 / 1024)).astype(np.float16).astype(np.float32) for _ in range(16)]); del T
+w = np.stack([(_rng.standard_normal((1024, 1024)) * np.sqrt(2.0 / 1024)).astype(np.float32) for _ in range(16)]); del T
 mlp = MLP(width=1024, depth=16, weights=[fnp.asarray(x) for x in w], seed=1)
 est = M.Estimator(); est.setup(C())
 with flops.BudgetContext(flop_budget=10 ** 14, quiet=True):
