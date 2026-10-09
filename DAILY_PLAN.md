@@ -209,3 +209,10 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   (V37_LP_LATE=5) C/B −0.14% (0.21047→0.21018, 0.20548→0.20519), raw within noise, wall ±2%. Knob space exhausted;
   Track B moves to code: wall-time profile by op family (`work/prof_time.py`) at Strassen L5 vs L6, to find the time
   that does not buy FLOPs and make L6 fit the 120 s limit.
+- **Track A graded**: 334917 nabid_nur robust + e2e 4.0552e-09 (pred ~4.055; robust floor improved from 4.0627).
+- **Track B profile** (L5, local, steady state): backend 125 s + overhead 11.5 s; Strassen add/sub ~67 s, the single
+  `"tij,ti,tj,tg->gij"` PK2 einsum (52×1024×1024, 14 calls) 20.4 s (~16%), matmul 16.8 s.
+- **V44** (`work/make_v44.py`): PK2 einsum → two in-place broadcasts + sums over the contiguous IND2 groups.
+  Local (2 MLPs): raw bit-identical (1.9601e-08), C/B 0.2080 → 0.2066 (−0.67%), wall 135 → 116 s (−14%).
+  Submitted on multi_agent: 334922 `sub130_B_v44`, pred ~3.996e-09. The freed ~18 s of wall is the budget for the
+  next Track B step (deeper Strassen where it now fits).
