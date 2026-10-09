@@ -306,6 +306,14 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
     error (scoring aborted, "Error while scoring your submission"). Median predict was a normal 107.5 s, so the
     grader looks at fault, not the build. LAM 0.975 / 1.05, R_OLD2 240, R_OLD 448, AGE_OLD 5 and B robust+0.003 are
     still pending.
+- **Leaderboard (09:20 UTC)**: the board rounds scores to 2 significant figures. All three accounts tie at **#51**
+  (4.0e-09) with five other teams: multi_agent 3.956e-09, Hydrion-Labs (nabid_nur), Nanoloom (koushik_rudra). #46
+  shows 3.9e-09, so beating 3.95e-09 moves us up ~5 places. Top 10 is ≤ 2.0e-09; #1 J2W 1.5e-09 (raw 1.47e-08,
+  C/B 0.105).
+- **Lean-chain ladder (8 full MLPs, eval_seeds.py)**: V44 base raw 1.880e-08, C/B 0.2020, score 3.797e-09 (wall
+  ~100 s). R_OLD 192 + R_OLD2 112 (half ranks): raw 3.967e-08 (+111%), C/B 0.1630 (−19%), score 6.465e-09 (+70%),
+  wall ~76 s. **No-go**: rank truncation costs far more accuracy than it saves. Cost cuts have to come from cheaper
+  transport at the same rank, not from lower rank.
 - The round-2 watcher hit the 2 h background limit; the rest is archived by `work/archive_pending.sh
   work/runs/round2_args.txt` (one pass, no loop) from scheduled check-ins.
 
