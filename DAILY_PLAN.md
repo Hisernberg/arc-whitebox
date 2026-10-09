@@ -199,3 +199,9 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   `sub128_A_e2e` (sub121 lineage, only the model literal changed) and submitted on nabid_nur: 334900, pred ~4.01e-09.
 - **Track A graded**: 334900 nabid_nur 4.0155e-09 (pred ~4.01) — new best; raw 1.9612e-08 vs 1.9649e-08 (−0.2%, about
   half the offline −0.6%, as for V42). The three accounts now differ: A 4.0155, B 4.0231, C 4.0231.
+### 2026-10-09 (first three-track day)
+- Leaderboard/forum: no change at the top (J2W 1.5e-09; top 10 ≤ 2.1e-09); no new forum posts. Ours ~4.0e-09 (#50–56).
+- **Track A round 1**: 334917 nabid_nur robust nominee with the end-to-end corrector (pred ~4.055e-09).
+- **Track B round 1 (local first)**: C_pre family at Strassen level 6 (V29_CPRE_LEV) and join products at level 5
+  (V37_LP_LATE) on multi_agent's lineage; FLOP-only changes, so 2 MLPs suffice for C/B and wall.
+- **Track C**: 8-MLP local measurements queued after Track B.
