@@ -290,3 +290,10 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
 - **Track B graded**: 334963 V44 + PRUNE_THR 0.003 **3.9561e-09** — new overall best (−1.0% vs V44); raw 1.9663e-08
   (+0.07%), so the gain is C/B from pruning more dead neurons. Round 2's 0.002 / 0.005 / 0.0075 / 0.01 trace the
   curve.
+- **Round 2 partial (08:22 UTC, grader queue slow)**: Track A scale 1.0 (V44 + e2e corrector) **3.9885e-09** (vs V44 3.9959;
+  the corrector's grader gain on V44); 1.75 4.2654e-09; scales 0.75 and 1.25 **failed** (2 and 9 MLPs cut at a 120.3 s
+  round trip with predict ~108–110 s; same code cost as 1.0, so grader-side round-trip cuts). Builds with the e2e corrector sit at
+  a median predict of ~108 s (V44 105.6), close enough to the limit for random cuts to sink a submission. **Tomorrow:
+  get ≥8 s more wall margin before stacking anything on V44 + corrector.**
+- The round-2 watcher hit the 2 h background limit; the rest is archived by `work/archive_pending.sh
+  work/runs/round2_args.txt` (one pass, no loop) from scheduled check-ins.
