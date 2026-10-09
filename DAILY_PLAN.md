@@ -258,3 +258,5 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   inline 10.9% (6.3k ops, 15.5 s); shared-basis mm L1208/L1214 11.3%; lone products ~14% in total (≈1% each, ~1.1k ops each);
   C_pre 3.0%; lp 3.3%; corrector 0.5%. No family dominates: halving cost needs fewer/lower-rank slots across
   legs + hubs together (≈65% of C/B scales with slot count × rank), not a single-kernel fix.
+- **Track B graded**: 334940 V44 + warm-up 1 3.99597e-09 vs 3.99594 (334922, warm-up 2): no failures (round trip
+  max 114.2 s) but no gain either; warm-up 2 stays. Track B best remains 334922.
