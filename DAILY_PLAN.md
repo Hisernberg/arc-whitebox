@@ -247,3 +247,9 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   calls; pred ~3.985e-09 or a fail.
 - **Track A**: e2e continuation from the best checkpoint at lr 3e-5 (train ≈ held-out ≈ 0.888 on ~1000 MLPs: the
   corrector is feature-limited, not data-limited; new error features are the next Track A step).
+- **Track A**: e2e continuation at lr 3e-5: 0.8866 → 0.8880 → 0.8869 (no gain; converged). A var-correction head adds
+  no new signal (the per-layer mean target g_l already absorbs pre-activation variance errors through the ReLU mean).
+  Dataset `n_samples` = 1e9, so the grader truth's MC floor (~7.5e-11) is negligible: the gap to the leaders is all
+  method. **Strategic note**: lode_dockx reaches raw 2.1e-08 (≈ ours) at C/B 0.10 (half ours); halving our cost at
+  equal raw would put us at ~2.0e-09 (top 10). Track A pivots to cost-at-equal-raw work on the chain (rank/tier
+  structure re-derived for C/B 0.10) after today's slots, measured on ≥24 `full` MLPs.
