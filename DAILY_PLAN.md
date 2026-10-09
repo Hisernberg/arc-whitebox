@@ -205,3 +205,7 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
 - **Track B round 1 (local first)**: C_pre family at Strassen level 6 (V29_CPRE_LEV) and join products at level 5
   (V37_LP_LATE) on multi_agent's lineage; FLOP-only changes, so 2 MLPs suffice for C/B and wall.
 - **Track C**: 8-MLP local measurements queued after Track B.
+- **Track B local**: C_pre level 6 (V29_CPRE_LEV=6) bit-identical to base (capped like the hub); join level 5
+  (V37_LP_LATE=5) C/B −0.14% (0.21047→0.21018, 0.20548→0.20519), raw within noise, wall ±2%. Knob space exhausted;
+  Track B moves to code: wall-time profile by op family (`work/prof_time.py`) at Strassen L5 vs L6, to find the time
+  that does not buy FLOPs and make L6 fit the 120 s limit.
