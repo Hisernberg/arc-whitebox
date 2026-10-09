@@ -227,3 +227,12 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
 - **Track C 8-MLP paired result** (robust base 4.2738e-09): LAM 0.90 alone raw −0.57% (6/8 MLPs better), C/B same →
   4.2492 (−0.58%); R_OLD2 192 alone raw +0.75% (+2.7% worst), C/B −1.2% → 4.2553 (−0.43%), uneven. The 334889 raw rise
   came from R_OLD2 192. Submitted LAM 0.90 alone on sub121: 334929 koushik_rudra, pred ~4.00e-09.
+- **Track C graded**: 334929 koushik_rudra LAM 0.90 alone **4.0435e-09** vs 4.0231 for the same build at LAM 0.95
+  (334742): raw 1.9749 vs 1.9649e-08 (+0.5%). The grader scores **the same 100 MLPs in every submission** (names
+  identical across 334742 / 334922 / 334929; only 1 of them in our 1100 local MLPs), so this is an exact paired
+  comparison: LAM 0.90 is worse on the grader set although it won on 8 local mini MLPs (−0.6%, 6/8, SE ~0.17%).
+  **Lesson: the mini split does not predict chain-knob effects on the grader set.** Track C now tests chain changes
+  on ≥24 MLPs from the `full` split before any slot, and prefers structural changes over scale knobs (LAM 0.95 and
+  R_OLD2 are at their grader optima).
+- Ops: the queued Track B family runs waited on `pgrep -f trackC8.sh`, which matched its own command line, so they never
+  started (2 h lost). Restarted directly at 03:20.
