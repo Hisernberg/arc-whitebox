@@ -277,3 +277,56 @@ Follow-ups: LAM 0.85 4.1570e-09, LAM 0.80 4.2383e-09 (0.90 is the optimum); **LA
   - Track C, chain structure (koushik_rudra): LAM 0.975 / 1.05 (334979, 334980), R_OLD2 240 (334981), AGE_OLD2 7
     (334982), R_OLD 448 (334983), AGE_OLD 5 (334985).
   All 30 of today's slots are used (10 per account); every build is unique to its account.
+- **Round 1 grades (6 of 8 in)**, vs V44 3.9959e-09 / raw 1.9649e-08:
+  - Track A corrector scale: s=0 4.4406e-09 (raw 2.1808e-08), s=0.5 4.0953 (2.0138), s=1.5 4.1148 (2.0233). A parabola
+    through the three gives s* ≈ 0.98 and raw ≈ 1.961e-08: the e2e corrector is already calibrated on the grader set
+    (it removes ~10% of the chain's raw error). The 0.75/1.0/1.25 points (round 2) will confirm it.
+  - Track C: LAM 1.00 4.0137e-09 (raw +0.4%); AGE_OLD2 9 4.0090 (raw −0.44%, cost up, net +0.3%); R_OLD2 256 failed
+    (0.0478: wall cuts from the extra rank). None beats V44.
+- Round 1 failures are the builds' own wall time, not grader contention: B LP_LATE 5 (334961) median predict 110.3 s,
+  3 MLPs TIME_EXHAUSTED → 0.0158; C R_OLD2 256 (334959) median 112.0 s, 7 cut → 0.0478. Concurrent V44 builds stayed
+  at median 105–108 s with no cuts. **Rule: on V44, anything adding ≥4 s median predict fails** (headroom ~8 s at
+  the round-trip tail).
+- **Track B graded**: 334963 V44 + PRUNE_THR 0.003 **3.9561e-09** — new overall best (−1.0% vs V44); raw 1.9663e-08
+  (+0.07%), so the gain is C/B from pruning more dead neurons. Round 2's 0.002 / 0.005 / 0.0075 / 0.01 trace the
+  curve.
+- **Round 2 partial (08:22 UTC, grader queue slow)**: Track A scale 1.0 (V44 + e2e corrector) **3.9885e-09** (vs V44 3.9959;
+  the corrector's grader gain on V44); 1.75 4.2654e-09; scales 0.75 and 1.25 **failed** (2 and 9 MLPs cut at a 120.3 s
+  round trip with predict ~108–110 s; same code cost as 1.0, so grader-side round-trip cuts). Builds with the e2e corrector sit at
+  a median predict of ~108 s (V44 105.6), close enough to the limit for random cuts to sink a submission. **Tomorrow:
+  get ≥8 s more wall margin before stacking anything on V44 + corrector.**
+- The round-2 watcher hit the 2 h background limit; the rest is archived by `work/archive_pending.sh
+  work/runs/round2_args.txt` (one pass, no loop) from scheduled check-ins.
+
+## Plan for 2026-10-10 (Day 10) — goal: top 10 (score ≤ 2.0e-09)
+**Honest gap.** Rank 50 at 3.956e-09; rank 45 needs < 3.95e-09; top 10 needs ≤ 2.0e-09, i.e. **half our score**.
+No knob or kernel change gets there: the whole day-9 grid moved the score by ≤ 1%. The leaders sit at raw
+1.15–1.5e-08 with C/B 0.105–0.14; we are at raw 1.97e-08 with C/B 0.205. Profile (V44): ~65% of C/B is
+leg transport + hubs, which scale with slots × rank. Forum Phase-2 write-ups (18200, 18214, 18219) are all at
+1e-07 and do not help; the top teams have not published.
+
+**The one path with 2× potential: a lean chain plus a corrector retrained for it.**
+Cut the chain to C/B ≈ 0.11–0.12 (R_OLD 384→192, R_OLD2 224→112, fewer old-tier slots) and let a learned corrector
+recover the extra raw error. Today's grades show the corrector removes ~10% of raw error on the current chain
+(scale 0 → 1: 2.18 → 1.96e-08). A lean chain's error is larger and more systematic, so the recoverable share should
+be bigger. Break-even for top 10: raw ≤ 1.8e-08 at C/B 0.11.
+
+**Day 10 schedule**
+1. 00:20 Archive the last day-9 grades (pruning curve, robust builds, Track C chain knobs); scan the leaderboard
+   and forum.
+2. Morning, local research (serialised runs; one job at a time):
+   a. Lean-chain ladder on ≥24 `full` MLPs: three cost points (C/B ≈ 0.16, 0.13, 0.11), measuring raw and wall.
+   b. Feature dumps of the 0.13 and 0.11 chains (`work/lt/build_x2.py`) on ~300 MLPs; retrain the LT-x2 corrector
+      plus the e2e fine-tune; held-out raw ratio. **Go/no-go:** corrected raw × C/B must beat 3.0e-09 offline
+      (offline gains transfer at about half, so 3.0 offline ≈ 3.5 graded is the first step toward top 10).
+3. Slots, three accounts, three styles, every build unique:
+   - **Track B, multi_agent (cost):** best pruning threshold from the day-9 curve; robust (lone L4) + pruning for
+     wall margin; PRUNE_THR × LP_LATE 3 combinations. Target rank 45 (< 3.95e-09) early in the day.
+   - **Track A, nabid_nur (corrector):** first the robust V44 + e2e corrector + best pruning (V44 + e2e sits at
+     ~108 s median, too close to the 120 s round trip; the robust lineage has ~8 s more margin); then the
+     lean-chain + retrained corrector builds once they pass the go/no-go.
+   - **Track C, koushik_rudra (chain structure):** lean-chain ladder points graded directly (the grader set is
+     fixed, so each slot is an exact measurement); then old-tier rank vs age trade-offs at the chosen cost.
+   Each slot carries a logged prediction; anything adding ≥ 4 s median predict on V44 is not submitted.
+4. Realistic targets: rank 45 tomorrow (3.85–3.95e-09). Top 10 only if the lean chain plus corrector clears its
+   go/no-go; that is a 2–4 day build, finishing before the 10-17 deadline.
